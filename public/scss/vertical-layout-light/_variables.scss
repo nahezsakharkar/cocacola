@@ -1,0 +1,102 @@
+////////// SIDEBAR ////////
+$sidebar-width-lg: 240px;
+$sidebar-width-mini: 185px;
+$sidebar-width-icon: 70px;
+
+$sidebar-light-bg: #f3f4f7;
+$sidebar-light-menu-color: #6f7580;
+$sidebar-light-submenu-color: #2e294e;
+$sidebar-light-menu-active-bg: initial;
+$sidebar-light-menu-active-color: #2e294e;
+$sidebar-light-menu-hover-bg: $content-bg;
+$sidebar-light-menu-hover-color: theme-color(danger);
+$sidebar-light-submenu-hover-color: $black;
+$sidebar-light-submenu-active-color: theme-color(danger);
+$sidebar-light-menu-icon-color: theme-color(danger);
+$sidebar-light-menu-active-icon-color: theme-color(danger);
+$sidebar-light-menu-arrow-color: #686868;
+$sidebar-light-profile-name-color: #404852;
+$sidebar-light-profile-title-color: #8d9498;
+$sidebar-light-submenu-menu-bg: linear-gradient(to top, #f1f2f5, rgba(255, 255, 255, 0)), linear-gradient(to bottom, #f6f6f9, #f6f6f9);
+$sidebar-light-submenu-menu-boxshadow: 4px 4px 10px 0 rgba(0, 0, 0, 0.08), -5px -4px 10px 0 rgba(253, 253, 253, 0.9);
+$sidebar-light-submenu-menu-active-bg: #f1f1f4;
+$sidebar-light-submenu-menu-active-boxshadow: inset 2px 1px 3px 0 rgba(200, 186, 186, 0.5);
+$sidebar-light-menu-icon-bg: linear-gradient(to top, #f1f2f5, rgba(255, 255, 255, 0)), linear-gradient(to bottom, #f6f6f9, #f6f6f9);
+$sidebar-light-menu-icon-boxshadow: 4px 4px 10px 0 rgba(0, 0, 0, 0.08), -5px -4px 10px 0 rgba(253, 253, 253, 0.9);
+
+$sidebar-dark-bg: #23262b; 
+$sidebar-dark-menu-color: #6f7580;
+$sidebar-dark-menu-active-bg: initial;
+$sidebar-dark-menu-active-color: theme-color(danger);
+$sidebar-dark-menu-hover-bg: transparent;
+$sidebar-dark-menu-hover-color: #d0cfcf;
+$sidebar-dark-submenu-color: $sidebar-dark-menu-color;
+$sidebar-dark-submenu-hover-bg: initial;
+$sidebar-dark-submenu-hover-color: #9a94a7;
+$sidebar-dark-menu-icon-color: theme-color(danger);
+$sidebar-dark-profile-name-color: #ffffff;
+$sidebar-dark-profile-title-color: #8d9498;
+$sidebar-dark-menu-icon-bg: #262a2d;
+$sidebar-dark-menu-icon-boxshadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+$sidebar-dark-menu-arrow-color:#6f7580;
+
+$sidebar-dark-submenu-menu-bg: #262a2d;
+$sidebar-dark-submenu-menu-boxshadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+$sidebar-dark-submenu-menu-active-bg: #131924;
+
+
+$sidebar-menu-font-size: .875rem;
+$sidebar-menu-padding-left: 2rem;
+$sidebar-menu-padding-right: 2rem;
+$sidebar-menu-padding-top: .75rem;
+$sidebar-menu-padding-bottom: .75rem;
+
+$sidebar-submenu-padding: 13px;
+$sidebar-submenu-font-size: .75rem;
+$sidebar-submenu-item-padding: 8px 10px;
+
+$sidebar-icon-font-size:  1.125rem;
+$sidebar-arrow-font-size: .625rem;
+
+$sidebar-profile-bg: transparent;
+$sidebar-profile-padding: 0 1.625rem 2.25rem 1.188rem;
+
+$sidebar-mini-menu-padding: .8125rem 1rem .8125rem 1rem;
+
+$sidebar-icon-only-menu-padding: .5rem 1.625rem .5rem 1.188rem;
+$sidebar-icon-only-submenu-padding: 0 0 0 .5rem;
+
+$sidebar-box-shadow: none;
+
+$rtl-sidebar-submenu-padding: 0 4.5rem 0 0;
+
+$icon-only-collapse-width: 190px;
+$icon-only-menu-bg-light: $sidebar-light-bg;
+$icon-only-menu-bg-dark: $sidebar-dark-bg;
+
+///////// SIDEBAR ////////
+
+///////// BOXED LAYOUT ///////
+$boxed-container-width: 1200px;
+$boxed-layout-bg: #c6c8ca;
+///////// BOXED LAYOUT ///////
+
+///////// SETTINGS PANEL ////////
+
+$settings-panel-width: 300px;
+
+///////// NAVBAR ////////
+
+$navbar-default-bg: #f3f4f7;
+$navbar-height: 74px;
+$navbar-menu-color: #2e294e;
+$navbar-font-size: 1rem;
+$navbar-icon-font-size: .9375rem;
+$navbar-toggler-bg:linear-gradient(to top, #f1f2f5, rgba(255, 255, 255, 0)), linear-gradient(to bottom, #f6f6f9, #f6f6f9);
+$navbar-toggler-box-shadow:4px 4px 10px 0 rgba(0, 0, 0, 0.08), -5px -6px 10px 0 rgba(253, 253, 253, 0.9);
+$navbar-input-color:#6f7580; 
+$navbar-input-bg:#f1f1f4;
+$navbar-input-box-shadow:inset 2px 1px 3px 0 rgba(200, 186, 186, 0.5);
+$navbar-nav-link-bg:linear-gradient(to top, #f1f2f5, rgba(255, 255, 255, 0)), linear-gradient(to bottom, #f6f6f9, #f6f6f9);
+$navbar-nav-link-box-shadow:4px 4px 10px 0 rgba(0, 0, 0, 0.08), -5px -6px 10px 0 rgba(253, 253, 253, 0.9);
+///////// NAVBAR ////////

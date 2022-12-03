@@ -1,0 +1,23 @@
+/* Badges */
+
+.badge {
+  border-radius: 0;
+  font-size: 12px;
+  line-height: 1;
+  padding: .375rem .5625rem;
+  font-weight: normal;
+  box-shadow:  $btn-box-shadow;
+  -webkit-box-shadow:  $btn-box-shadow;
+  -moz-box-shadow:  $btn-box-shadow;
+  -ms-box-shadow:  $btn-box-shadow;
+  &.badge-pill {
+    border-radius: 10rem;
+  }
+}
+
+/*Badge outlined variations*/
+@each $color, $value in $theme-colors {
+  .badge-outline-#{$color} {
+    @include badge-outline-variations($value);
+  }
+}

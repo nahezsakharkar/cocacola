@@ -1,0 +1,103 @@
+/* Demo Styles */
+// Add spacing to Boostrap components for demo purpose
+.icon-wrap {
+  background: $bg-light;
+  box-shadow: inset 2px 1px 3px 0 rgba(200, 186, 186, 0.5);
+  -webkit-box-shadow:  inset 2px 1px 3px 0 rgba(200, 186, 186, 0.5);
+  -moz-box-shadow:  inset 2px 1px 3px 0 rgba(200, 186, 186, 0.5);
+  -ms-box-shadow:  inset 2px 1px 3px 0 rgba(200, 186, 186, 0.5);
+  padding: 10px 25px;
+  color: theme-color(danger);
+  font-size: 24px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  height: 70px;
+}
+.dashboard-chart-height {
+  height: 230px;
+}
+.border-horizontal {
+  height: 4px;
+  border-radius: 5px;
+  box-shadow: inset 1px 1px 2px 0 rgba(174, 174, 192, 0.2), inset -1px -1px 1px 0 rgba(255, 255, 255, 0.7);
+  background-color: $light-grey;
+}
+.border-vertical {
+  width: 4px;
+  border-radius: 5px;
+  box-shadow: inset 1px 1px 2px 0 rgba(174, 174, 192, 0.2), inset -1px -1px 1px 0 rgba(255, 255, 255, 0.7);
+  background-color: $light-grey;
+  height: 100%;
+  &.height-fixed {
+    height: 46px;
+  }
+}
+.chart-legend-revenue {
+  display: flex;
+  ul {
+    list-style: none;
+    margin-bottom: 0;
+    li {
+      display: inline-block;
+      margin-left: 10px;
+      span {
+        width: 9.8px;
+        height: 5px;
+        display: inline-block;
+        margin-right: 5px;
+      }
+    }
+  }
+}
+.product-chart-wrap {
+  height: 220px;
+  .ct-perfect-fourth {
+    height: 100%;
+  }
+  .product-chart {
+    .ct-series-a {
+      .ct-bar {
+        stroke: theme-color(primary);
+        stroke-width: 15px !important;
+      }
+    }
+    .ct-series-b {
+      .ct-bar {
+        stroke: theme-color(warning);
+        stroke-width: 15px !important;
+      }
+    }
+    .ct-series-c {
+      .ct-bar {
+        stroke: theme-color(info);
+        stroke-width: 15px !important;
+      }
+    }
+    .ct-grid {
+      &.ct-vertical {
+        stroke: #dfe1e5;
+        stroke-width: 1px;
+        stroke-dasharray: 0px;
+        height: 20px !important;
+      }
+      &.ct-horizontal {
+        display: none;
+      }
+    }
+    .ct-label {
+      font-size: 8px;
+    }
+  }
+}
+
+.chart-table-wrap {
+  width: 40px;
+  height: 20px;
+}
+.chart-revenue-wrap {
+  height: 205px;
+}
+.news-letter-chart-wrap {
+  height: 200px;
+}

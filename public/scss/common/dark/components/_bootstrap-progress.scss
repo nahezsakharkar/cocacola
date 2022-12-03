@@ -1,0 +1,23 @@
+/* Bootstrap Progress */
+
+.progress {
+  @include border-radius(3px);
+  box-shadow: inset 2px 2px 5px #202020, inset -3px -3px 7px #202020;
+  height: 8px;
+  .progress-bar {
+    @include border-radius(3px);
+  }
+
+  &.progress-sm{
+    height: 0.375rem;
+  }
+  &.progress-md {
+    height: 8px;
+  }
+  &.progress-lg {
+    height: 15px;
+  }
+  &.progress-xl {
+    height: 18px;
+  }
+}

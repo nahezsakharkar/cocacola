@@ -1,0 +1,26 @@
+.jq-toast-wrap {
+    .jq-has-icon {
+        z-index: 9999;
+    }
+    .jq-icon-success {
+        background-color: theme-color("success");
+    }
+    .jq-icon-info {
+        background-color: theme-color("info");
+    }
+    .jq-icon-warning {
+        background-color: theme-color("warning");
+    }
+    .jq-icon-error {
+        background-color: theme-color("danger");
+    }
+    &.bottom-left {
+        bottom: 80px;
+    }
+    &.bottom-right {
+        bottom: 80px;
+    }
+    &.bottom-center {
+        bottom: 80px;
+    }
+}

@@ -1,0 +1,93 @@
+////////// SIDEBAR ////////
+$sidebar-width-lg: 240px;
+$sidebar-width-mini: 185px;
+$sidebar-width-icon: 70px;
+
+
+ 
+
+
+$sidebar-bg: #23262b; 
+$sidebar-menu-color: #6f7580;
+$sidebar-menu-active-bg: initial;
+$sidebar-menu-active-color: theme-color(danger);
+$sidebar-menu-hover-bg: transparent;
+$sidebar-menu-hover-color: #d0cfcf;
+$sidebar-submenu-color: $sidebar-menu-color;
+$sidebar-submenu-hover-bg: initial;
+$sidebar-submenu-hover-color: #9a94a7;
+$sidebar-menu-icon-color: theme-color(danger);
+$sidebar-profile-name-color: #ffffff;
+$sidebar-profile-title-color: #8d9498;
+$sidebar-menu-icon-bg: #262a2d;
+$sidebar-menu-icon-boxshadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+$sidebar-menu-arrow-color:#6f7580;
+
+$sidebar-submenu-active-color: theme-color(danger);
+
+$sidebar-submenu-menu-bg: #262a2d;
+$sidebar-submenu-menu-boxshadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+$sidebar-submenu-menu-active-bg: #131924;
+$sidebar-submenu-menu-active-boxshadow: inset -1px 0 4px 0 rgba(61, 66, 74, 0.6), inset -1px 0 10px 0 #131924;
+
+
+
+$icon-only-menu-bg-dark: $sidebar-bg;
+
+$sidebar-menu-font-size: .875rem;
+$sidebar-menu-padding-left: 2rem;
+$sidebar-menu-padding-right: 2rem;
+$sidebar-menu-padding-top: .75rem;
+$sidebar-menu-padding-bottom: .75rem;
+
+$sidebar-submenu-padding: 13px;
+$sidebar-submenu-font-size: .75rem;
+$sidebar-submenu-item-padding: 8px 10px;
+
+$sidebar-icon-font-size:  1rem;
+$sidebar-arrow-font-size: .625rem;
+
+$sidebar-profile-bg: transparent;
+$sidebar-profile-padding: 0 1.625rem 2.25rem 1.188rem;
+
+$sidebar-mini-menu-padding: .8125rem 1rem .8125rem 1rem;
+
+$sidebar-icon-only-menu-padding: .5rem 1.625rem .5rem 1.188rem;
+$sidebar-icon-only-submenu-padding: 0 0 0 .5rem;
+
+$sidebar-box-shadow: none;
+
+$rtl-sidebar-submenu-padding: 0 4.5rem 0 0;
+
+$icon-only-collapse-width: 190px;
+$icon-only-menu-bg: $sidebar-bg;
+
+///////// SIDEBAR ////////
+
+///////// BOXED LAYOUT ///////
+$boxed-container-width: 1200px;
+$boxed-layout-bg: #c6c8ca;
+///////// BOXED LAYOUT ///////
+
+///////// SETTINGS PANEL ////////
+
+$settings-panel-width: 300px;
+
+///////// NAVBAR ////////
+
+$navbar-default-bg: #23262b;
+$navbar-height: 70px;
+$navbar-menu-color: #b1b1b5;
+$navbar-font-size: 1rem;
+$navbar-icon-font-size: .9375rem;
+
+$navbar-toggler-bg:#262a2d;
+$navbar-toggler-box-shadow:0 4px 4px 0 rgba(0, 0, 0, 0.25);
+$navbar-input-color:#fff;
+$navbar-input-bg:#1f2125;
+$navbar-input-box-shadow:inset -1px 0 4px 0 rgba(61, 66, 74, 0.6), inset -1px 0 10px 0 #131924;
+$navbar-nav-link-bg:#262a2d;
+$navbar-nav-link-box-shadow:0 4px 4px 0 rgba(0, 0, 0, 0.25);
+$navbar-input-placeholder-color:#333333;
+
+///////// NAVBAR ////////
