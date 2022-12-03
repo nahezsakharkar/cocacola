@@ -7,6 +7,8 @@ import Layout from './layouts/Layout';
 // pages -----------------------------------------
 import Login from "./pages/Login/Login"
 import Dashboard from "./pages/Dashboard/Dashboard"
+import AddGroup from "./pages/Groups/AddGroup/AddGroup"
+import ShowGroups from "./pages/Groups/ShowGroups/ShowGroup"
 
 function App() {
   return (
@@ -15,10 +17,8 @@ function App() {
         <Route path="Login" element={<Login />} />
         <Route element={<Layout />}>
           <Route index path="/" element={<Dashboard />} />
-          {/* <Route path="Admins" element={<Admins />} />
-          <Route path="Houses" element={<Houses />} />
-          <Route path="Families" element={<Families />} />
-          <Route path="Members" element={<Members />} /> */}
+          <Route path="AddGroup" element={<AddGroup />} />
+          <Route path="ShowGroups" element={<ShowGroups />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
