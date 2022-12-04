@@ -15,7 +15,9 @@ function Header() {
           >
             <span className="mdi mdi-menu"></span>
           </button>
-          <div className="welcome-message d-lg-flex d-none">Hi, welcome back!</div>
+          <div className="welcome-message d-lg-flex d-none">
+            Hi, welcome back!
+          </div>
         </div>
         <ul className="navbar-nav mr-lg-2">
           <li className="nav-item nav-search d-none d-lg-block">
@@ -36,6 +38,9 @@ function Header() {
           </li>
         </ul>
         <ul className="navbar-nav navbar-nav-right">
+          <li className="nav-item">
+            <i className="flag-icon flag-icon-in" style={{fontSize: "1.75rem"}}></i>
+          </li>
           <li className="nav-item dropdown">
             <a
               className="nav-link count-indicator dropdown-toggle"
@@ -138,7 +143,9 @@ function Header() {
                   </div>
                 </div>
                 <div className="preview-item-content">
-                  <h6 className="preview-subject font-weight-medium">Settings</h6>
+                  <h6 className="preview-subject font-weight-medium">
+                    Settings
+                  </h6>
                   <p className="font-weight-light small-text mb-0">
                     Private message
                   </p>
@@ -155,7 +162,9 @@ function Header() {
                   <h6 className="preview-subject font-weight-medium">
                     New user registration
                   </h6>
-                  <p className="font-weight-light small-text mb-0">2 days ago</p>
+                  <p className="font-weight-light small-text mb-0">
+                    2 days ago
+                  </p>
                 </div>
               </a>
             </div>
