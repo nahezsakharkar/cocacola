@@ -1,6 +1,4 @@
-import React from "react";
-
-function AddGroupComponent() {
+function AddGroup() {
   return (
     <>
       <div className="container m-2">
@@ -25,7 +23,9 @@ function AddGroupComponent() {
                 </div>
                 <div className="col-md-6">
                   <div className="form-group row">
-                    <label className="col-sm-3 col-form-label">Status <span className="text-danger">*</span></label>
+                    <label className="col-sm-3 col-form-label">
+                      Status <span className="text-danger">*</span>
+                    </label>
                     <div className="col-sm-9">
                       <select className="form-control">
                         <option>Select Status</option>
@@ -39,7 +39,9 @@ function AddGroupComponent() {
               <div className="row">
                 <div className="col-md-6">
                   <div className="form-group row">
-                    <label className="col-sm-3 col-form-label">Schedule<span className="text-danger">*</span></label>
+                    <label className="col-sm-3 col-form-label">
+                      Schedule<span className="text-danger">*</span>
+                    </label>
                     <div className="col-sm-9">
                       <select className="form-control">
                         <option>Select Schedule</option>
@@ -51,7 +53,9 @@ function AddGroupComponent() {
                 </div>
                 <div className="col-md-6">
                   <div className="form-group row">
-                    <label className="col-sm-3 col-form-label">Frequency<span className="text-danger">*</span></label>
+                    <label className="col-sm-3 col-form-label">
+                      Frequency<span className="text-danger">*</span>
+                    </label>
                     <div className="col-sm-9">
                       <select className="form-control">
                         <option>5 mins</option>
@@ -72,7 +76,7 @@ function AddGroupComponent() {
                     </label>
                     <div className="col-sm-9">
                       <input
-                      type="date"
+                        type="date"
                         className="form-control"
                         placeholder="dd/mm/yyyy"
                       />
@@ -96,7 +100,8 @@ function AddGroupComponent() {
                             />
                             <i className="input-helper"></i>
                             <p className="card-description">
-                              data will not be sent to server but will be logged locally
+                              data will not be sent to server but will be logged
+                              locally
                             </p>
                           </label>
                         </div>
@@ -113,4 +118,4 @@ function AddGroupComponent() {
   );
 }
 
-export default AddGroupComponent;
+export default AddGroup;

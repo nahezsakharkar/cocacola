@@ -28,8 +28,8 @@ function Login() {
                       placeholder="Password"
                     />
                   </div>
-                  <div class="form-group">
-                    <select class="form-control form-control-lg js-example-basic-single" style={{width:"100%"}}>
+                  <div className="form-group">
+                    <select className="form-control form-control-lg js-example-basic-single" style={{width:"100%"}}>
                       <option value="AL">Alabama</option>
                       <option value="WY">Wyoming</option>
                       <option value="AM">America</option>

@@ -37,7 +37,7 @@ function Sidebar() {
             <ul className="nav flex-column sub-menu">
               <li className="nav-item">
                 {" "}
-                <NavLink className="nav-link" to="/AddGroup">
+                <NavLink className="nav-link" to="/AddNewGroup">
                   Add New Group
                 </NavLink>
               </li>
@@ -103,20 +103,20 @@ function Sidebar() {
             <span className="menu-title"> Logout</span>
           </NavLink>
         </li>
-        <div class="ps__rail-x" style={{ left: "0px", bottom: "0px" }}>
+        <div className="ps__rail-x" style={{ left: "0px", bottom: "0px" }}>
           <div
-            class="ps__thumb-x"
-            tabindex="0"
+            className="ps__thumb-x"
+            tabIndex="0"
             style={{ left: "0px", width: "0px" }}
           ></div>
         </div>
         <div
-          class="ps__rail-y"
+          className="ps__rail-y"
           style={{ top: "0px", height: "626px", right: "0px" }}
         >
           <div
-            class="ps__thumb-y"
-            tabindex="0"
+            className="ps__thumb-y"
+            tabIndex="0"
             style={{ top: "0px", height: "517px" }}
           ></div>
         </div>

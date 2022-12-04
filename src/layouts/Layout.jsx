@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 
 // components ------------------------------------
 import Header from "../components/Header/Header";
-import Settings from "../components/Settings/Settings";
+import Settings from "../components/ThemeSettings/ThemeSettings";
 import Sidebar from "../components/Sidebar/Sidebar";
 import Footer from "../components/Footer/Footer";
 

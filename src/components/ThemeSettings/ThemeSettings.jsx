@@ -1,4 +1,4 @@
-function Settings() {
+function ThemeSettings() {
   return (
     <>
       <div className="theme-setting-wrapper">
@@ -112,7 +112,7 @@ function Settings() {
                 <li className="completed">
                   <div className="form-check">
                     <label className="form-check-label">
-                      <input className="checkbox" type="checkbox" checked />
+                      <input className="checkbox" type="checkbox" />
                       Schedule meeting for next week
                     </label>
                   </div>
@@ -121,7 +121,7 @@ function Settings() {
                 <li className="completed">
                   <div className="form-check">
                     <label className="form-check-label">
-                      <input className="checkbox" type="checkbox" checked />
+                      <input className="checkbox" type="checkbox" />
                       Project review
                     </label>
                   </div>
@@ -242,4 +242,4 @@ function Settings() {
   );
 }
 
-export default Settings;
+export default ThemeSettings;
