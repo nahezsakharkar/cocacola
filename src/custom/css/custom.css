@@ -10,7 +10,7 @@
   align-items: center;
 }
 
-.activeJobs .body {
+.activeJobs .body, .existingGroups .body {
   height: 406.5px;
 }
 
@@ -59,4 +59,9 @@
   justify-content: space-between;
   padding: 1rem;
   border: 2px solid #cec5c5;
+}
+
+.cellAction {
+  display: flex;
+  gap: 2rem;
 }
