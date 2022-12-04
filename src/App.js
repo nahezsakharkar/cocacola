@@ -34,7 +34,7 @@ function App() {
           <Route path="Error404" element={<Error404 />} />
           <Route path="Error500" element={<Error500 />} />
         </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="Error404" replace />} />
       </Routes>
     </div>
   );
