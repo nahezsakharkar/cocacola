@@ -14,6 +14,8 @@ import JobReport from "./pages/Jobs/JobReport/JobReport"
 import Settings from "./pages/Settings/Settings"
 import Account from "./pages/UserInformation/Account/Account"
 import Logout from "./pages/UserInformation/Logout/Logout"
+import Error404 from "./pages/Errors/404/404"
+import Error500 from "./pages/Errors/500/500"
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
           <Route path="Settings" element={<Settings />} />
           <Route path="Account" element={<Account />} />
           <Route path="Logout" element={<Logout />} />
+          <Route path="Error404" element={<Error404 />} />
+          <Route path="Error500" element={<Error500 />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
