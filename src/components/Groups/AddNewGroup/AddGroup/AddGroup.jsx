@@ -1,7 +1,7 @@
 function AddGroup() {
   return (
     <>
-      <div className="container m-2">
+      <div className="container mt-2">
         <div className="card">
           <div className="card-body">
             <h4 className="card-title">Add New Group</h4>
