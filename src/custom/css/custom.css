@@ -4,13 +4,23 @@
   gap: 1rem;
 }
 
-.data .title {
+.existingGroups .title,
+.activeJobs .title {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.activeJobs .body, .existingGroups .body {
+.jobReport .title {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.existingGroups .body,
+.activeJobs .body,
+.jobReport .body {
   height: 406.5px;
 }
 
