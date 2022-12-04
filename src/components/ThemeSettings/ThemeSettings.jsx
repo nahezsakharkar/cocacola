@@ -166,7 +166,7 @@ function ThemeSettings() {
             <ul className="chat-list">
               <li className="list active">
                 <div className="profile">
-                  <img src="../../images/faces/face1.jpg" alt="image" />
+                  <img src="../../images/faces/face1.jpg" alt=" " />
                   <span className="online"></span>
                 </div>
                 <div className="info">
@@ -177,7 +177,7 @@ function ThemeSettings() {
               </li>
               <li className="list">
                 <div className="profile">
-                  <img src="../../images/faces/face2.jpg" alt="image" />
+                  <img src="../../images/faces/face2.jpg" alt=" " />
                   <span className="offline"></span>
                 </div>
                 <div className="info">
@@ -191,7 +191,7 @@ function ThemeSettings() {
               </li>
               <li className="list">
                 <div className="profile">
-                  <img src="../../images/faces/face3.jpg" alt="image" />
+                  <img src="../../images/faces/face3.jpg" alt=" " />
                   <span className="online"></span>
                 </div>
                 <div className="info">
@@ -202,7 +202,7 @@ function ThemeSettings() {
               </li>
               <li className="list">
                 <div className="profile">
-                  <img src="../../images/faces/face4.jpg" alt="image" />
+                  <img src="../../images/faces/face4.jpg" alt=" " />
                   <span className="offline"></span>
                 </div>
                 <div className="info">
@@ -213,7 +213,7 @@ function ThemeSettings() {
               </li>
               <li className="list">
                 <div className="profile">
-                  <img src="../../images/faces/face5.jpg" alt="image" />
+                  <img src="../../images/faces/face5.jpg" alt=" " />
                   <span className="online"></span>
                 </div>
                 <div className="info">
@@ -224,7 +224,7 @@ function ThemeSettings() {
               </li>
               <li className="list">
                 <div className="profile">
-                  <img src="../../images/faces/face6.jpg" alt="image" />
+                  <img src="../../images/faces/face6.jpg" alt=" " />
                   <span className="online"></span>
                 </div>
                 <div className="info">

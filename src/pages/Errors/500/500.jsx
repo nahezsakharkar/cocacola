@@ -4,7 +4,7 @@ function Error500() {
   return (
     <div className="container-scroller">
       <div className="container-fluid page-body-wrapper full-page-wrapper">
-        <div className="content-wrapper d-flex align-items-center text-center error-page bg-info">
+        <div className="content-wrapper d-flex align-items-center text-center error-page bg-danger">
           <div className="row flex-grow">
             <div className="col-lg-7 mx-auto text-white">
               <div className="row align-items-center d-flex flex-row">

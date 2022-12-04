@@ -40,8 +40,8 @@ function Header() {
         <ul className="navbar-nav navbar-nav-right">
           <li className="nav-item">
             <i
-              className="flag-icon flag-icon-in"
-              style={{ fontSize: "1.75rem" }}
+              className="flag-icon flag-icon-in icon-md"
+              // style={{ fontSize: "1.75rem" }}
             ></i>{" "}
             IN
           </li>
