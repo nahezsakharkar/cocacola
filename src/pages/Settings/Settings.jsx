@@ -25,6 +25,24 @@ function Settings() {
             </div>
           </div>
         </div>
+        <div className="alerts">
+          <div className="alerts-head">
+            <i className="fa fa-chain display-5"></i>
+            <div className="connection-title">Alerts</div>
+          </div>
+          <div className="alerts-body">
+            <div className="alerts-inner">
+              <h4 className="Heading">Error Alerts</h4>
+              <h5 className="text-muted">Emails </h5>
+              {/* <WifiTetheringIcon /> */}
+            </div>
+            <div className="alerts-inner">
+              <h4 className="Heading">All Alerts</h4>
+              <h5 className="text-muted">Emails </h5>
+              {/* <WifiTetheringOffIcon /> */}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
