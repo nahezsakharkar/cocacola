@@ -6,10 +6,10 @@ function Sidebar() {
       <ul className="nav">
         <li className="nav-item">
           <Link className="navbar-brand brand-logo-mini" to="/">
-            <img src="../../images/logo-mini.svg" alt="logo" />
+            <img src="./Assets/logo-icon.png" alt="logo" style={{ height: "auto", width: "28px" }} />
           </Link>
           <Link className="navbar-brand brand-logo" to="/">
-            <img src="../../images/logo.svg" alt="logo" />
+              <img src="./Assets/logo-wide.png" alt="logo" style={{ height: "auto", width: "170px" }} />
           </Link>
         </li>
         <li className="nav-item">
