@@ -1,5 +1,6 @@
 import WifiTetheringIcon from "@mui/icons-material/WifiTethering";
-import WifiTetheringOffIcon from '@mui/icons-material/WifiTetheringOff';
+import WifiTetheringOffIcon from "@mui/icons-material/WifiTetheringOff";
+import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
 import "../../custom/css/custom.css";
 
 function Settings() {
@@ -27,8 +28,8 @@ function Settings() {
         </div>
         <div className="alerts">
           <div className="alerts-head">
-            <i className="fa fa-chain display-5"></i>
-            <div className="connection-title">Alerts</div>
+            <ForwardToInboxIcon />
+            <div className="alerts-title">Alerts</div>
           </div>
           <div className="alerts-body">
             <div className="alerts-inner">
