@@ -1,7 +1,7 @@
 // import { Link } from "react-router-dom";
 import DataTable from "../../components/Common/DataTable/DataTable";
 import WifiTetheringIcon from "@mui/icons-material/WifiTethering";
-import WifiTetheringOffIcon from '@mui/icons-material/WifiTetheringOff';
+import WifiTetheringOffIcon from "@mui/icons-material/WifiTetheringOff";
 import "../../custom/css/custom.css";
 
 function Dashboard() {
@@ -56,7 +56,7 @@ function Dashboard() {
         <h3 className="Heading">{dateTime}</h3>
       </div>
       <div className="body">
-        <DataTable columns={columns} rows={rows} />
+        <DataTable columns={columns} rows={rows} toolbar />
         <div className="connection">
           <div className="connection-head">
             <i className="fa fa-chain display-5"></i>

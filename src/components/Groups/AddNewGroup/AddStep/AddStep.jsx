@@ -89,7 +89,6 @@ function AddStepComponent() {
                               <input
                                 type="checkbox"
                                 className="form-check-input"
-                                checked=""
                               />
                               <i className="input-helper"></i>
                             </label>
@@ -128,7 +127,6 @@ function AddStepComponent() {
                               <input
                                 type="checkbox"
                                 className="form-check-input"
-                                checked=""
                               />
                               <i className="input-helper"></i>
                             </label>
@@ -159,7 +157,6 @@ function AddStepComponent() {
                           <input
                             type="checkbox"
                             className="form-check-input"
-                            checked=""
                           />
                           <i className="input-helper"></i>
                         </label>

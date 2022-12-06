@@ -83,7 +83,7 @@ function ShowGroup() {
         </button>
       </div>
       <div className="body">
-        <DataTable columns={columns} rows={rows} />
+        <DataTable columns={columns} rows={rows} toolbar />
       </div>
     </div>
   );

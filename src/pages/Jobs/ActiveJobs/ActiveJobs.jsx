@@ -79,7 +79,7 @@ function ActiveJobs() {
         <Stack sx={{ width: "100%", color: "#f02632" }} spacing={2}>
           <LinearProgress color="inherit" />
         </Stack>
-        <DataTable columns={columns} rows={rows} />
+        <DataTable columns={columns} rows={rows} toolbar />
       </div>
     </div>
   );

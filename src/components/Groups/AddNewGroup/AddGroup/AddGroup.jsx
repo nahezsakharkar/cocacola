@@ -1,3 +1,5 @@
+import OrderedSteps from "./OrderedSteps";
+
 function AddGroup() {
   return (
     <>
@@ -96,7 +98,6 @@ function AddGroup() {
                             <input
                               type="checkbox"
                               className="form-check-input"
-                              checked=""
                             />
                             <i className="input-helper"></i>
                             <p className="card-description">
@@ -114,6 +115,7 @@ function AddGroup() {
           </div>
         </div>
       </div>
+      <OrderedSteps />
     </>
   );
 }

@@ -1,7 +1,7 @@
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 
 function DataTable(props) {
-  const { columns, rows } = props;
+  const { columns, rows ,toolbar } = props;
 
   return (
     <DataGrid
@@ -11,7 +11,7 @@ function DataTable(props) {
       rowsPerPageOptions={[5]}
       disableSelectionOnClick
       experimentalFeatures={{ newEditingApi: true }}
-      components={{ Toolbar: GridToolbar }}
+      components={{ Toolbar: toolbar ? GridToolbar : "" }}
       sx={{
         ".MuiButton-root span svg": {
           color: "#f02632",

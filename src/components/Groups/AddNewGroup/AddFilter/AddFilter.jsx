@@ -44,7 +44,7 @@ function AddFilter() {
         <h4 className="card-title">Filters</h4>
         <button
           type="button"
-          class="btn btn-inverse-success btn-fw btn-sm mt-4 mb-2"
+          className="btn btn-inverse-success btn-fw btn-sm mt-4 mb-2"
           onClick={handleAdd}
         >
           Add Filter
@@ -138,7 +138,7 @@ function AddFilter() {
                     <td>
                       <button
                         type="button"
-                        class="btn btn-inverse-warning btn-fw btn-sm"
+                        className="btn btn-inverse-warning btn-fw btn-sm"
                       >
                         Edit
                       </button>
@@ -146,7 +146,7 @@ function AddFilter() {
                     <td>
                       <button
                         type="button"
-                        class="btn btn-inverse-danger btn-fw btn-sm"
+                        className="btn btn-inverse-danger btn-fw btn-sm"
                         onClick = {()=>handleDelete(filter.fieldId)}
                       >
                         Delete

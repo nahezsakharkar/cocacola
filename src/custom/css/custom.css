@@ -127,3 +127,15 @@
   display: flex;
   gap: 2rem;
 }
+
+.steps {
+  height: 370.5px;
+  scale: 0.9;
+}
+
+.steps .cellAction .MuiSvgIcon-root:hover {
+  background-color: #000;
+  border-radius: 15px;
+  color: #f02632;
+  cursor: pointer;
+}
