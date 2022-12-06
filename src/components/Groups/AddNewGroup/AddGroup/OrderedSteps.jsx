@@ -5,7 +5,7 @@ import Tooltip from "@mui/material/Tooltip";
 
 function OrderedSteps() {
   const columns = [
-    { field: "step", headerName: "Step", width: 200 },
+    { field: "step", headerName: "Step", width: 150 },
     {
       field: "interface",
       headerName: "Interface",
@@ -34,7 +34,7 @@ function OrderedSteps() {
     {
       field: "order",
       headerName: "Order",
-      width: 200,
+      width: 180,
       renderCell: (params) => {
         return (
           <div className="cellAction">

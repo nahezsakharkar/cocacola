@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 function AddFilter() {
   const [filters, setFilters] = useState([{
@@ -39,9 +39,8 @@ function AddFilter() {
 
 
   return (
-    <div className="container card mt-2">
-      <div className="card-body">
-        <h4 className="card-title">Filters</h4>
+      <div className="card-body border border-secondary rounded mb-3">
+        <h4 className="card-title">Filter #1</h4>
         <button
           type="button"
           className="btn btn-inverse-success btn-fw btn-sm mt-4 mb-2"
@@ -159,7 +158,6 @@ function AddFilter() {
           </table>
         </div>
       </div>
-    </div>
   );
 }
 

@@ -1,176 +1,159 @@
-import React from "react";
+import AddFilter from "../AddFilter/AddFilter";
 
-function AddStepComponent() {
+function AddStep() {
   return (
-    <>
-      <div className="container mt-2">
-        <div className="card">
-          <div className="card-body">
-            <h4 className="card-title">Add New Step</h4>
-            <form className="form-sample">
-              <p className="card-description">
-                Fields marked with <span className="text-danger">*</span> are
-                required
-              </p>
-              <div className="row">
-                <div className="col-md-6">
-                  <div className="form-group row">
-                    <label className="col-sm-3 col-form-label">
-                      Interface <span className="text-danger">*</span>
-                    </label>
-                    <div className="col-sm-9">
-                      <select className="form-control">
-                        <option>Select Interface</option>
-                        <option>Interface-1</option>
-                        <option>Interface-2</option>
-                        <option>Interface-3</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="form-group row">
-                    <label className="col-sm-3 col-form-label">
-                      Filters <span className="text-danger">*</span>
-                    </label>
-                    <div className="col-sm-9">
-                      <select className="form-control">
-                        <option>Select Filter</option>
-                        <option>Filter-1</option>
-                        <option>Filter-2</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
+    <div className="card-body border border-secondary rounded mb-3">
+      <h4 className="card-title">Step #1</h4>
+      <form className="form-sample">
+        <div className="row">
+          <div className="col-md-6">
+            <div className="form-group row">
+              <label className="col-sm-3 col-form-label">
+                Interface <span className="text-danger">*</span>
+              </label>
+              <div className="col-sm-9">
+                <select className="form-control">
+                  <option>Select Interface</option>
+                  <option>Interface-1</option>
+                  <option>Interface-2</option>
+                  <option>Interface-3</option>
+                </select>
               </div>
-              <div className="row">
-                <div className="col-md-6">
-                  <div className="form-group row">
-                    <label className="col-sm-3 col-form-label">
-                      Company Code<span className="text-danger">*</span>
-                    </label>
-                    <div className="col-sm-9">
-                      <select className="form-control">
-                        <option>Select Company Code</option>
-                        <option>1429</option>
-                        <option>1430</option>
-                        <option>1364</option>
-                        <option>1428</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
+            </div>
+          </div>
+          {/* <div className="col-md-6">
+            <div className="form-group row">
+              <label className="col-sm-3 col-form-label">
+                Filters <span className="text-danger">*</span>
+              </label>
+              <div className="col-sm-9">
+                <select className="form-control">
+                  <option>Select Filter</option>
+                  <option>Filter-1</option>
+                  <option>Filter-2</option>
+                </select>
               </div>
-              <div className="row">
-                <div className="col-md-6">
-                  <div className="form-group row">
-                    <label className="col-sm-3 col-form-label">
-                      Sync Type <span className="text-danger">*</span>
-                    </label>
-                    <div className="col-sm-9">
-                      <select className="form-control">
-                        <option>Select Sync Type</option>
-                        <option>Full</option>
-                        <option>Delta</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-6">
-                  <div className="row">
-                    <div className="col-md-6">
-                      <div className="form-group row d-flex">
-                        <label className="col-sm-5 col-form-label">
-                          Enable Force Sync Date
-                        </label>
-                        <div className="col-sm-5">
-                          <div className="form-check">
-                            <label className="form-check-label">
-                              <input
-                                type="checkbox"
-                                className="form-check-input"
-                              />
-                              <i className="input-helper"></i>
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="form-group row">
-                        <label className="col-4 col-form-label">
-                          Sync Date
-                        </label>
-                        <div className="col-sm-8">
-                          <input
-                            type="date"
-                            className="form-control"
-                            placeholder="dd/mm/yyyy"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            </div>
+          </div> */}
+          <div className="col-md-6">
+            <div className="form-group row">
+              <label className="col-sm-3 col-form-label">
+                Company Code<span className="text-danger">*</span>
+              </label>
+              <div className="col-sm-9">
+                <select className="form-control">
+                  <option>Select Company Code</option>
+                  <option>1429</option>
+                  <option>1430</option>
+                  <option>1364</option>
+                  <option>1428</option>
+                </select>
               </div>
-              <div className="row">
-                <div className="col-6">
-                  <div className="row">
-                    <div className="col-md-6">
-                      <div className="form-group row d-flex">
-                        <label className="col-sm-5 col-form-label">
-                          Enable Batch
-                        </label>
-                        <div className="col-sm-5">
-                          <div className="form-check">
-                            <label className="form-check-label">
-                              <input
-                                type="checkbox"
-                                className="form-check-input"
-                              />
-                              <i className="input-helper"></i>
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="form-group row">
-                        <label className="col-4 col-form-label">
-                          Batch Size
-                        </label>
-                        <div className="col-sm-8">
-                          <input type="number" className="form-control" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="form-group row d-flex">
-                    <label className="col-sm-5 col-form-label">
-                      Enable Batch
-                    </label>
-                    <div className="col-sm-5">
-                      <div className="form-check">
-                        <label className="form-check-label">
-                          <input
-                            type="checkbox"
-                            className="form-check-input"
-                          />
-                          <i className="input-helper"></i>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </form>
+            </div>
           </div>
         </div>
-      </div>
-    </>
+        <div className="row">
+          <div className="col-md-6">
+            <div className="form-group row">
+              <label className="col-sm-3 col-form-label">
+                Sync Type <span className="text-danger">*</span>
+              </label>
+              <div className="col-sm-9">
+                <select className="form-control">
+                  <option>Select Sync Type</option>
+                  <option>Full</option>
+                  <option>Delta</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div className="col-6">
+            <div className="row">
+              <div className="col-md-6">
+                <div className="form-group row d-flex">
+                  <label className="col-sm-8 col-form-label">
+                    Enable Force Sync Date
+                  </label>
+                  <div className="col-sm-1">
+                    <div className="form-check">
+                      <label className="form-check-label">
+                        <input type="checkbox" className="form-check-input" />
+                        <i className="input-helper"></i>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="form-group row">
+                  <label className="col-4 col-form-label">Sync Date</label>
+                  <div className="col-sm-8">
+                    <input
+                      type="date"
+                      className="form-control"
+                      placeholder="dd/mm/yyyy"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-12">
+            <div className="row">
+              <div className="col-md-3">
+                <div className="form-group row d-flex">
+                  <label className="col-sm-6 col-form-label">
+                    Enable Batch
+                  </label>
+                  <div className="col-sm-2">
+                    <div className="form-check">
+                      <label className="form-check-label">
+                        <input type="checkbox" className="form-check-input" />
+                        <i className="input-helper"></i>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-5">
+                <div className="form-group row">
+                  <label className="col-4 col-form-label">Batch Size</label>
+                  <div className="col-sm-6">
+                    <input type="number" className="form-control" />
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4">
+                <div className="form-group row d-flex">
+                  <label className="col-sm-6 col-form-label">
+                    Enable Detailed Logs
+                  </label>
+                  <div className="col-sm-3">
+                    <div className="form-check">
+                      <label className="form-check-label">
+                        <input type="checkbox" className="form-check-input" />
+                        <i className="input-helper"></i>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <AddFilter />
+        <div className="row">
+          <button type="button" class="btn btn-dark btn-icon-text">
+            Add Filter
+            {/* Add Another Filter */}
+            <i class="fa fa-plus btn-icon-append"></i>
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
 
-export default AddStepComponent;
+export default AddStep;
