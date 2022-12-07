@@ -57,7 +57,12 @@ function OrderedSteps() {
 
   return (
     <div className="steps">
-      <DataTable columns={columns} rows={rows} />
+      <div className="title">
+        <h4 className="card-title">Steps</h4>
+      </div>
+      <div className="body">
+        <DataTable columns={columns} rows={rows} />
+      </div>
     </div>
   );
 }

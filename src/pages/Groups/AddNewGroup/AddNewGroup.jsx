@@ -11,8 +11,13 @@ function AddNewGroup() {
           Fields marked with <span className="text-danger">*</span> are required
         </p>
       </div>
-      <div className="body">
+      <div className="body border border-secondary rounded">
         <AddGroup />
+      </div>
+      <div className="createBtn">
+        <button type="button" class="btn btn-dark btn-icon-text">
+          Create Group <i class="mdi mdi-group menu-icon"></i>
+        </button>
       </div>
     </div>
   );

@@ -128,19 +128,31 @@
   gap: 2rem;
 }
 
-.addNewGroup .body {
+.addNewGroup > .body {
   background-color: white;
   padding: 2rem;
   border-radius: 10px;
 }
 
-.addNewGroup .title {
+.addNewGroup > .title {
   padding-bottom: 1rem;
 }
 
+.addNewGroup > .createBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+  margin: 1rem;
+}
+
 .steps {
-  height: 370.5px;
   scale: 0.9;
+}
+
+.steps .body {
+  height: 370.5px;
 }
 
 .steps .cellAction .MuiSvgIcon-root:hover {
@@ -148,4 +160,33 @@
   border-radius: 15px;
   color: #f02632;
   cursor: pointer;
+}
+
+.filters {
+  scale: 0.9;
+}
+
+.filters .body {
+  height: 370.5px;
+}
+
+.filterForm {
+  display: flex;
+  justify-content: space-between;
+}
+
+.filterForm .filterField:nth-child(1) {
+  width: 28%;
+}
+
+.filterForm .filterField:nth-child(2) {
+  width: 18%;
+}
+
+.filterForm .filterField:nth-child(3) {
+  width: 28%;
+}
+
+.filterForm .filterField:nth-child(4) {
+  width: 18%;
 }

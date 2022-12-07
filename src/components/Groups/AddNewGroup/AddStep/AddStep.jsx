@@ -1,9 +1,24 @@
+import Filters from "./Filters";
 import AddFilter from "../AddFilter/AddFilter";
+import Tooltip from "@mui/material/Tooltip";
 
 function AddStep() {
   return (
     <div className="card-body border border-secondary rounded mb-3">
-      <h4 className="card-title">Step #1</h4>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "2rem",
+        }}
+      >
+        <h4 className="card-title">Step #1</h4>
+        <button type="button" class="close" aria-label="Close">
+          <Tooltip title="Remove Step" placement="left" arrow>
+            <span aria-hidden="true">&times;</span>
+          </Tooltip>
+        </button>
+      </div>
       <form className="form-sample">
         <div className="row">
           <div className="col-md-6">
@@ -143,6 +158,7 @@ function AddStep() {
             </div>
           </div>
         </div>
+        <Filters />
         <AddFilter />
         <div className="row">
           <button type="button" class="btn btn-dark btn-icon-text">
