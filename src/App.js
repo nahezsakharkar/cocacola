@@ -1,6 +1,9 @@
 import './App.css';
 import { Routes, Route, Navigate } from "react-router-dom";
 
+// importing user state
+import UserState from './context/user/UserState';
+
 //importing the layout
 import Layout from './layouts/Layout';
 
@@ -20,22 +23,24 @@ import Error500 from "./pages/Errors/500/500"
 function App() {
   return (
     <div className="App">
-      <Routes>
-        <Route path="Login" element={<Login />} />
-        <Route element={<Layout />}>
-          <Route index path="/" element={<Dashboard />} />
-          <Route path="AddNewGroup" element={<AddNewGroup />} />
-          <Route path="ShowGroups" element={<ShowGroups />} />
-          <Route path="ActiveJobs" element={<ActiveJobs />} />
-          <Route path="JobReport" element={<JobReport />} />
-          <Route path="Settings" element={<Settings />} />
-          <Route path="Account" element={<Account />} />
-          <Route path="Logout" element={<Logout />} />
-          <Route path="Error404" element={<Error404 />} />
-          <Route path="Error500" element={<Error500 />} />
-        </Route>
-        <Route path="*" element={<Navigate to="Error404" replace />} />
-      </Routes>
+      <UserState>
+        <Routes>
+          <Route path="Login" element={<Login />} />
+          <Route element={<Layout />}>
+            <Route index path="/" element={<Dashboard />} />
+            <Route path="AddNewGroup" element={<AddNewGroup />} />
+            <Route path="ShowGroups" element={<ShowGroups />} />
+            <Route path="ActiveJobs" element={<ActiveJobs />} />
+            <Route path="JobReport" element={<JobReport />} />
+            <Route path="Settings" element={<Settings />} />
+            <Route path="Account" element={<Account />} />
+            <Route path="Logout" element={<Logout />} />
+            <Route path="Error404" element={<Error404 />} />
+            <Route path="Error500" element={<Error500 />} />
+          </Route>
+          <Route path="*" element={<Navigate to="Error404" replace />} />
+        </Routes>
+      </UserState>
     </div>
   );
 }
