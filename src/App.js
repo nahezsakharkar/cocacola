@@ -17,12 +17,15 @@ import Logout from "./pages/UserInformation/Logout/Logout"
 import Error404 from "./pages/Errors/404/404"
 import Error500 from "./pages/Errors/500/500"
 
+//helpers
+import { ProtectedRoute } from './helpers/ProtectedRoute';
+
 function App() {
   return (
     <div className="App">
       <Routes>
         <Route path="Login" element={<Login />} />
-        <Route element={<Layout />}>
+        <Route element={<ProtectedRoute> <Layout /> </ProtectedRoute>}>
           <Route index path="/" element={<Dashboard />} />
           <Route path="AddNewGroup" element={<AddNewGroup />} />
           <Route path="ShowGroups" element={<ShowGroups />} />
