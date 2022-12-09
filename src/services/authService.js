@@ -1,23 +1,16 @@
 import http from './httpService'
-import config from './../config.json'
+import { baseURL } from '../helpers/config';
 
 const sessionKey = "user";
 // const currentDate = new Date().toISOString();
 let date_ob = new Date();
 let currentDate = (("0" + date_ob.getDate()).slice(-2) + "-" + ("0" + (date_ob.getMonth() + 1)).slice(-2) + "-" + date_ob.getFullYear() + " " + date_ob.getHours() + ":" + date_ob.getMinutes() + ":" + date_ob.getSeconds());
 
-http.setJwt(getJwt())
-
-export async function login(email, password) {
-    const response = await http.post(config.baseURL + "auth", {
-        email: email,
-        password: password
+export async function login(formValues) {
+    const response = await http.post(baseURL + "authenticate", {
+        formValues
     });
     localStorage.setItem(sessionKey, response.data);
-}
-
-export function loginWithJwt(jwt) {
-    localStorage.setItem(sessionKey, jwt);
 }
 
 export function logout() {
@@ -43,16 +36,10 @@ export function getCurrentUser() {
     }
 }
 
-export function getJwt() {
-    return localStorage.getItem(sessionKey)
-}
-
 const auth = {
     login,
-    loginWithJwt,
     logout,
     getCurrentUser,
-    getJwt
 }
 
 export default auth

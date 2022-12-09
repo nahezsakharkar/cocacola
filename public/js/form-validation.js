@@ -2,7 +2,7 @@
   'use strict';
   $.validator.setDefaults({
     submitHandler: function() {
-      alert("submitted!");
+      // alert("submitted!");
     }
   });
   $(function() {

@@ -1,9 +1,48 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { baseURL } from "../../helpers/config";
+import auth from "../../services/authService";
 
 function Login() {
   const navigate = useNavigate();
-  const [formValues, setFormValues] = useState({ email: "", password: "", country: "" });
+  const [formValues, setFormValues] = useState({
+    username: "",
+    password: "",
+    country: "",
+  });
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormValues({ ...formValues, [id]: value });
+  };
+
+  function handleSubmit() {
+    auth.login(formValues)
+    // fetch(baseURL + "authenticate", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(formValues),
+    // })
+    //   .then((response) => console.log(response))
+    //   .then((data) => {
+    //     alert(data);
+    //     console.log("Success:", data);
+    //     // localStorage.setItem("user", JSON.stringify(data));
+    //     // navigate("/Dashboard");
+    //     // window.location.reload(false);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error:", error);
+    //     // swal({
+    //     //   title: "Error!",
+    //     //   text: "Failed to contact the Server! Login Failed!",
+    //     //   icon: "error",
+    //     //   button: "OK!",
+    //     // });
+    //   });
+  }
 
   return (
     <div className="container-scroller">
@@ -20,14 +59,15 @@ function Login() {
                 <form
                   className="cmxform pt-3"
                   id="commentForm"
-                  onSubmit={navigate("/")}
+                  onSubmit={handleSubmit}
                 >
                   <div className="form-group">
                     <input
                       type="email"
                       className="form-control form-control-lg"
-                      id="email"
-                      placeholder="Email"
+                      id="username"
+                      placeholder="Username"
+                      onChange={handleChange}
                       required
                     />
                   </div>
@@ -37,6 +77,7 @@ function Login() {
                       className="form-control form-control-lg"
                       id="password"
                       placeholder="Password"
+                      onChange={handleChange}
                       required
                     />
                   </div>
@@ -45,6 +86,7 @@ function Login() {
                       id="country"
                       className="form-control form-control-lg js-example-basic-single"
                       style={{ width: "100%" }}
+                      onChange={handleChange}
                       required
                     >
                       <option value="">Select Country</option>
@@ -57,6 +99,7 @@ function Login() {
                     <button
                       type="submit"
                       className="btn btn-block btn-danger btn-lg font-weight-medium auth-form-btn"
+                      onClick={handleSubmit}
                     >
                       SIGN IN
                     </button>
