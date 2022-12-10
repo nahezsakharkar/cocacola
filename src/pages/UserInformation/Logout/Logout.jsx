@@ -1,5 +1,12 @@
+import { useEffect } from "react";
+import auth from "../../../services/authService";
+
 function Logout() {
-    return null;
+  useEffect(() => {
+    auth.logout();
+  }, []);
+
+  return null;
 }
 
 export default Logout;

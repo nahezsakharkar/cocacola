@@ -1,15 +1,35 @@
-import { NavLink, Link } from "react-router-dom";
-
+import { useState } from "react";
+import { NavLink, Link, useNavigate } from "react-router-dom";
+import auth from "../../services/authService";
+import OurModal from "../Common/OurModal/OurModal";
 function Sidebar() {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  function handleLogout() {
+    setOpen(false);
+    navigate("/Logout");
+  }
+
   return (
     <nav className="sidebar sidebar-offcanvas" id="sidebar">
       <ul className="nav">
         <li className="nav-item">
           <Link className="navbar-brand brand-logo-mini" to="/">
-            <img src="./Assets/logo-icon.png" alt="logo" style={{ height: "auto", width: "28px" }} />
+            <img
+              src="./Assets/logo-icon.png"
+              alt="logo"
+              style={{ height: "auto", width: "28px" }}
+            />
           </Link>
           <Link className="navbar-brand brand-logo" to="/">
-              <img src="./Assets/logo-wide.png" alt="logo" style={{ height: "auto", width: "170px" }} />
+            <img
+              src="./Assets/logo-wide.png"
+              alt="logo"
+              style={{ height: "auto", width: "170px" }}
+            />
           </Link>
         </li>
         <li className="nav-item">
@@ -98,10 +118,19 @@ function Sidebar() {
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink className="nav-link" to="/Logout">
+          <NavLink className="nav-link" onClick={handleOpen}>
             <i className="mdi mdi-logout menu-icon"></i>
             <span className="menu-title"> Logout</span>
           </NavLink>
+          <OurModal
+            open={open}
+            setOpen={setOpen}
+            handleOpen={handleOpen}
+            handleClose={handleClose}
+            handleYes={handleLogout}
+            title={"Logout?"}
+            description="Do you really wish to leave and log out? All the unsaved changes will be lost. "
+          />
         </li>
         <div className="ps__rail-x" style={{ left: "0px", bottom: "0px" }}>
           <div

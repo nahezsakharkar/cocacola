@@ -20,11 +20,16 @@ import Error500 from "./pages/Errors/500/500"
 //helpers
 import { ProtectedRoute } from './helpers/ProtectedRoute';
 
+//toast
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function App() {
   return (
     <div className="App">
+      <ToastContainer />
       <Routes>
-        <Route path="Login" element={<Login />} />
+        <Route path="Login" element={<ProtectedRoute> <Login /> </ProtectedRoute>} />
         <Route element={<ProtectedRoute> <Layout /> </ProtectedRoute>}>
           <Route index path="/" element={<Dashboard />} />
           <Route path="AddNewGroup" element={<AddNewGroup />} />
@@ -36,7 +41,7 @@ function App() {
           <Route path="Logout" element={<Logout />} />
           <Route path="Error500" element={<Error500 />} />
         </Route>
-          <Route path="Error404" element={<Error404 />} />
+        <Route path="Error404" element={<Error404 />} />
         <Route path="*" element={<Navigate to="Error404" replace />} />
       </Routes>
     </div>

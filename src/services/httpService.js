@@ -6,8 +6,12 @@ axios.interceptors.response.use(null, error => {
         error.response &&
         error.response.status >= 400 &&
         error.response.status < 500;
+    const unauthorized = (error.response && error.response.status === 401)
 
-    if (!expectedError) {
+    if (unauthorized) {
+        console.log("Account does not exist or is unauthorized,", error);
+        toast.error("This Account is Unauthorized. Please Check Credentials and Try Again!");
+    } else if (!expectedError) {
         console.log("Logging the error", error);
         toast.error("An unexpected error occurrred.");
     }

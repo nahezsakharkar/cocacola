@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { baseURL } from "../../helpers/config";
+import { useLocation } from "react-router-dom";
 import auth from "../../services/authService";
+import { toast } from "react-toastify";
 
 function Login() {
-  const navigate = useNavigate();
+  const location = useLocation();
   const [formValues, setFormValues] = useState({
     username: "",
     password: "",
@@ -16,33 +16,27 @@ function Login() {
     setFormValues({ ...formValues, [id]: value });
   };
 
-  function handleSubmit() {
-    // console.log("submitted", formValues)
-    auth.login(formValues)
-        navigate("/Dashboard");
-    // fetch(baseURL + "authenticate", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(formValues),
-    // })
-    //   .then((response) => console.log(response))
-    //   .then((data) => {
-    //     console.log("Success:", data);
-    //     // localStorage.setItem("user", JSON.stringify(data));
-    //     // window.location.reload(false);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error:", error);
-    //     // swal({
-    //     //   title: "Error!",
-    //     //   text: "Failed to contact the Server! Login Failed!",
-    //     //   icon: "error",
-    //     //   button: "OK!",
-    //     // });
-    //   });
-  }
+  const handleSubmit = async () => {
+    for (let properties in formValues) {
+      if (formValues[properties].length === 0) {
+        let displayName;
+        if (properties === "username") {
+          displayName = "Username";
+        } else if (properties === "password") {
+          displayName = "Password";
+        } else if (properties === "companyid") {
+          displayName = "Country";
+        }
+        toast.error(
+          displayName +
+            " field is empty. Please Check Credentials and Try Again!"
+        );
+      }
+    }
+    await auth.login(formValues);
+    window.location =
+      location.state === "/Logout" ? "/" : location.state || "/";
+  };
 
   return (
     <div className="container-scroller">
@@ -56,11 +50,7 @@ function Login() {
                 </div>
                 <h4>Hello! let's get started</h4>
                 <h6 className="font-weight-light">Sign in to continue.</h6>
-                <form
-                  className="cmxform pt-3"
-                  id="commentForm"
-                  // onSubmit={handleSubmit}
-                >
+                <form className="cmxform pt-3" id="commentForm">
                   <div className="form-group">
                     <input
                       type="email"
