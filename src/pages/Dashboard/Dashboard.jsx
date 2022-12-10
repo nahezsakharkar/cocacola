@@ -1,3 +1,4 @@
+import { useState } from "react";
 // import { Link } from "react-router-dom";
 import DataTable from "../../components/Common/DataTable/DataTable";
 import WifiTetheringIcon from "@mui/icons-material/WifiTethering";
@@ -5,12 +6,37 @@ import WifiTetheringOffIcon from "@mui/icons-material/WifiTetheringOff";
 import "../../custom/css/custom.css";
 
 function Dashboard() {
-  var today = new Date();
-  var date =
-    today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-  var time =
-    today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-  var dateTime = date + " " + time;
+  const [currentDateTime, setCurrentDateTime] = useState();
+
+  const addZero = (number) => {
+    if (number.toString().length === 1) {
+      return "0" + number;
+    } else {
+      return number;
+    }
+  };
+
+  const dateTime = () => {
+    var today = new Date();
+    const updateDateTime = () => {
+      today = new Date();
+      var date =
+        today.getFullYear() +
+        "-" +
+        addZero(today.getMonth() + 1) +
+        "-" +
+        addZero(today.getDate());
+      var time =
+        addZero(today.getHours()) +
+        ":" +
+        addZero(today.getMinutes()) +
+        ":" +
+        addZero(today.getSeconds());
+      setCurrentDateTime(date + " " + time);
+    };
+    setInterval(updateDateTime, 1000);
+    return currentDateTime;
+  };
 
   const columns = [
     { field: "interface", headerName: "Interface", width: 200 },
@@ -53,7 +79,7 @@ function Dashboard() {
     <div className="data dashboard">
       <div className="title">
         <h1 className="Heading">Dashboard</h1>
-        <h3 className="Heading">{dateTime}</h3>
+        <h3 className="Heading">{dateTime()}</h3>
       </div>
       <div className="body">
         <DataTable columns={columns} rows={rows} toolbar />
@@ -68,7 +94,7 @@ function Dashboard() {
               <WifiTetheringIcon />
             </div>
             <div className="connection-inner">
-              <h4 className="Heading">VAXCEED CONNECTION</h4>
+              <h4 className="Heading">VXCEED CONNECTION</h4>
               <WifiTetheringOffIcon />
             </div>
           </div>

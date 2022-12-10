@@ -5,8 +5,9 @@
   gap: 1rem;
 }
 
-.existingGroups .title,
-.activeJobs .title {
+.dashboard > .title,
+.existingGroups > .title,
+.activeJobs > .title {
   display: flex;
   justify-content: space-between;
   align-items: center;
