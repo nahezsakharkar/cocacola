@@ -34,9 +34,9 @@ function App() {
           <Route path="Settings" element={<Settings />} />
           <Route path="Account" element={<Account />} />
           <Route path="Logout" element={<Logout />} />
-          <Route path="Error404" element={<Error404 />} />
           <Route path="Error500" element={<Error500 />} />
         </Route>
+          <Route path="Error404" element={<Error404 />} />
         <Route path="*" element={<Navigate to="Error404" replace />} />
       </Routes>
     </div>

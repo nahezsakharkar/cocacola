@@ -8,7 +8,7 @@ function Login() {
   const [formValues, setFormValues] = useState({
     username: "",
     password: "",
-    country: "",
+    companyid: "",
   });
 
   const handleChange = (e) => {
@@ -17,7 +17,9 @@ function Login() {
   };
 
   function handleSubmit() {
+    // console.log("submitted", formValues)
     auth.login(formValues)
+        navigate("/Dashboard");
     // fetch(baseURL + "authenticate", {
     //   method: "POST",
     //   headers: {
@@ -27,10 +29,8 @@ function Login() {
     // })
     //   .then((response) => console.log(response))
     //   .then((data) => {
-    //     alert(data);
     //     console.log("Success:", data);
     //     // localStorage.setItem("user", JSON.stringify(data));
-    //     // navigate("/Dashboard");
     //     // window.location.reload(false);
     //   })
     //   .catch((error) => {
@@ -59,7 +59,7 @@ function Login() {
                 <form
                   className="cmxform pt-3"
                   id="commentForm"
-                  onSubmit={handleSubmit}
+                  // onSubmit={handleSubmit}
                 >
                   <div className="form-group">
                     <input
@@ -83,14 +83,14 @@ function Login() {
                   </div>
                   <div className="form-group">
                     <select
-                      id="country"
+                      id="companyid"
                       className="form-control form-control-lg js-example-basic-single"
                       style={{ width: "100%" }}
                       onChange={handleChange}
                       required
                     >
                       <option value="">Select Country</option>
-                      <option value="SriLanka">SriLanka</option>
+                      <option value="1429">SriLanka</option>
                       <option value="Bangladesh">Bangladesh</option>
                       <option value="Nepal">Nepal</option>
                     </select>

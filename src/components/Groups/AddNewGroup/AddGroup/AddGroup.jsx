@@ -100,8 +100,8 @@ function AddGroup() {
         </div>
         <OrderedSteps />
         <AddStep />
-        <AddStep />
-        <AddStep />
+        {/* <AddStep /> */}
+        {/* <AddStep /> */}
         <div className="row">
           <button type="button" class="btn btn-dark btn-icon-text">
             Add New Step

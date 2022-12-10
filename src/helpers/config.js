@@ -1,3 +1,3 @@
-const baseURL = "http://qatest.800mycoke.ae:7000/"
+const baseURL = "https://qatest.800mycoke.ae:7000/"
 
 export { baseURL }
