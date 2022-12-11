@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import auth from "../../services/authService";
 import { toast } from "react-toastify";
 
 function Login() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [formValues, setFormValues] = useState({
     username: "",
     password: "",
@@ -16,8 +17,7 @@ function Login() {
     setFormValues({ ...formValues, [id]: value });
   };
 
-  const onSubmit = () => {
-    console.log(formValues);
+  const handleSubmit = async () => {
     for (let properties in formValues) {
       if (formValues[properties].length === 0) {
         let displayName;
@@ -34,13 +34,8 @@ function Login() {
         );
       }
     }
-    handleSubmit();
-  };
-
-  const handleSubmit = async () => {
     await auth.login(formValues);
-    window.location =
-      location.state === ("/Logout" ? "/" : location.state) || "/";
+    navigate(location.state || "/");
   };
 
   return (
@@ -55,7 +50,11 @@ function Login() {
                 </div>
                 <h4>Hello! let's get started</h4>
                 <h6 className="font-weight-light">Sign in to continue.</h6>
-                <form className="cmxform pt-3" id="commentForm">
+                <form
+                  className="cmxform pt-3"
+                  id="commentForm"
+                  onSubmit={(e) => e.preventDefault()}
+                >
                   <div className="form-group">
                     <input
                       type="email"
@@ -94,7 +93,7 @@ function Login() {
                     <button
                       type="submit"
                       className="btn btn-block btn-danger btn-lg font-weight-medium auth-form-btn"
-                      onClick={onSubmit}
+                      onClick={handleSubmit}
                     >
                       SIGN IN
                     </button>

@@ -18,6 +18,7 @@ import Error404 from "./pages/Errors/404/404"
 import Error500 from "./pages/Errors/500/500"
 
 //helpers
+import { LoggedRoute } from './helpers/LoggedRoute';
 import { ProtectedRoute } from './helpers/ProtectedRoute';
 
 //toast
@@ -29,7 +30,8 @@ function App() {
     <div className="App">
       <ToastContainer />
       <Routes>
-        <Route path="Login" element={<ProtectedRoute> <Login /> </ProtectedRoute>} />
+        <Route path="Login" element={<LoggedRoute> <Login /> </LoggedRoute>} />
+        <Route path="Logout" element={<Logout />} />
         <Route element={<ProtectedRoute> <Layout /> </ProtectedRoute>}>
           <Route index path="/" element={<Dashboard />} />
           <Route path="AddNewGroup" element={<AddNewGroup />} />
@@ -38,9 +40,8 @@ function App() {
           <Route path="JobReport" element={<JobReport />} />
           <Route path="Settings" element={<Settings />} />
           <Route path="Account" element={<Account />} />
-          <Route path="Logout" element={<Logout />} />
-          <Route path="Error500" element={<Error500 />} />
         </Route>
+        <Route path="Error500" element={<Error500 />} />
         <Route path="Error404" element={<Error404 />} />
         <Route path="*" element={<Navigate to="Error404" replace />} />
       </Routes>

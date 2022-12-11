@@ -8,8 +8,6 @@ export const ProtectedRoute = ({ children }) => {
   useEffect(() => {
     if (!auth.getCurrentUser()) {
       navigate("/login", { state: location.pathname });
-    } else {
-      navigate(location.pathname === "/login" ? "/" : location.pathname);
     }
   }, [location.pathname, navigate]);
 
