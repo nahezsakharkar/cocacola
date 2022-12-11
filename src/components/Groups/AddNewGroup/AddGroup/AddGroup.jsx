@@ -2,27 +2,39 @@ import OrderedSteps from "./OrderedSteps";
 import AddStep from "../AddStep/AddStep";
 
 function AddGroup() {
+  const addStep = () => {};
+
+  const anotherStep = () => {};
+  
   return (
     <div className="card-body">
       <form>
         <div className="row">
           <div className="col-md-6">
             <div className="form-group row">
-              <label className="col-sm-3 col-form-label">
+              <label htmlFor="groupname" className="col-sm-3 col-form-label">
                 Job Group Name<span className="text-danger">*</span>
               </label>
               <div className="col-sm-9">
-                <input type="text" className="form-control bg-white" />
+                <input
+                  id="groupname"
+                  type="text"
+                  className="form-control bg-white"
+                  placeholder="Enter Job Group Name"
+                />
               </div>
             </div>
           </div>
           <div className="col-md-6">
             <div className="form-group row">
-              <label className="col-sm-3 col-form-label">
+              <label
+                htmlFor="scheduledstatus"
+                className="col-sm-3 col-form-label"
+              >
                 Status <span className="text-danger">*</span>
               </label>
               <div className="col-sm-9">
-                <select className="form-control">
+                <select id="scheduledstatus" className="form-control">
                   <option>Select Status</option>
                   <option>Active</option>
                   <option>Disabled</option>
@@ -34,11 +46,11 @@ function AddGroup() {
         <div className="row">
           <div className="col-md-6">
             <div className="form-group row">
-              <label className="col-sm-3 col-form-label">
+              <label htmlFor="scheduled" className="col-sm-3 col-form-label">
                 Schedule<span className="text-danger">*</span>
               </label>
               <div className="col-sm-9">
-                <select className="form-control">
+                <select id="scheduled" className="form-control">
                   <option>Select Schedule</option>
                   <option>Recurring</option>
                   <option>Once</option>
@@ -48,11 +60,11 @@ function AddGroup() {
           </div>
           <div className="col-md-6">
             <div className="form-group row">
-              <label className="col-sm-3 col-form-label">
+              <label htmlFor="frequency" className="col-sm-3 col-form-label">
                 Frequency<span className="text-danger">*</span>
               </label>
               <div className="col-sm-9">
-                <select className="form-control">
+                <select id="frequency" className="form-control">
                   <option>5 mins</option>
                   <option>10 mins</option>
                   <option>15 mins</option>
@@ -66,11 +78,12 @@ function AddGroup() {
         <div className="row">
           <div className="col-md-6">
             <div className="form-group row">
-              <label className="col-sm-3 col-form-label">
+              <label htmlFor="startdate" className="col-sm-3 col-form-label">
                 Start Date<span className="text-danger">*</span>
               </label>
               <div className="col-sm-9">
                 <input
+                  id="startdate"
                   type="date"
                   className="form-control"
                   placeholder="dd/mm/yyyy"
@@ -98,14 +111,28 @@ function AddGroup() {
             </div>
           </div>
         </div>
-        <OrderedSteps />
-        <AddStep />
+        {/* <OrderedSteps /> */}
+        {/* <AddStep /> */}
         {/* <AddStep /> */}
         {/* <AddStep /> */}
         <div className="row">
-          <button type="button" className="btn btn-dark btn-icon-text">
-            Add New Step
+          <button
+            type="button"
+            onClick={addStep}
+            className="btn btn-dark btn-icon-text"
+          >
+            Create Group and Add New Step
             {/* Add Another Step */}
+            <i className="fa fa-plus btn-icon-append"></i>
+          </button>
+        </div>
+        <div className="row">
+          <button
+            type="button"
+            onClick={anotherStep}
+            className="btn btn-dark btn-icon-text"
+          >
+            Add Another Step
             <i className="fa fa-plus btn-icon-append"></i>
           </button>
         </div>

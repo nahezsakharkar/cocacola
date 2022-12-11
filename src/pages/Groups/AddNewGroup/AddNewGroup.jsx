@@ -14,11 +14,11 @@ function AddNewGroup() {
       <div className="body border border-secondary rounded">
         <AddGroup />
       </div>
-      <div className="createBtn">
+      {/* <div className="createBtn">
         <button type="button" className="btn btn-dark btn-icon-text">
           Create Group <i className="mdi mdi-group menu-icon"></i>
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }
