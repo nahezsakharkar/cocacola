@@ -99,17 +99,17 @@ function Login() {
                       SIGN IN
                     </button>
                   </div>
-                  <div className="my-2 d-flex justify-content-between align-items-center">
+                  {/* <div className="my-2 d-flex justify-content-between align-items-center">
                     <div className="form-check">
                       <label className="form-check-label text-muted">
                         <input type="checkbox" className="form-check-input" />
                         Keep me signed in
                       </label>
                     </div>
-                    {/* <a href=" " className="auth-link text-black">
+                    <a href=" " className="auth-link text-black">
                       Forgot password?
-                    </a> */}
-                  </div>
+                    </a>
+                  </div> */}
                 </form>
               </div>
             </div>
