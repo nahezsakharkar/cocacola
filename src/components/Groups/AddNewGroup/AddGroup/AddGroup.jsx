@@ -103,10 +103,10 @@ function AddGroup() {
         {/* <AddStep /> */}
         {/* <AddStep /> */}
         <div className="row">
-          <button type="button" class="btn btn-dark btn-icon-text">
+          <button type="button" className="btn btn-dark btn-icon-text">
             Add New Step
             {/* Add Another Step */}
-            <i class="fa fa-plus btn-icon-append"></i>
+            <i className="fa fa-plus btn-icon-append"></i>
           </button>
         </div>
       </form>

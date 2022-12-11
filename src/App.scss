@@ -1,0 +1,11 @@
+.sidebar {
+  .nav {
+    .nav-link {
+      &.active {
+        .menu-title {
+          color: #2e294e;
+        }
+      }
+    }
+  }
+}

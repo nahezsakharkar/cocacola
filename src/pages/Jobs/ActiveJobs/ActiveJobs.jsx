@@ -5,22 +5,25 @@ import "../../../custom/css/custom.css";
 
 function ActiveJobs() {
   const columns = [
-    { field: "jobGroup", headerName: "Job Group", width: 200 },
+    { field: "jobGroup", headerName: "Job Group", flex: 2, width: 200 },
     {
       field: "step",
       headerName: "Step",
+      flex: 1.5,
       width: 150,
       editable: true,
     },
     {
       field: "interface",
       headerName: "Interface",
+      flex: 1.5,
       width: 150,
       editable: true,
     },
     {
       field: "jobNumber",
       headerName: "Job Number",
+      flex: 1.5,
       type: "number",
       width: 150,
       editable: true,
@@ -28,27 +31,31 @@ function ActiveJobs() {
     {
       field: "started",
       headerName: "Started",
+      flex: 1.3,
       //   description: "This column has a value getter and is not sortable.",
       //   sortable: false,
-        width: 130,
+      width: 130,
       //   valueGetter: (params) =>
       //     `${params.row.firstName || ""} ${params.row.lastName || ""}`,
     },
     {
       field: "status",
       headerName: "Status",
+      flex: 1.3,
       width: 130,
       editable: true,
     },
     {
       field: "duration",
       headerName: "Duration",
+      flex: 1.5,
       width: 150,
       editable: true,
     },
     {
       field: "logs",
       headerName: "Logs",
+      flex: 1.5,
       width: 150,
       editable: true,
     },

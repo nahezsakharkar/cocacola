@@ -13,13 +13,12 @@ function AddStep() {
         }}
       >
         <h4 className="card-title">Step #1</h4>
-        <button type="button" class="close" aria-label="Close">
+        <button type="button" className="close" aria-label="Close">
           <Tooltip title="Remove Step" placement="left" arrow>
             <span aria-hidden="true">&times;</span>
           </Tooltip>
         </button>
       </div>
-      <form className="form-sample">
         <div className="row">
           <div className="col-md-6">
             <div className="form-group row">
@@ -161,13 +160,12 @@ function AddStep() {
         <Filters />
         <AddFilter />
         <div className="row">
-          <button type="button" class="btn btn-dark btn-icon-text">
+          <button type="button" className="btn btn-dark btn-icon-text">
             Add Filter
             {/* Add Another Filter */}
-            <i class="fa fa-plus btn-icon-append"></i>
+            <i className="fa fa-plus btn-icon-append"></i>
           </button>
         </div>
-      </form>
     </div>
   );
 }

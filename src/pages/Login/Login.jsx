@@ -16,7 +16,8 @@ function Login() {
     setFormValues({ ...formValues, [id]: value });
   };
 
-  const handleSubmit = async () => {
+  const onSubmit = () => {
+    console.log(formValues);
     for (let properties in formValues) {
       if (formValues[properties].length === 0) {
         let displayName;
@@ -33,9 +34,13 @@ function Login() {
         );
       }
     }
+    handleSubmit();
+  };
+
+  const handleSubmit = async () => {
     await auth.login(formValues);
     window.location =
-      location.state === "/Logout" ? "/" : location.state || "/";
+      location.state === ("/Logout" ? "/" : location.state) || "/";
   };
 
   return (
@@ -74,22 +79,22 @@ function Login() {
                   <div className="form-group">
                     <select
                       id="companyid"
-                      className="form-control form-control-lg js-example-basic-single"
+                      className="form-control form-control-lg"
                       style={{ width: "100%" }}
                       onChange={handleChange}
                       required
                     >
-                      <option value="">Select Country</option>
-                      <option value="1429">SriLanka</option>
-                      <option value="Bangladesh">Bangladesh</option>
-                      <option value="Nepal">Nepal</option>
+                      <option value={""}>Select Country</option>
+                      <option value={1429}>SriLanka</option>
+                      <option value={1000}>Bangladesh</option>
+                      <option value={1430}>Nepal</option>
                     </select>
                   </div>
                   <div className="mt-3">
                     <button
                       type="submit"
                       className="btn btn-block btn-danger btn-lg font-weight-medium auth-form-btn"
-                      onClick={handleSubmit}
+                      onClick={onSubmit}
                     >
                       SIGN IN
                     </button>
@@ -101,9 +106,9 @@ function Login() {
                         Keep me signed in
                       </label>
                     </div>
-                    <a href=" " className="auth-link text-black">
+                    {/* <a href=" " className="auth-link text-black">
                       Forgot password?
-                    </a>
+                    </a> */}
                   </div>
                 </form>
               </div>

@@ -5,27 +5,29 @@ import Tooltip from "@mui/material/Tooltip";
 
 function OrderedSteps() {
   const columns = [
-    { field: "step", headerName: "Step", width: 150 },
+    { field: "step", headerName: "Step", flex:.8, width: 150 },
     {
       field: "interface",
       headerName: "Interface",
+      flex:1.4,
       width: 350,
       editable: true,
     },
     {
       field: "action",
       headerName: "Action",
+      flex:1.3,
       width: 400,
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            <button type="button" class="btn btn-dark btn-icon-text btn-sm">
+            <button type="button" className="btn btn-dark btn-icon-text btn-sm">
               Edit
-              <i class="mdi mdi-file-check btn-icon-append"></i>
+              <i className="mdi mdi-file-check btn-icon-append"></i>
             </button>
-            <button type="button" class="btn btn-danger btn-icon-text btn-sm">
+            <button type="button" className="btn btn-danger btn-icon-text btn-sm">
               Delete
-              <i class="ti-trash btn-icon-append"></i>
+              <i className="ti-trash btn-icon-append"></i>
             </button>
           </div>
         );
@@ -34,6 +36,7 @@ function OrderedSteps() {
     {
       field: "order",
       headerName: "Order",
+      flex:1,
       width: 180,
       renderCell: (params) => {
         return (

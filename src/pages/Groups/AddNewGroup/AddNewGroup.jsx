@@ -15,8 +15,8 @@ function AddNewGroup() {
         <AddGroup />
       </div>
       <div className="createBtn">
-        <button type="button" class="btn btn-dark btn-icon-text">
-          Create Group <i class="mdi mdi-group menu-icon"></i>
+        <button type="button" className="btn btn-dark btn-icon-text">
+          Create Group <i className="mdi mdi-group menu-icon"></i>
         </button>
       </div>
     </div>

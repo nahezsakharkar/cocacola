@@ -118,10 +118,10 @@ function Sidebar() {
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink className="nav-link" onClick={handleOpen}>
+          <Link className="nav-link" onClick={handleOpen}>
             <i className="mdi mdi-logout menu-icon"></i>
             <span className="menu-title"> Logout</span>
-          </NavLink>
+          </Link>
           <OurModal
             open={open}
             setOpen={setOpen}

@@ -5,50 +5,58 @@ import "../../../custom/css/custom.css";
 
 function JobReport() {
   const columns = [
-    { field: "jobGroup", headerName: "Job Group", width: 200 },
+    { field: "jobGroup", headerName: "Job Group", flex: 2, width: 200 },
     {
       field: "step",
       headerName: "Step",
+      flex: 1.5,
       width: 150,
       editable: true,
     },
     {
       field: "interface",
       headerName: "Interface",
+      flex: 1.4,
       width: 140,
       editable: true,
     },
     {
       field: "jobNumber",
       headerName: "Job No.",
+      flex: 1.1,
       width: 110,
       editable: true,
     },
     {
       field: "started",
       headerName: "Started",
+      flex: 1,
       width: 100,
     },
     {
       field: "ended",
       headerName: "Ended",
+      flex: 1,
       width: 100,
     },
     {
       field: "status",
       headerName: "Status",
+      flex: 1.1,
       width: 110,
       editable: true,
     },
     {
       field: "duration",
       headerName: "Duration",
+      flex: 1.3,
       width: 130,
       editable: true,
     },
     {
       field: "logs",
       headerName: "Logs",
+      flex: 1.3,
       width: 130,
       editable: true,
     },
@@ -128,9 +136,12 @@ function JobReport() {
             </div>
           </div>
           <div className="col-md-2">
-              <button type="button" class="btn btn-dark btn-rounded btn-fw ml-5">
-                Go!
-              </button>
+            <button
+              type="button"
+              className="btn btn-dark btn-rounded btn-fw ml-5"
+            >
+              Go!
+            </button>
           </div>
         </div>
       </div>

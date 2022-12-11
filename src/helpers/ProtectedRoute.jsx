@@ -9,7 +9,7 @@ export const ProtectedRoute = ({ children }) => {
     if (!auth.getCurrentUser()) {
       navigate("/login", { state: location.pathname });
     } else {
-      navigate("/");
+      navigate(location.pathname === "/login" ? "/" : location.pathname);
     }
   }, [location.pathname, navigate]);
 

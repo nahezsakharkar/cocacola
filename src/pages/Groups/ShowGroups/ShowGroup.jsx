@@ -6,45 +6,60 @@ function ShowGroup() {
   const navigate = useNavigate();
 
   const columns = [
-    { field: "id", headerName: "Id", width: 80 },
-    { field: "jobGroup", headerName: "Job Group", width: 270, editable: true },
+    { field: "id", headerName: "Id", flex: .2, width: 80 },
+    {
+      field: "jobGroup",
+      headerName: "Job Group",
+      flex: .8,
+      width: 270,
+      editable: true,
+    },
     {
       field: "schedule",
       headerName: "Schedule",
+      flex: .7,
       width: 210,
       editable: true,
     },
     {
       field: "status",
       headerName: "Status",
+      flex: .5,
       width: 150,
       editable: true,
     },
     {
       field: "action",
       headerName: "Action",
+      flex: 1.5,
       width: 500,
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            <button type="button" class="btn btn-dark btn-icon-text btn-sm">
+            <button type="button" className="btn btn-dark btn-icon-text btn-sm">
               Edit
-              <i class="mdi mdi-file-check btn-icon-append"></i>
+              <i className="mdi mdi-file-check btn-icon-append"></i>
             </button>
             <button
               type="button"
-              class="btn btn-secondary btn-icon-text btn-sm"
+              className="btn btn-secondary btn-icon-text btn-sm"
             >
               Disable
-              <i class="fa fa-ban btn-icon-append"></i>
+              <i className="fa fa-ban btn-icon-append"></i>
             </button>
-            <button type="button" class="btn btn-warning btn-icon-text btn-sm">
+            <button
+              type="button"
+              className="btn btn-warning btn-icon-text btn-sm"
+            >
               Run
-              <i class="fa fa-flash btn-icon-append"></i>
+              <i className="fa fa-flash btn-icon-append"></i>
             </button>
-            <button type="button" class="btn btn-danger btn-icon-text btn-sm">
+            <button
+              type="button"
+              className="btn btn-danger btn-icon-text btn-sm"
+            >
               Delete
-              <i class="ti-trash btn-icon-append"></i>
+              <i className="ti-trash btn-icon-append"></i>
             </button>
           </div>
         );

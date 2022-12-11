@@ -2,7 +2,6 @@ function AddFilter() {
   return (
     <div className="card-body border border-secondary rounded mb-3">
       <h4 className="card-title">Add Filter</h4>
-      <form>
         <div className="filterForm">
           <div className="filterField">
             <div className="label">
@@ -59,14 +58,13 @@ function AddFilter() {
               <label className="col-sm-3 col-form-label">Actions</label>
             </div>
             <div className="input">
-              <button type="button" class="btn btn-dark btn-icon-text">
+              <button type="button" className="btn btn-dark btn-icon-text">
                 Add
-                <i class="fa fa-plus btn-icon-append"></i>
+                <i className="fa fa-plus btn-icon-append"></i>
               </button>
             </div>
           </div>
         </div>
-      </form>
     </div>
   );
 }

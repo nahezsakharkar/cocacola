@@ -39,22 +39,25 @@ function Dashboard() {
   };
 
   const columns = [
-    { field: "interface", headerName: "Interface", width: 200 },
+    { field: "interface", headerName: "Interface",flex: 1.4, width: 200 },
     {
       field: "vxceedCount",
       headerName: "Vxceed Count",
+      flex: 1,
       width: 150,
       editable: true,
     },
     {
       field: "sapCount",
       headerName: "Sap Count",
+      flex: 1,
       width: 150,
       editable: true,
     },
     {
       field: "action",
       headerName: "Action",
+      flex: 1.1,
       width: 200,
       renderCell: (params) => {
         return (

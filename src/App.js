@@ -1,4 +1,4 @@
-import './App.css';
+import './App.scss';
 import { Routes, Route, Navigate } from "react-router-dom";
 
 //importing the layout
