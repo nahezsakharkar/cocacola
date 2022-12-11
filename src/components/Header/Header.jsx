@@ -45,7 +45,7 @@ function Header() {
             ></i>{" "}
             IN
           </li>
-          <li className="nav-item dropdown">
+          {/* <li className="nav-item dropdown">
             <a
               className="nav-link count-indicator dropdown-toggle"
               id="notificationDropdown"
@@ -172,7 +172,7 @@ function Header() {
                 </div>
               </a>
             </div>
-          </li>
+          </li> */}
         </ul>
         <button
           className="navbar-toggler navbar-toggler-right d-lg-none align-self-center"

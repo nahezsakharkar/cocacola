@@ -1,11 +1,28 @@
+import { useState, useEffect } from "react";
 import OrderedSteps from "./OrderedSteps";
 import AddStep from "../AddStep/AddStep";
 
 function AddGroup() {
-  const addStep = () => {};
+  const [noSteps, setNoSteps] = useState(true);
+  const [noOfSteps, setNoOfSteps] = useState(0);
+  const [stepArray, setStepArray] = useState([]);
 
-  const anotherStep = () => {};
-  
+  const addStep = () => {
+    setNoSteps(false);
+    setNoOfSteps(noOfSteps + 1);
+    setStepArray((prev) => [...prev, noOfSteps + 1]);
+  };
+
+  const anotherStep = () => {
+    setNoOfSteps(noOfSteps + 1);
+    setStepArray((prev) => [...prev, noOfSteps + 1]);
+  };
+
+  useEffect(() => {
+    console.log(noOfSteps);
+    console.log(stepArray);
+  }, [noOfSteps, stepArray]);
+
   return (
     <div className="card-body">
       <form>
@@ -111,31 +128,34 @@ function AddGroup() {
             </div>
           </div>
         </div>
-        {/* <OrderedSteps /> */}
-        {/* <AddStep /> */}
-        {/* <AddStep /> */}
-        {/* <AddStep /> */}
-        <div className="row">
-          <button
-            type="button"
-            onClick={addStep}
-            className="btn btn-dark btn-icon-text"
-          >
-            Create Group and Add New Step
-            {/* Add Another Step */}
-            <i className="fa fa-plus btn-icon-append"></i>
-          </button>
-        </div>
-        <div className="row">
-          <button
-            type="button"
-            onClick={anotherStep}
-            className="btn btn-dark btn-icon-text"
-          >
-            Add Another Step
-            <i className="fa fa-plus btn-icon-append"></i>
-          </button>
-        </div>
+        {noSteps || <OrderedSteps />}
+        {stepArray.map((step, index) => {
+          return <AddStep key={index} stepNumber={step} />;
+        })}
+        {noSteps && (
+          <div className="row">
+            <button
+              type="button"
+              onClick={addStep}
+              className="btn btn-dark btn-icon-text"
+            >
+              Create Group and Add New Step
+              <i className="fa fa-plus btn-icon-append"></i>
+            </button>
+          </div>
+        )}
+        {noSteps || (
+          <div className="row">
+            <button
+              type="button"
+              onClick={anotherStep}
+              className="btn btn-dark btn-icon-text"
+            >
+              Add Another Step
+              <i className="fa fa-plus btn-icon-append"></i>
+            </button>
+          </div>
+        )}
       </form>
     </div>
   );

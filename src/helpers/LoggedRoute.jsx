@@ -11,11 +11,6 @@ export const LoggedRoute = ({ children }) => {
         navigate("/");
       }
     }
-    // if (!auth.getCurrentUser()) {
-    //   navigate("/login", { state: location.pathname });
-    // } else {
-    //   navigate(location.pathname === "/login" ? "/" : location.pathname);
-    // }
   }, [location.pathname, navigate]);
 
   return children;
