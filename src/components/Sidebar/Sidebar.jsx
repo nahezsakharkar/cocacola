@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
-import auth from "../../services/authService";
 import OurModal from "../Common/OurModal/OurModal";
 function Sidebar() {
   const navigate = useNavigate();
@@ -50,7 +49,7 @@ function Sidebar() {
             aria-controls="groups"
           >
             <i className="mdi mdi-group menu-icon"></i>
-            <span className="menu-title">Groups</span>
+            <span className="menu-title">Schedules</span>
             <i className="menu-arrow"></i>
           </a>
           <div className="collapse" id="groups">
@@ -64,7 +63,7 @@ function Sidebar() {
               <li className="nav-item">
                 {" "}
                 <NavLink className="nav-link" to="/ShowGroups">
-                  Show Existing Groups
+                  Show Jobs Group
                 </NavLink>
               </li>
             </ul>

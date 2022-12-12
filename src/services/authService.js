@@ -35,10 +35,23 @@ export function getCurrentUser() {
     }
 }
 
+export async function getCurrentUserDetails() {
+    const user = JSON.parse(localStorage.getItem(sessionKey))
+
+    const response = await http.get(baseURL + "api/admin/byid?id=" + user.id, {
+        headers: {
+            Authorization: user.jwtToken
+        }
+    }
+    );
+    return response.data
+}
+
 const auth = {
     login,
     logout,
     getCurrentUser,
+    getCurrentUserDetails
 }
 
 export default auth

@@ -87,7 +87,7 @@ function ShowGroup() {
   return (
     <div className="data existingGroups">
       <div className="title">
-        <h1 className="Heading">Existing Groups</h1>
+        <h1 className="Heading">Jobs Group</h1>
         <button
           onClick={() => navigate("/AddNewGroup")}
           type="button"

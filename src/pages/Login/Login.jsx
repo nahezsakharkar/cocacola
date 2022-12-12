@@ -84,9 +84,10 @@ function Login() {
                       required
                     >
                       <option value={""}>Select Country</option>
-                      <option value={1429}>SriLanka</option>
-                      <option value={1000}>Bangladesh</option>
-                      <option value={1430}>Nepal</option>
+                      <option value={1428}>SriLanka</option>
+                      <option value={1364}>Bangladesh</option>
+                      <option value={1429}>Nepal - A</option>
+                      <option value={1430}>Nepal - B</option>
                     </select>
                   </div>
                   <div className="mt-3">

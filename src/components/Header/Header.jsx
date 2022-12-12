@@ -1,4 +1,31 @@
+import { useEffect, useState } from "react";
+import auth from "../../services/authService";
+
 function Header() {
+  const [companyId, setCompanyId] = useState(0);
+  const [country, setCountry] = useState();
+  const [admin, setAdmin] = useState({});
+
+  async function getAdmin() {
+    const data = await auth.getCurrentUserDetails();
+    setAdmin(data.payload);
+  }
+  
+  useEffect(() => {
+    getAdmin();
+    setCompanyId(admin.companyid)
+    if (companyId === 1429 || companyId === 1430) {
+      setCountry("np");
+    } else if (companyId === 1428) {
+      setCountry("lk");
+    } else if (companyId === 1364) {
+      setCountry("bd");
+    }
+  }, [admin.companyid, companyId]);
+
+  
+  console.log(companyId)
+  
   return (
     <nav className="navbar col-lg-12 col-12 p-0 d-flex flex-row">
       <div className="navbar-brand-wrapper d-flex align-items-center justify-content-start">
@@ -40,11 +67,12 @@ function Header() {
         <ul className="navbar-nav navbar-nav-right">
           <li className="nav-item">
             <i
-              className="flag-icon flag-icon-in icon-md"
+              className={`flag-icon flag-icon-${country} icon-md`}
               // style={{ fontSize: "1.75rem" }}
             ></i>{" "}
-            IN
+            {country}
           </li>
+
           {/* <li className="nav-item dropdown">
             <a
               className="nav-link count-indicator dropdown-toggle"
