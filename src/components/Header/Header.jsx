@@ -3,7 +3,7 @@ import auth from "../../services/authService";
 
 function Header() {
   const [companyId, setCompanyId] = useState(0);
-  const [country, setCountry] = useState();
+  const [country, setCountry] = useState("");
   const [admin, setAdmin] = useState({});
 
   async function getAdmin() {
@@ -70,7 +70,7 @@ function Header() {
               className={`flag-icon flag-icon-${country} icon-md`}
               // style={{ fontSize: "1.75rem" }}
             ></i>{" "}
-            {country}
+            {country ? country.toUpperCase() : null}
           </li>
 
           {/* <li className="nav-item dropdown">
