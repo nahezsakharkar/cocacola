@@ -8,6 +8,7 @@ import OurModal from "../../../Common/OurModal/OurModal";
 function AddGroup(props) {
   const { admin } = props;
   const [userId, setUserId] = useState(0);
+  const [groupId, setGroupId] = useState(0);
   const [companyId, setCompanyId] = useState(0);
   const [noSteps, setNoSteps] = useState(true);
   const [noOfSteps, setNoOfSteps] = useState(0);
@@ -20,9 +21,6 @@ function AddGroup(props) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  console.log("array : ", stepArray);
-  // console.log("steps : ", noOfSteps);
-  
   useEffect(() => {
     setUserId(admin["id"]);
     setCompanyId(admin["companyid"]);
@@ -59,9 +57,10 @@ function AddGroup(props) {
     }
     setOpen(false);
   };
-
+  
   const handleSubmit = async () => {
     const data = await schedule.createGroup(formValues);
+    setGroupId(data.payload.id);
     if (data.message === "updated successfully") {
       toast.success("Schedule was Updated Successfully");
     } else if (data.message === "added successfully") {
@@ -203,14 +202,16 @@ function AddGroup(props) {
             </div>
           </div>
         </div>
-        {noSteps || <OrderedSteps />}
+        {noSteps || <OrderedSteps groupId={groupId} noOfSteps={noOfSteps} />}
         {stepArray.map((step, index) => {
           return (
             <AddStep
               key={index}
               stepNumber={step}
+              groupId={groupId}
               deleteStep={noOfSteps === step}
               setAddAnotherStep={setAddAnotherStep}
+              noSteps={noSteps}
               setNoSteps={setNoSteps}
               noOfSteps={noOfSteps}
               setNoOfSteps={setNoOfSteps}

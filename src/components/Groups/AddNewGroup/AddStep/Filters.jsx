@@ -6,7 +6,7 @@ function Filters() {
     {
       field: "operator",
       headerName: "Operator",
-      flex: .5,
+      flex: 0.5,
       width: 150,
     },
     {

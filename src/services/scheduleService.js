@@ -15,6 +15,19 @@ export async function createGroup(formValues) {
     return response.data
 }
 
+export async function getAllSteps(groupId) {
+    const user = JSON.parse(localStorage.getItem(sessionKey))
+
+    const response = await http.get(baseURL + "api/steps/bygid?gid=" + groupId, {
+        headers: {
+            Authorization: user.jwtToken
+        }
+    }
+    );
+    // console.log(typeof(response.data.payload))
+    return response.data
+}
+
 export async function getAllInterfaces() {
     const user = JSON.parse(localStorage.getItem(sessionKey))
 
@@ -27,7 +40,31 @@ export async function getAllInterfaces() {
     return response.data
 }
 
-export const getGroupsByScheduleStatus = async (scheduledStatus) => {
+export async function createStep(formValues) {
+    const user = JSON.parse(localStorage.getItem(sessionKey))
+    const response = await http.post(baseURL + "api/steps/save",
+        formValues, {
+        headers: {
+            Authorization: user.jwtToken
+        }
+    }
+    );
+    return response.data
+}
+
+export async function createFilter(formValues) {
+    const user = JSON.parse(localStorage.getItem(sessionKey))
+    const response = await http.post(baseURL + "api/filters/save",
+        formValues, {
+        headers: {
+            Authorization: user.jwtToken
+        }
+    }
+    );
+    return response.data
+}
+
+export async function getGroupsByScheduleStatus(scheduledStatus) {
     const user = JSON.parse(localStorage.getItem(sessionKey));
     const response = await http.get(baseURL + "api/groups/byScheduledStatus?scheduledstatus=" + scheduledStatus,
         {
@@ -42,7 +79,10 @@ export const getGroupsByScheduleStatus = async (scheduledStatus) => {
 
 const schedule = {
     createGroup,
+    getAllSteps,
     getAllInterfaces,
+    createStep,
+    createFilter,
     getGroupsByScheduleStatus
 }
 

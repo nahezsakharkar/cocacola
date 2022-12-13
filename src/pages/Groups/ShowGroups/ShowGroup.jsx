@@ -79,22 +79,24 @@ function ShowGroup() {
     },
   ];
 
-  const rows = [
-    {
-      id: 1,
-      jobGroup: "Nepal Products",
-      schedule: "Every 10 Mins",
-      status: "Active",
-    },
-    {
-      id: 2,
-      jobGroup: "Nepal Distributers",
-      schedule: "Daily at 9 AM",
-      status: "Active",
-    },
-    { id: 3, jobGroup: "Nepal Outlets", schedule: null, status: "Disabled" },
-    { id: 4, jobGroup: "Nepal Salesman", schedule: null, status: "Active" },
-  ];
+  const rows = groupList
+
+  // const rows = [
+  //   {
+  //     id: 1,
+  //     jobGroup: "Nepal Products",
+  //     schedule: "Every 10 Mins",
+  //     status: "Active",
+  //   },
+  //   {
+  //     id: 2,
+  //     jobGroup: "Nepal Distributers",
+  //     schedule: "Daily at 9 AM",
+  //     status: "Active",
+  //   },
+  //   { id: 3, jobGroup: "Nepal Outlets", schedule: null, status: "Disabled" },
+  //   { id: 4, jobGroup: "Nepal Salesman", schedule: null, status: "Active" },
+  // ];
 
   return (
     <div className="data existingGroups">
@@ -110,7 +112,7 @@ function ShowGroup() {
         </button>
       </div>
       <div className="body">
-        <DataTable rowsPerPageOptions={15} columns={columns} rows={groupList} toolbar />
+        <DataTable pageSize={15} columns={columns} rows={rows} toolbar />
       </div>
     </div>
   );
