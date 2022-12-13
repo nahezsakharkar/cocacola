@@ -11,6 +11,7 @@ function AddGroup(props) {
   const [companyId, setCompanyId] = useState(0);
   const [noSteps, setNoSteps] = useState(true);
   const [noOfSteps, setNoOfSteps] = useState(0);
+  const [addAnotherStep, setAddAnotherStep] = useState(false);
   const [stepArray, setStepArray] = useState([]);
 
   const [formValues, setFormValues] = useState({});
@@ -19,6 +20,9 @@ function AddGroup(props) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  console.log("array : ", stepArray);
+  // console.log("steps : ", noOfSteps);
+  
   useEffect(() => {
     setUserId(admin["id"]);
     setCompanyId(admin["companyid"]);
@@ -33,6 +37,7 @@ function AddGroup(props) {
   const anotherStep = () => {
     setNoOfSteps(noOfSteps + 1);
     setStepArray((prev) => [...prev, noOfSteps + 1]);
+    setAddAnotherStep(false);
   };
 
   const handleChange = (e) => {
@@ -155,6 +160,7 @@ function AddGroup(props) {
                   id="frequency"
                   onChange={handleChange}
                   type="number"
+                  min="0"
                   className="form-control"
                   placeholder="Enter Frequency"
                 />
@@ -199,7 +205,19 @@ function AddGroup(props) {
         </div>
         {noSteps || <OrderedSteps />}
         {stepArray.map((step, index) => {
-          return <AddStep key={index} stepNumber={step} />;
+          return (
+            <AddStep
+              key={index}
+              stepNumber={step}
+              deleteStep={noOfSteps === step}
+              setAddAnotherStep={setAddAnotherStep}
+              setNoSteps={setNoSteps}
+              noOfSteps={noOfSteps}
+              setNoOfSteps={setNoOfSteps}
+              stepArray={stepArray}
+              setStepArray={setStepArray}
+            />
+          );
         })}
         {noSteps && (
           <div className="row">
@@ -222,18 +240,19 @@ function AddGroup(props) {
           title={"Create Schedule?"}
           description="Do you really wish to Create a Schedule and proceed to adding Steps? "
         />
-        {noSteps || (
-          <div className="row">
-            <button
-              type="button"
-              onClick={anotherStep}
-              className="btn btn-dark btn-icon-text"
-            >
-              Add Another Step
-              <i className="fa fa-plus btn-icon-append"></i>
-            </button>
-          </div>
-        )}
+        {noSteps ||
+          (addAnotherStep && (
+            <div className="row">
+              <button
+                type="button"
+                onClick={anotherStep}
+                className="btn btn-dark btn-icon-text"
+              >
+                Add Another Step
+                <i className="fa fa-plus btn-icon-append"></i>
+              </button>
+            </div>
+          ))}
       </form>
     </div>
   );

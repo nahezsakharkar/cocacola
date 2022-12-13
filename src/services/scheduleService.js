@@ -15,8 +15,21 @@ export async function createGroup(formValues) {
     return response.data
 }
 
+export async function getAllInterfaces() {
+    const user = JSON.parse(localStorage.getItem(sessionKey))
+
+    const response = await http.get(baseURL + "api/interfaces/all", {
+        headers: {
+            Authorization: user.jwtToken
+        }
+    }
+    );
+    return response.data
+}
+
 const schedule = {
-    createGroup
+    createGroup,
+    getAllInterfaces
 }
 
 export default schedule

@@ -1,17 +1,55 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import schedule from "../../../../services/scheduleService";
 import Filters from "./Filters";
 import AddFilter from "../AddFilter/AddFilter";
 import Tooltip from "@mui/material/Tooltip";
+import OurModal from "../../../Common/OurModal/OurModal";
 
 function AddStep(props) {
-  const { stepNumber } = props;
+  const {
+    stepNumber,
+    deleteStep,
+    setAddAnotherStep,
+    setNoSteps,
+    noOfSteps,
+    setNoOfSteps,
+    stepArray,
+    setStepArray,
+  } = props;
 
   const [noFilters, setNoFilters] = useState(true);
   const [noOfFilters, setNoOfFilters] = useState(0);
 
+  const [interfaces, setInterfaces] = useState([]);
+
+  const [openRemoveStep, setOpenRemoveStep] = useState(false);
+  const handleOpenRemoveStep = () => setOpenRemoveStep(true);
+  const handleCloseRemoveStep = () => setOpenRemoveStep(false);
+
+  async function getInterfaces() {
+    const data = await schedule.getAllInterfaces();
+    setInterfaces(data.payload);
+  }
+
   const addFilter = () => {
     setNoFilters(false);
     setNoOfFilters(noOfFilters + 1);
+    setAddAnotherStep(true);
+  };
+
+  useEffect(() => {
+    getInterfaces();
+  }, []);
+
+  const onRemoveStep = () => {
+    setNoOfSteps(noOfSteps - 1);
+    setStepArray((prevArray) => {
+      return prevArray.filter((item) => item !== noOfSteps);
+    });
+    if (noOfSteps === 0) {
+      setNoSteps(true);
+    }
+    setOpenRemoveStep(false);
   };
 
   return (
@@ -24,29 +62,49 @@ function AddStep(props) {
         }}
       >
         <h4 className="card-title">Step #{stepNumber}</h4>
-        <button type="button" className="close" aria-label="Close">
-          <Tooltip title="Remove Step" placement="left" arrow>
-            <span aria-hidden="true">&times;</span>
-          </Tooltip>
-        </button>
+        {deleteStep && (
+          <button
+            onClick={handleOpenRemoveStep}
+            type="button"
+            className="close"
+            aria-label="Close"
+          >
+            <Tooltip title="Remove Step" placement="left" arrow>
+              <span aria-hidden="true">&times;</span>
+            </Tooltip>
+          </button>
+        )}
+        <OurModal
+          open={openRemoveStep}
+          setOpen={setOpenRemoveStep}
+          handleOpen={handleOpenRemoveStep}
+          handleClose={handleCloseRemoveStep}
+          handleYes={onRemoveStep}
+          title={"Remove Step?"}
+          description="Do you really wish to Remove this Step? All Form Data will be lost. "
+        />
       </div>
       <div className="row">
-        <div className="col-md-6">
+        <div className="col-md-8">
           <div className="form-group row">
             <label className="col-sm-3 col-form-label">
               Interface <span className="text-danger">*</span>
             </label>
             <div className="col-sm-9">
               <select className="form-control">
-                <option>Select Interface</option>
-                <option>Interface-1</option>
-                <option>Interface-2</option>
-                <option>Interface-3</option>
+                <option value={""}>Select Interface</option>
+                {interfaces.map((single) => {
+                  return (
+                    <option key={single.id} value={single.id}>
+                      {single.name}
+                    </option>
+                  );
+                })}
               </select>
             </div>
           </div>
         </div>
-        <div className="col-md-6">
+        {/* <div className="col-md-6">
           <div className="form-group row">
             <label className="col-sm-3 col-form-label">
               Company Code<span className="text-danger">*</span>
@@ -61,7 +119,7 @@ function AddStep(props) {
               </select>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="row">
         <div className="col-md-6">
