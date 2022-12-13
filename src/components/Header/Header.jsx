@@ -22,9 +22,6 @@ function Header() {
       setCountry("bd");
     }
   }, [admin.companyid, companyId]);
-
-  
-  console.log(companyId)
   
   return (
     <nav className="navbar col-lg-12 col-12 p-0 d-flex flex-row">

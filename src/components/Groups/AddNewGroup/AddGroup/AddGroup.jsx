@@ -1,11 +1,14 @@
-import { useState} from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import OrderedSteps from "./OrderedSteps";
 import AddStep from "../AddStep/AddStep";
 import schedule from "../../../../services/scheduleService";
 import OurModal from "../../../Common/OurModal/OurModal";
 
-function AddGroup() {
+function AddGroup(props) {
+  const { admin } = props;
+  const [userId, setUserId] = useState(0);
+  const [companyId, setCompanyId] = useState(0);
   const [noSteps, setNoSteps] = useState(true);
   const [noOfSteps, setNoOfSteps] = useState(0);
   const [stepArray, setStepArray] = useState([]);
@@ -15,6 +18,11 @@ function AddGroup() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  useEffect(() => {
+    setUserId(admin["id"]);
+    setCompanyId(admin["companyid"]);
+  }, [admin]);
 
   const addStep = () => {
     setNoSteps(false);
@@ -29,7 +37,12 @@ function AddGroup() {
 
   const handleChange = (e) => {
     const { id, value } = e.target;
-    setFormValues({ ...formValues, [id]: value });
+    setFormValues({
+      ...formValues,
+      [id]: value,
+      companyid: companyId,
+      userid: userId,
+    });
   };
 
   const onSubmit = () => {
