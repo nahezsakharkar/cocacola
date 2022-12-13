@@ -1,31 +1,43 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DataTable from "../../../components/Common/DataTable/DataTable";
 import "../../../custom/css/custom.css";
+import schedule from "../../../services/scheduleService";
 
 function ShowGroup() {
   const navigate = useNavigate();
+  const [groupList, setGroupList] = useState([]);
+
+  async function getGroupsData(queryParams) {
+    const data = await schedule.getGroupsByScheduleStatus(queryParams);
+    setGroupList(data.payload);
+  }
+
+  useEffect(() => {
+    getGroupsData("Active,Disabled");
+  }, []);
 
   const columns = [
-    { field: "id", headerName: "Id", flex: .2, width: 80 },
+    { field: "id", headerName: "Id", flex: 0.2, width: 80 },
     {
-      field: "jobGroup",
+      field: "groupname",
       headerName: "Job Group",
-      flex: .8,
-      width: 270,
+      flex: 0.8,
+      // width: 270,
       editable: true,
     },
     {
-      field: "schedule",
+      field: "scheduled",
       headerName: "Schedule",
-      flex: .7,
-      width: 210,
+      flex: 0.5,
+      // width: 210,
       editable: true,
     },
     {
-      field: "status",
+      field: "scheduledstatus",
       headerName: "Status",
-      flex: .5,
-      width: 150,
+      flex: 0.5,
+      // width: 150,
       editable: true,
     },
     {
@@ -98,7 +110,7 @@ function ShowGroup() {
         </button>
       </div>
       <div className="body">
-        <DataTable columns={columns} rows={rows} toolbar />
+        <DataTable rowsPerPageOptions={15} columns={columns} rows={groupList} toolbar />
       </div>
     </div>
   );

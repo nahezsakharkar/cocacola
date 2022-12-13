@@ -27,9 +27,23 @@ export async function getAllInterfaces() {
     return response.data
 }
 
+export const getGroupsByScheduleStatus = async (scheduledStatus) => {
+    const user = JSON.parse(localStorage.getItem(sessionKey));
+    const response = await http.get(baseURL + "api/groups/byScheduledStatus?scheduledstatus=" + scheduledStatus,
+        {
+            headers: {
+                Authorization: user.jwtToken
+            }
+        }
+    );
+    return response.data;
+}
+
+
 const schedule = {
     createGroup,
-    getAllInterfaces
+    getAllInterfaces,
+    getGroupsByScheduleStatus
 }
 
 export default schedule

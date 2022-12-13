@@ -1,14 +1,14 @@
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 
 function DataTable(props) {
-  const { columns, rows ,toolbar } = props;
+  const { columns, rows ,toolbar,rowsPerPageOptions,pageSize } = props;
 
   return (
     <DataGrid
       rows={rows}
       columns={columns}
-      pageSize={5}
-      rowsPerPageOptions={[5]}
+      pageSize={pageSize !== null || undefined ? pageSize : 5}
+      rowsPerPageOptions={[rowsPerPageOptions !== null || undefined ? rowsPerPageOptions : 5]}
       disableSelectionOnClick
       experimentalFeatures={{ newEditingApi: true }}
       components={{ Toolbar: toolbar ? GridToolbar : "" }}
