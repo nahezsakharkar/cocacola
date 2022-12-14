@@ -52,6 +52,18 @@ export async function createStep(formValues) {
     return response.data
 }
 
+export async function getStepById(stepId) {
+    const user = JSON.parse(localStorage.getItem(sessionKey))
+
+    const response = await http.get(baseURL + "api/groups/byid?id=" + stepId, {
+        headers: {
+            Authorization: user.jwtToken
+        }
+    }
+    );
+    return response.data
+}
+
 export async function createFilter(formValues) {
     const user = JSON.parse(localStorage.getItem(sessionKey))
     const response = await http.post(baseURL + "api/filters/save",
@@ -82,6 +94,7 @@ const schedule = {
     getAllSteps,
     getAllInterfaces,
     createStep,
+    getStepById,
     createFilter,
     getGroupsByScheduleStatus
 }

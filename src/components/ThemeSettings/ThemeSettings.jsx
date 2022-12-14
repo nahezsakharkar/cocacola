@@ -26,7 +26,7 @@ function ThemeSettings() {
           </div>
         </div>
       </div>
-      <div id="right-sidebar" className="settings-panel">
+      {/* <div id="right-sidebar" className="settings-panel">
         <i className="settings-close mdi mdi-close"></i>
         <ul className="nav nav-tabs" id="setting-panel" role="tablist">
           <li className="nav-item">
@@ -237,7 +237,7 @@ function ThemeSettings() {
           </div>
           chat tab ends
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

@@ -7,7 +7,13 @@ import Layout from './layouts/Layout';
 // pages -----------------------------------------
 import Login from "./pages/Login/Login"
 import Dashboard from "./pages/Dashboard/Dashboard"
+
+// add new Group layout
 import AddNewGroup from "./pages/Groups/AddNewGroup/AddNewGroup"
+import AddGroup from "./pages/Groups/AddNewGroup/AddGroup/AddGroup"
+import AddStep from "./pages/Groups/AddNewGroup/AddStep/AddStep"
+import AddFilter from "./pages/Groups/AddNewGroup/AddFilter/AddFilter"
+
 import ShowGroups from "./pages/Groups/ShowGroups/ShowGroup"
 import ActiveJobs from "./pages/Jobs/ActiveJobs/ActiveJobs"
 import JobReport from "./pages/Jobs/JobReport/JobReport"
@@ -34,7 +40,11 @@ function App() {
         <Route path="Logout" element={<Logout />} />
         <Route element={<ProtectedRoute> <Layout /> </ProtectedRoute>}>
           <Route index path="/" element={<Dashboard />} />
-          <Route path="AddNewGroup" element={<AddNewGroup />} />
+          <Route path='AddNewGroup' element={<AddNewGroup />} >
+            <Route index path="/AddNewGroup/AddGroup" element={<AddGroup />} />
+            <Route path="/AddNewGroup/AddStep" element={<AddStep />} />
+            <Route path="/AddNewGroup/AddFilter" element={<AddFilter />} />
+          </Route>
           <Route path="ShowGroups" element={<ShowGroups />} />
           <Route path="ActiveJobs" element={<ActiveJobs />} />
           <Route path="JobReport" element={<JobReport />} />

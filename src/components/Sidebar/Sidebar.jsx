@@ -56,7 +56,7 @@ function Sidebar() {
             <ul className="nav flex-column sub-menu">
               <li className="nav-item">
                 {" "}
-                <NavLink className="nav-link" to="/AddNewGroup">
+                <NavLink className="nav-link" to="/AddNewGroup/AddGroup">
                   Add New Group
                 </NavLink>
               </li>

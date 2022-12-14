@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link, Outlet } from "react-router-dom";
 import auth from "../../../services/authService";
-import OurStepper from "../../../components/Common/OurStepper/OurStepper";
+import AddGroup from "../../../components/Groups/AddNewGroup/AddGroup/AddGroup";
 import "../../../custom/css/custom.css";
 
 function AddNewGroup() {
-  // Stepper Steps
-  const steps = ["Create New Group", "Add Steps", "Add Filters"];
   const [admin, setAdmin] = useState({});
 
   async function getAdmin() {
@@ -27,15 +24,13 @@ function AddNewGroup() {
         </p>
       </div>
       <div className="body border border-secondary rounded">
-        <Link to="AddGroup">Group</Link>/<Link to="AddStep">Step</Link>/
-        <Link to="AddFilter">Filter</Link>
-        <OurStepper
-          steps={steps}
-          admin={admin}
-          Outlet={<Outlet />}
-          onlyBack={true}
-        />
+        <AddGroup admin={admin} />
       </div>
+      {/* <div className="createBtn">
+        <button type="button" className="btn btn-dark btn-icon-text">
+          Create Group <i className="mdi mdi-group menu-icon"></i>
+        </button>
+      </div> */} 
     </div>
   );
 }

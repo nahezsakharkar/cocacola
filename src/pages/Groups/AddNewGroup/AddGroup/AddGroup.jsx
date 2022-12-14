@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import OrderedSteps from "./OrderedSteps";
-import AddStep from "../AddStep/AddStep";
 import schedule from "../../../../services/scheduleService";
-import OurModal from "../../../Common/OurModal/OurModal";
+import OurModal from "../../../../components/Common/OurModal/OurModal";
 
 function AddGroup(props) {
   const { admin } = props;
@@ -36,11 +34,11 @@ function AddGroup(props) {
     setSteps(data);
   }
 
-  useEffect(() => {
-    setUserId(admin["id"]);
-    setCompanyId(admin["companyid"]);
-    getSteps(groupId);
-  }, [admin, groupId]);
+  // useEffect(() => {
+  //   setUserId(admin["id"]);
+  //   setCompanyId(admin["companyid"]);
+  //   getSteps(groupId);
+  // }, [admin, groupId]);
 
   const addStep = () => {
     setNoSteps(false);
@@ -218,27 +216,6 @@ function AddGroup(props) {
             </div>
           </div>
         </div>
-        {noSteps || <OrderedSteps steps={steps} confirmedSteps={confirmedSteps} />}
-        {stepArray.map((step, index) => {
-          return (
-            <AddStep
-              key={index}
-              stepNumber={step}
-              groupId={groupId}
-              setAddAnotherStep={setAddAnotherStep}
-              noSteps={noSteps}
-              setNoSteps={setNoSteps}
-              noOfSteps={noOfSteps}
-              setNoOfSteps={setNoOfSteps}
-              stepArray={stepArray}
-              setStepArray={setStepArray}
-              noOfConfirmedSteps={noOfConfirmedSteps}
-              setNoOfConfirmedSteps={setNoOfConfirmedSteps}
-              confirmedSteps={confirmedSteps}
-              setConfirmedSteps={setConfirmedSteps}
-            />
-          );
-        })}
         {noSteps && (
           <div className="row">
             <button
@@ -260,19 +237,6 @@ function AddGroup(props) {
           title={"Create Schedule?"}
           description="Do you really wish to Create a Schedule and proceed to adding Steps? "
         />
-        {noSteps ||
-          (addAnotherStep && (
-            <div className="row">
-              <button
-                type="button"
-                onClick={anotherStep}
-                className="btn btn-dark btn-icon-text"
-              >
-                Add Another Step
-                <i className="fa fa-plus btn-icon-append"></i>
-              </button>
-            </div>
-          ))}
       </form>
     </div>
   );

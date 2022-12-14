@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import schedule from "../../../../services/scheduleService";
-import Filters from "./Filters";
-import AddFilter from "../AddFilter/AddFilter";
-import Tooltip from "@mui/material/Tooltip";
-import OurModal from "../../../Common/OurModal/OurModal";
 import { toast } from "react-toastify";
+import Tooltip from "@mui/material/Tooltip";
+import OurModal from "../../../../components/Common/OurModal/OurModal";
+import schedule from "../../../../services/scheduleService";
 
 function AddStep(props) {
   const {
@@ -322,8 +320,6 @@ function AddStep(props) {
           </div>
         </div>
       </div>
-      {noFilters || <Filters />}
-      {noFilters || <AddFilter stepId={stepId} />}
       {noFilters && (
         <div className="row">
           <button
