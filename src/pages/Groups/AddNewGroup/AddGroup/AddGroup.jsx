@@ -1,80 +1,51 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import auth from "../../../../services/authService";
 import schedule from "../../../../services/scheduleService";
 import OurModal from "../../../../components/Common/OurModal/OurModal";
 
-function AddGroup(props) {
-  const { admin } = props;
-  const [userId, setUserId] = useState(0);
-  const [groupId, setGroupId] = useState(0);
-  const [companyId, setCompanyId] = useState(0);
-  // check if steps exists
-  const [noSteps, setNoSteps] = useState(true);
-  //  number of steps
-  const [noOfSteps, setNoOfSteps] = useState(0);
-  // add another step button -- show/hide
-  const [addAnotherStep, setAddAnotherStep] = useState(false);
-  // array if steps stepArray = [1 ,2 ,3 ...]
-  const [stepArray, setStepArray] = useState([]);
-  // number of confirmed steps
-  const [noOfConfirmedSteps, setNoOfConfirmedSteps] = useState(0);
-  // array of confirmed steps confirmedSteps=[1 ,2 ,3 ...]
-  const [confirmedSteps, setConfirmedSteps] = useState([]);
-  //all steps
-  const [steps, setSteps] = useState([]);
-
+function AddGroup() {
   const [formValues, setFormValues] = useState({});
+  const [admin, setAdmin] = useState({});
+  const [steps, setSteps] = useState([]);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  async function getSteps(groupId) {
-    const data = await schedule.getAllSteps(groupId);
+  const navigate = useNavigate();
+
+  async function getAdmin() {
+    const data = await auth.getCurrentUserDetails();
+    setAdmin(data.payload);
+  }
+
+  async function getSteps(id) {
+    const data = await schedule.getAllSteps(id);
     setSteps(data);
   }
 
-  // useEffect(() => {
-  //   setUserId(admin["id"]);
-  //   setCompanyId(admin["companyid"]);
-  //   getSteps(groupId);
-  // }, [admin, groupId]);
-
-  const addStep = () => {
-    setNoSteps(false);
-    setNoOfSteps(noOfSteps + 1);
-    setStepArray((prev) => [...prev, noOfSteps + 1]);
-  };
-
-  const anotherStep = () => {
-    setNoOfSteps(noOfSteps + 1);
-    setStepArray((prev) => [...prev, noOfSteps + 1]);
-    setAddAnotherStep(false);
-  };
+  useEffect(() => {
+    getAdmin();
+  }, []);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormValues({
       ...formValues,
       [id]: value,
-      companyid: companyId,
-      userid: userId,
+      companyid: admin["companyid"],
+      userid: admin["id"],
     });
   };
 
   const onSubmit = () => {
-    if (Object.keys(formValues).length === 0) {
-      toast.warning("Atleast Fill a Single Field !");
-    } else {
-      handleSubmit();
-      addStep();
-    }
-    setOpen(false);
+    handleSubmit();
   };
 
-  const handleSubmit = async () => {
+  async function handleSubmit() {
     const data = await schedule.createGroup(formValues);
-    setGroupId(data.payload.id);
     if (data.message === "updated successfully") {
       toast.success("Schedule was Updated Successfully");
     } else if (data.message === "added successfully") {
@@ -82,7 +53,10 @@ function AddGroup(props) {
     } else {
       toast.error("There was some Error while creating a Schedule");
     }
-  };
+    setOpen(false);
+    getSteps(data.payload.id);
+    navigate("/AddNewGroup/AddStep", { state: { group: data.payload } });
+  }
 
   return (
     <div className="card-body">
@@ -216,8 +190,8 @@ function AddGroup(props) {
             </div>
           </div>
         </div>
-        {noSteps && (
-          <div className="row">
+        <div className="row" style={{ justifyContent: "center" }}>
+          {steps.type === "S" || (
             <button
               type="button"
               onClick={handleOpen}
@@ -226,8 +200,18 @@ function AddGroup(props) {
               Create Group and Add New Step
               <i className="fa fa-plus btn-icon-append"></i>
             </button>
-          </div>
-        )}
+          )}
+          {steps.type === "S" && (
+            <button
+              type="button"
+              onClick={handleOpen}
+              className="btn btn-dark btn-icon-text"
+            >
+              Update Steps
+              <i className="fa fa-plus btn-icon-append"></i>
+            </button>
+          )}
+        </div>
         <OurModal
           open={open}
           setOpen={setOpen}

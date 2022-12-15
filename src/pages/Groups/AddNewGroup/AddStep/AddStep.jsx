@@ -1,44 +1,23 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import Tooltip from "@mui/material/Tooltip";
-import OurModal from "../../../../components/Common/OurModal/OurModal";
 import schedule from "../../../../services/scheduleService";
+import OurModal from "../../../../components/Common/OurModal/OurModal";
+import OrderedSteps from "./OrderedSteps";
 
-function AddStep(props) {
-  const {
-    stepNumber,
-    groupId,
-    setAddAnotherStep,
-    noSteps,
-    setNoSteps,
-    noOfSteps,
-    setNoOfSteps,
-    stepArray,
-    setStepArray,
-    noOfConfirmedSteps,
-    setNoOfConfirmedSteps,
-    confirmedSteps,
-    setConfirmedSteps,
-  } = props;
+function AddStep() {
+  const location = useLocation();
 
-  const [noFilters, setNoFilters] = useState(true);
-  const [noOfFilters, setNoOfFilters] = useState(0);
+  var { group } = location.state;
 
   const [interfaces, setInterfaces] = useState([]);
-
+  const [steps, setSteps] = useState({ id: "default" });
   const [formValues, setFormValues] = useState({
+    gid: group.id,
     batching: 0,
     detailedlog: 0,
     forcesync: 0,
-    sequence: stepNumber,
   });
-
-  const [stepId, setStepId] = useState(0);
-  const [stepDetails, setStepDetails] = useState({});
-
-  const [openRemoveStep, setOpenRemoveStep] = useState(false);
-  const handleOpenRemoveStep = () => setOpenRemoveStep(true);
-  const handleCloseRemoveStep = () => setOpenRemoveStep(false);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -48,85 +27,53 @@ function AddStep(props) {
     const data = await schedule.getAllInterfaces();
     setInterfaces(data.payload);
   }
-  async function getStepDetails(id) {
-    const data = await schedule.getStepById(id);
-    setStepDetails(data);
-  }
 
-  const addFilter = () => {
-    setNoFilters(false);
-    setNoOfFilters(noOfFilters + 1);
-    setAddAnotherStep(true);
-  };
+  async function getSteps(groupId) {
+    const data = await schedule.getAllSteps(groupId);
+    setSteps(data.payload);
+  }
 
   useEffect(() => {
     getInterfaces();
-    getStepDetails(stepId);
-  }, [stepId]);
-
-  // console.log("Number of Steps : ", noOfSteps);
-
-  const onRemoveStep = () => {
-    // console.log("Number of Steps before Minus : ", noOfSteps);
-    setNoOfSteps(noOfSteps - 1);
-
-    setStepArray((prevArray) => {
-      return prevArray.filter((item) => item !== noOfSteps);
-    });
-
-    setDefaults();
-    setOpenRemoveStep(false);
-  };
-
-  const setDefaults = () => {
-    if (noOfSteps === 0) {
-      setNoSteps(true);
-    }
-    // console.log("Number of Steps after Minus : ", noOfSteps);
-  };
+    getSteps(group.id);
+  }, [group.id]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormValues({
       ...formValues,
       [id]: value,
-      gid: groupId,
     });
 
     if (e.target.id === "batching") {
       setFormValues({
         ...formValues,
         [id]: e.target.checked === true ? 1 : 0,
-        gid: groupId,
       });
     }
     if (e.target.id === "forcesync") {
       setFormValues({
         ...formValues,
         [id]: e.target.checked === true ? 1 : 0,
-        gid: groupId,
       });
     }
     if (e.target.id === "detailedlog") {
       setFormValues({
         ...formValues,
         [id]: e.target.checked === true ? 1 : 0,
-        gid: groupId,
       });
     }
   };
 
   const onSubmit = () => {
     handleSubmit();
-    addFilter();
-    setOpen(false);
-    setNoOfConfirmedSteps(noOfConfirmedSteps + 1);
-    setConfirmedSteps((prev) => [...prev, noOfConfirmedSteps + 1]);
   };
 
   const handleSubmit = async () => {
-    const data = await schedule.createStep(formValues);
-    setStepId(data.payload.id);
+    const data = await schedule.createStep({
+      ...formValues,
+      sequence: steps.id === "default" ? 1 : Object.keys(steps).length + 1,
+    });
     if (data.message === "updated successfully") {
       toast.success("Step was Updated Successfully");
     } else if (data.message === "added successfully") {
@@ -134,6 +81,9 @@ function AddStep(props) {
     } else {
       toast.error("There was some Error while creating a Step");
     }
+    setOpen(false);
+    window.location.reload(false);
+    // navigate("/AddNewGroup/AddStep", { state: { group: group} });
   };
 
   return (
@@ -145,28 +95,9 @@ function AddStep(props) {
           marginBottom: "2rem",
         }}
       >
-        <h4 className="card-title">Step #{stepNumber}</h4>
-        {/* {confirmedStep && ( */}
-          <button
-            onClick={handleOpenRemoveStep}
-            type="button"
-            className="close"
-            aria-label="Close"
-          >
-            <Tooltip title="Remove Step" placement="left" arrow>
-              <span aria-hidden="true">&times;</span>
-            </Tooltip>
-          </button>
-        {/* )} */}
-        <OurModal
-          open={openRemoveStep}
-          setOpen={setOpenRemoveStep}
-          handleOpen={handleOpenRemoveStep}
-          handleClose={handleCloseRemoveStep}
-          handleYes={onRemoveStep}
-          title={"Remove Step?"}
-          description="Do you really wish to Remove this Step? All Form Data will be lost. "
-        />
+        <h4 className="card-title">
+          Adding Steps into {group.groupname} Group
+        </h4>
       </div>
       <div className="row">
         <div className="col-md-8">
@@ -320,18 +251,16 @@ function AddStep(props) {
           </div>
         </div>
       </div>
-      {noFilters && (
-        <div className="row">
-          <button
-            type="button"
-            className="btn btn-dark btn-icon-text"
-            onClick={handleOpen}
-          >
-            Confirm Step and Add Filter
-            <i className="fa fa-plus btn-icon-append"></i>
-          </button>
-        </div>
-      )}
+      <div className="row" style={{ justifyContent: "center" }}>
+        <button
+          type="button"
+          className="btn btn-dark btn-icon-text"
+          onClick={handleOpen}
+        >
+          Confirm Step
+          <i className="fa fa-plus btn-icon-append"></i>
+        </button>
+      </div>
       <OurModal
         open={open}
         setOpen={setOpen}
@@ -339,8 +268,9 @@ function AddStep(props) {
         handleClose={handleClose}
         handleYes={onSubmit}
         title={"Create Step?"}
-        description="Do you really wish to Create a Step and proceed to adding Filter? "
+        description="Do you really wish to Create this Step? "
       />
+      <OrderedSteps group={group} steps={steps} interfaces={interfaces} />
     </div>
   );
 }

@@ -1,29 +1,43 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import OurModal from "../../../../components/Common/OurModal/OurModal";
 import schedule from "../../../../services/scheduleService";
+import Filters from "./Filters";
 
-function AddFilter(props) {
-  const { stepId } = props;
+function AddFilter() {
+  const location = useLocation();
+  const { step, group } = location.state;
+
   const [formValues, setFormValues] = useState({});
+  const [filters, setFilters] = useState({ id: "default" });
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  async function getFilters(groupId) {
+    const data = await schedule.getAllFilters(groupId);
+    setFilters(data.payload);
+  }
+
+  useEffect(() => {
+    getFilters(step.id);
+  }, [step.id]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormValues({
       ...formValues,
       [id]: value,
-      sid: stepId,
+      sid: step.id,
     });
   };
 
   const onSubmit = () => {
     handleSubmit();
-    setOpen(false);
   };
-
+  
   const handleSubmit = async () => {
     const data = await schedule.createFilter(formValues);
     if (data.message === "updated successfully") {
@@ -33,11 +47,15 @@ function AddFilter(props) {
     } else {
       toast.error("There was some Error while creating a Filter");
     }
+    setOpen(false);
+    window.location.reload(false);
   };
 
   return (
     <div className="card-body border border-secondary rounded mb-3">
-      <h4 className="card-title">Add Filter</h4>
+      <h4 className="card-title">
+        Adding Filters into Step {step.sequence} of Group '{group.groupname}'
+      </h4>
       <div className="filterForm">
         <div className="filterField">
           <div className="label">
@@ -108,6 +126,7 @@ function AddFilter(props) {
           </div>
         </div>
       </div>
+      <Filters filters={filters} />
     </div>
   );
 }

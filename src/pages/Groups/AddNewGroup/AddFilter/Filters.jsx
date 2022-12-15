@@ -1,6 +1,8 @@
-import DataTable from "../../../Common/DataTable/DataTable";
+import DataTable from "../../../../components/Common/DataTable/DataTable";
 
-function Filters() {
+function Filters(props) {
+  const { filters } = props;
+
   const columns = [
     { field: "field", headerName: "Field", flex: 1, width: 300 },
     {
@@ -10,7 +12,7 @@ function Filters() {
       width: 150,
     },
     {
-      field: "value",
+      field: "filtervalue",
       headerName: "Value",
       flex: 1,
       width: 300,
@@ -40,13 +42,16 @@ function Filters() {
     },
   ];
 
-  const rows = [
-    { id: 1, field: "CustomerId", operator: "=", value: 900425 },
-    { id: 2, field: "ProductId", operator: "LIKE", value: 900425 },
-  ];
+  // const rows = [
+  //   { id: 1, field: "CustomerId", operator: "=", value: 900425 },
+  //   { id: 2, field: "ProductId", operator: "LIKE", value: 900425 },
+  // ];
+
+  const rows =
+    Object.keys([filters].flat()[0]).length === 0 ? [].flat() : [filters].flat();
 
   return (
-    <div className="filters">
+    <div className="filters mt-3">
       <div className="title">
         <h4 className="card-title">Filters</h4>
       </div>
