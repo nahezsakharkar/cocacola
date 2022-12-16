@@ -42,6 +42,9 @@ function Sidebar() {
           </NavLink>
         </li>
         <li className="nav-item">
+          <div className="menu-heading mt-0">SCHEDULE MANAGEMENT</div>
+        </li>
+        <li className="nav-item">
           <a
             className="nav-link"
             data-toggle="collapse"

@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import Stack from "@mui/material/Stack";
+import LinearProgress from "@mui/material/LinearProgress";
 import DataTable from "../../../components/Common/DataTable/DataTable";
 import schedule from "../../../services/scheduleService";
 import OurModal from "../../../components/Common/OurModal/OurModal";
+import Loader from "../../../components/Common/Loader/Loader";
 import "../../../custom/css/custom.css";
 
 function ShowGroups() {
@@ -14,6 +17,8 @@ function ShowGroups() {
   const [modalTitle, setModalTitle] = useState();
   const [modalDesc, setModalDesc] = useState();
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -21,10 +26,13 @@ function ShowGroups() {
   async function getGroupsData(queryParams) {
     const data = await schedule.getGroupsByScheduleStatus(queryParams);
     setGroupList(data.payload);
+    setIsLoading(false);
   }
 
   useEffect(() => {
-    getGroupsData("Active,Disabled");
+    setTimeout(() => {
+      getGroupsData("Active,Disabled");
+    }, 5000);
   }, [groupList]);
 
   const openModal = (thisRow, thisOperation) => {
@@ -145,9 +153,9 @@ function ShowGroups() {
   ];
 
   const rows = groupList;
-
   return (
     <div className="data existingGroups">
+      <Loader open={isLoading} handleClose={isLoading} />
       <div className="title">
         <h1 className="Heading">Jobs Group</h1>
         <button
@@ -160,6 +168,11 @@ function ShowGroups() {
         </button>
       </div>
       <div className="body">
+        {isLoading && (
+          <Stack sx={{ width: "100%", color: "#f02632" }} spacing={2}>
+            <LinearProgress color="inherit" />
+          </Stack>
+        )}
         <DataTable pageSize={15} columns={columns} rows={rows} toolbar />
         <OurModal
           open={open}

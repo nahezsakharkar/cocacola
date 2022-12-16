@@ -1,16 +1,33 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
 import { TextField } from "@mui/material";
 import Select from "react-select";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+
 import auth from "../../../../services/authService";
 import schedule from "../../../../services/scheduleService";
 import OurModal from "../../../../components/Common/OurModal/OurModal";
 
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
 function AddGroup() {
-  const [formValues, setFormValues] = useState({});
+  const [formValues, setFormValues] = useState({
+    groupname: "",
+    scheduledstatus: "",
+    scheduled: "",
+    startdate: "",
+    frequency: "",
+    frequencytype: "",
+  });
+  const [formErrors, setFormErrors] = useState({});
   const [admin, setAdmin] = useState({});
   const [steps, setSteps] = useState([]);
+  const [dateValue, setDateValue] = useState(null);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -61,17 +78,71 @@ function AddGroup() {
     },
   ];
 
+  const optionsForFrequencyType = [
+    {
+      target: JSON.parse('{"id":"frequencytype", "value":"Min"}'),
+      value: "Min",
+      label: "Min",
+    },
+    {
+      target: JSON.parse('{"id":"frequencytype", "value":"Hour"}'),
+      value: "Hour",
+      label: "Hour",
+    },
+    {
+      target: JSON.parse('{"id":"frequencytype", "value":"Day"}'),
+      value: "Day",
+      label: "Day",
+    },
+  ];
+
+  const dateHandleChange = (newValue) => {
+    setDateValue(newValue);
+    if (newValue) {
+      formValues["startdate"] = newValue.toISOString().slice(0, 10);
+    }
+  };
+
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormValues({
       ...formValues,
       [id]: value,
+      frequency: Number(value),
       groupname: capitalize(value),
       companyid: admin["companyid"],
       userid: admin["id"],
     });
-    console.log(formValues)
   };
+
+  const groupSchema = Yup.object({
+    scheduledstatus: Yup.string().required("Status is Required!"),
+    scheduled: Yup.string().required("Schedule is Required!"),
+    startdate: Yup.string().required("Start Date Type is Required!"),
+    frequency: Yup.number()
+      .required("Frequency is Required!")
+      .positive()
+      .integer(),
+    frequencytype: Yup.string().required("Frequency Type is Required!"),
+    groupname: Yup.string().required("Group Name is Required!"),
+  });
+
+  // console.log(groupSchema.isValid(formValues).then((valid) => valid));
+
+  const {
+    values,
+    errors,
+    handleChange: handlechangeFormik,
+    handleSubmit: handlesubmitFormik,
+  } = useFormik({
+    initialValues: formValues,
+    validationSchema: groupSchema,
+    onChange: handleChange,
+    onSubmit: handleSubmit,
+  });
+
+  console.log("Errors : ", errors);
+  console.log("Values : ", values);
 
   const onSubmit = () => {
     handleSubmit();
@@ -93,7 +164,7 @@ function AddGroup() {
 
   return (
     <div className="card-body">
-      <form>
+      <form onSubmit={handlesubmitFormik}>
         <div className="row">
           <div className="col-md-6">
             <div className="form-group row">
@@ -104,10 +175,11 @@ function AddGroup() {
                 <TextField
                   error={false} //{formErrors.house_name_prop ? true : false}
                   id="groupname"
+                  name="groupname"
                   className="capitalize"
                   placeholder="Enter Job Group Name"
                   // defaultValue={updateValues.house_name}
-                  onChange={handleChange}
+                  onChange={handlechangeFormik}
                   // InputProps={{
                   //   readOnly: readOnly,
                   // }}
@@ -136,12 +208,12 @@ function AddGroup() {
                   }}
                   inputId="scheduledstatus"
                   options={optionsForStatus}
-                  onChange={handleChange}
+                  onChange={handlechangeFormik}
                   className="search-options"
                   defaultValue={{
                     target: JSON.parse('{"id":"scheduledstatus", "value":""}'),
                     value: "",
-                    label: "Select Status",
+                    label: "Active, Disabled...",
                   }}
                 />
                 <p className="helperText">Error</p>
@@ -166,12 +238,12 @@ function AddGroup() {
                   }}
                   inputId="scheduled"
                   options={optionsForSchedule}
-                  onChange={handleChange}
+                  onChange={handlechangeFormik}
                   className="search-options"
                   defaultValue={{
                     target: JSON.parse('{"id":"scheduled", "value":""}'),
                     value: "",
-                    label: "Select Schedule",
+                    label: "Recurring, Once...",
                   }}
                 />
                 <p className="helperText">Error</p>
@@ -184,13 +256,22 @@ function AddGroup() {
                 Start Date<span className="text-danger">*</span>
               </label>
               <div className="col-sm-9">
-                <input
-                  id="startdate"
-                  onChange={handleChange}
-                  type="date"
-                  className="form-control"
-                  placeholder="dd/mm/yyyy"
-                />
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    inputId="startdate"
+                    className="date-picker"
+                    value={dateValue}
+                    onChange={dateHandleChange}
+                    renderInput={(params) => (
+                      <TextField
+                        name="startdate"
+                        sx={{ height: "3rem", width: "100%" }}
+                        {...params}
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
+                <p className="helperText">Error</p>
               </div>
             </div>
           </div>
@@ -202,13 +283,24 @@ function AddGroup() {
                 Frequency<span className="text-danger">*</span>
               </label>
               <div className="col-sm-9">
-                <input
+                <TextField
+                  error={false} //{formErrors.house_name_prop ? true : false}
                   id="frequency"
-                  onChange={handleChange}
-                  type="number"
-                  min="0"
-                  className="form-control"
+                  className="capitalize"
                   placeholder="Enter Frequency"
+                  // defaultValue={updateValues.house_name}
+                  onChange={handlechangeFormik}
+                  inputProps={{
+                    type: "number",
+                    min: 0,
+                  }}
+                  InputProps={
+                    {
+                      // readOnly: readOnly,
+                    }
+                  }
+                  helperText="Error" //{formErrors.house_name}
+                  variant="outlined"
                 />
               </div>
             </div>
@@ -222,16 +314,25 @@ function AddGroup() {
                 Frequency Type<span className="text-danger">*</span>
               </label>
               <div className="col-sm-7">
-                <select
-                  id="frequencytype"
-                  onChange={handleChange}
-                  className="form-control"
-                >
-                  <option value={""}>Select Frequency</option>
-                  <option value={"Min"}>Min</option>
-                  <option value={"Hour"}>Hour</option>
-                  <option value={"Day"}>Day</option>
-                </select>
+                <Select
+                  styles={{
+                    control: (baseStyles, state) => ({
+                      ...baseStyles,
+                      borderColor: state.menuIsOpen ? "red" : "#2684FF", //{formErrors.house_name_prop ? "red" : "grey"}
+                      borderWidth: state.menuIsOpen ? "2px" : "1px",
+                    }),
+                  }}
+                  inputId="frequencytype"
+                  options={optionsForFrequencyType}
+                  onChange={handlechangeFormik}
+                  className="search-options"
+                  defaultValue={{
+                    target: JSON.parse('{"id":"frequencytype", "value":""}'),
+                    value: "",
+                    label: "Min, Hour, Day...",
+                  }}
+                />
+                <p className="helperText">Error</p>
               </div>
             </div>
           </div>
@@ -252,8 +353,8 @@ function AddGroup() {
         <div className="row" style={{ justifyContent: "center" }}>
           {steps.type === "S" || (
             <button
-              type="button"
-              onClick={handleOpen}
+              type="submit"
+              // onClick={handleOpen}
               className="btn btn-dark btn-icon-text"
             >
               Create Group and Add New Step
