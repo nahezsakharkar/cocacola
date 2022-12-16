@@ -14,7 +14,7 @@ import AddGroup from "./pages/Groups/AddNewGroup/AddGroup/AddGroup"
 import AddStep from "./pages/Groups/AddNewGroup/AddStep/AddStep"
 import AddFilter from "./pages/Groups/AddNewGroup/AddFilter/AddFilter"
 
-import ShowGroups from "./pages/Groups/ShowGroups/ShowGroup"
+import ShowGroups from "./pages/Groups/ShowGroups/ShowGroups"
 import ActiveJobs from "./pages/Jobs/ActiveJobs/ActiveJobs"
 import JobReport from "./pages/Jobs/JobReport/JobReport"
 import Settings from "./pages/Settings/Settings"

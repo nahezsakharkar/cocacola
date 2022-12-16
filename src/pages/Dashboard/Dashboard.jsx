@@ -32,7 +32,7 @@ function Dashboard() {
         addZero(today.getMinutes()) +
         ":" +
         addZero(today.getSeconds());
-      setCurrentDateTime(date + " " + time);
+      setCurrentDateTime("Date: " + date + ", Time: " + time);
     };
     setInterval(updateDateTime, 1000);
     return currentDateTime;

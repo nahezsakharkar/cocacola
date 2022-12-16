@@ -1,12 +1,22 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import DataTable from "../../../components/Common/DataTable/DataTable";
-import "../../../custom/css/custom.css";
 import schedule from "../../../services/scheduleService";
+import OurModal from "../../../components/Common/OurModal/OurModal";
+import "../../../custom/css/custom.css";
 
-function ShowGroup() {
+function ShowGroups() {
   const navigate = useNavigate();
   const [groupList, setGroupList] = useState([]);
+  const [row, setRow] = useState([]);
+  const [operation, setOperation] = useState("");
+  const [modalTitle, setModalTitle] = useState();
+  const [modalDesc, setModalDesc] = useState();
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   async function getGroupsData(queryParams) {
     const data = await schedule.getGroupsByScheduleStatus(queryParams);
@@ -15,7 +25,61 @@ function ShowGroup() {
 
   useEffect(() => {
     getGroupsData("Active,Disabled");
-  }, []);
+  }, [groupList]);
+
+  const openModal = (thisRow, thisOperation) => {
+    setRow(thisRow);
+    setOperation(thisOperation);
+    if (thisOperation === "delete") {
+      setModalTitle("Delete " + thisRow.groupname + " Job Group?");
+      setModalDesc(
+        "Do you really wish to Remove " +
+          thisRow.groupname +
+          " from the System? This Group's data will be lost. "
+      );
+      handleOpen();
+    }
+  };
+
+  const handleOperation = () => {
+    if (operation === "delete") {
+      handleDelete();
+    } else if (operation === "run") {
+      // handleRun();
+    } else if (operation === "disable") {
+      // handleDisable();
+    }
+  };
+
+  async function handleDelete() {
+    const data = await schedule.deleteGroup(row.id);
+    if (data.message === "group deleted") {
+      toast.success("Schedule was Deleted Successfully");
+    } else {
+      toast.error("There was some Error while deleting a Schedule");
+    }
+    setOpen(false);
+  }
+
+  // async function handleRun() {
+  //   const data = await schedule.runGroup(row.id);
+  //   if (data.message === "group deleted") {
+  //     toast.success("Schedule was Deleted Successfully");
+  //   } else {
+  //     toast.error("There was some Error while deleting a Schedule");
+  //   }
+  //   setOpen(false);
+  // }
+
+  // async function handleDisable() {
+  //   const data = await schedule.disableGroup(row.id);
+  //   if (data.message === "group deleted") {
+  //     toast.success("Schedule was Deleted Successfully");
+  //   } else {
+  //     toast.error("There was some Error while deleting a Schedule");
+  //   }
+  //   setOpen(false);
+  // }
 
   const columns = [
     { field: "id", headerName: "Id", flex: 0.2, width: 80 },
@@ -69,6 +133,7 @@ function ShowGroup() {
             <button
               type="button"
               className="btn btn-danger btn-icon-text btn-sm"
+              onClick={() => openModal(params.row, "delete")}
             >
               Delete
               <i className="ti-trash btn-icon-append"></i>
@@ -79,31 +144,14 @@ function ShowGroup() {
     },
   ];
 
-  const rows = groupList
-
-  // const rows = [
-  //   {
-  //     id: 1,
-  //     jobGroup: "Nepal Products",
-  //     schedule: "Every 10 Mins",
-  //     status: "Active",
-  //   },
-  //   {
-  //     id: 2,
-  //     jobGroup: "Nepal Distributers",
-  //     schedule: "Daily at 9 AM",
-  //     status: "Active",
-  //   },
-  //   { id: 3, jobGroup: "Nepal Outlets", schedule: null, status: "Disabled" },
-  //   { id: 4, jobGroup: "Nepal Salesman", schedule: null, status: "Active" },
-  // ];
+  const rows = groupList;
 
   return (
     <div className="data existingGroups">
       <div className="title">
         <h1 className="Heading">Jobs Group</h1>
         <button
-          onClick={() => navigate("/AddNewGroup")}
+          onClick={() => navigate("/AddNewGroup/AddGroup")}
           type="button"
           className="btn btn-outline-secondary btn-icon-text"
         >
@@ -113,9 +161,18 @@ function ShowGroup() {
       </div>
       <div className="body">
         <DataTable pageSize={15} columns={columns} rows={rows} toolbar />
+        <OurModal
+          open={open}
+          setOpen={setOpen}
+          handleOpen={handleOpen}
+          handleClose={handleClose}
+          handleYes={handleOperation}
+          title={modalTitle}
+          description={modalDesc}
+        />
       </div>
     </div>
   );
 }
 
-export default ShowGroup;
+export default ShowGroups;

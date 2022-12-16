@@ -177,17 +177,59 @@
 }
 
 .filterForm .filterField:nth-child(1) {
-  width: 28%;
+  width: 30%;
 }
 
 .filterForm .filterField:nth-child(2) {
-  width: 18%;
+  width: 20%;
 }
 
 .filterForm .filterField:nth-child(3) {
-  width: 28%;
+  width: 30%;
 }
 
 .filterForm .filterField:nth-child(4) {
-  width: 18%;
+  width: 10%;
+}
+
+.capitalize .MuiInputBase-input {
+  text-transform: capitalize;
+}
+
+.uppercase .MuiInputBase-input {
+  text-transform: uppercase;
+}
+
+.MuiFormControl-root {
+  width: 100%;
+}
+
+.MuiInputBase-input {
+  height: 0.75rem !important;
+}
+
+.search-options {
+  width: 100%;
+}
+
+.search-options input {
+  height: 1.9rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: 0.625rem 0.75rem;
+  transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.helperText {
+  color: #d32f2f;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  font-size: 0.75rem;
+  line-height: 1.66;
+  letter-spacing: 0.03333em;
+  text-align: left;
+  margin-top: 3px;
+  margin-right: 14px;
+  margin-bottom: 0;
+  margin-left: 14px;
 }

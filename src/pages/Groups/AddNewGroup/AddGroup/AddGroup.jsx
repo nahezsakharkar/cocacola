@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { TextField } from "@mui/material";
+import Select from "react-select";
 import auth from "../../../../services/authService";
 import schedule from "../../../../services/scheduleService";
 import OurModal from "../../../../components/Common/OurModal/OurModal";
@@ -30,14 +32,45 @@ function AddGroup() {
     getAdmin();
   }, []);
 
+  const capitalize = (str) =>
+    str.replace(/^(.)|\s+(.)/g, (c) => c.toUpperCase());
+
+  const optionsForStatus = [
+    {
+      target: JSON.parse('{"id":"scheduledstatus", "value":"Active"}'),
+      value: "Active",
+      label: "Active",
+    },
+    {
+      target: JSON.parse('{"id":"scheduledstatus", "value":"Disabled"}'),
+      value: "Disabled",
+      label: "Disabled",
+    },
+  ];
+
+  const optionsForSchedule = [
+    {
+      target: JSON.parse('{"id":"scheduled", "value":"Recurring"}'),
+      value: "Recurring",
+      label: "Recurring",
+    },
+    {
+      target: JSON.parse('{"id":"scheduled", "value":"Once"}'),
+      value: "Once",
+      label: "Once",
+    },
+  ];
+
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormValues({
       ...formValues,
       [id]: value,
+      groupname: capitalize(value),
       companyid: admin["companyid"],
       userid: admin["id"],
     });
+    console.log(formValues)
   };
 
   const onSubmit = () => {
@@ -68,12 +101,18 @@ function AddGroup() {
                 Job Group Name<span className="text-danger">*</span>
               </label>
               <div className="col-sm-9">
-                <input
+                <TextField
+                  error={false} //{formErrors.house_name_prop ? true : false}
                   id="groupname"
-                  onChange={handleChange}
-                  type="text"
-                  className="form-control bg-white"
+                  className="capitalize"
                   placeholder="Enter Job Group Name"
+                  // defaultValue={updateValues.house_name}
+                  onChange={handleChange}
+                  // InputProps={{
+                  //   readOnly: readOnly,
+                  // }}
+                  helperText="Error" //{formErrors.house_name}
+                  variant="outlined"
                 />
               </div>
             </div>
@@ -87,15 +126,25 @@ function AddGroup() {
                 Status <span className="text-danger">*</span>
               </label>
               <div className="col-sm-9">
-                <select
-                  id="scheduledstatus"
+                <Select
+                  styles={{
+                    control: (baseStyles, state) => ({
+                      ...baseStyles,
+                      borderColor: state.menuIsOpen ? "red" : "#2684FF", //{formErrors.house_name_prop ? "red" : "grey"}
+                      borderWidth: state.menuIsOpen ? "2px" : "1px",
+                    }),
+                  }}
+                  inputId="scheduledstatus"
+                  options={optionsForStatus}
                   onChange={handleChange}
-                  className="form-control"
-                >
-                  <option value={""}>Select Status</option>
-                  <option value={"Active"}>Active</option>
-                  <option value={"Disabled"}>Disabled</option>
-                </select>
+                  className="search-options"
+                  defaultValue={{
+                    target: JSON.parse('{"id":"scheduledstatus", "value":""}'),
+                    value: "",
+                    label: "Select Status",
+                  }}
+                />
+                <p className="helperText">Error</p>
               </div>
             </div>
           </div>
@@ -107,15 +156,25 @@ function AddGroup() {
                 Schedule<span className="text-danger">*</span>
               </label>
               <div className="col-sm-9">
-                <select
-                  id="scheduled"
+                <Select
+                  styles={{
+                    control: (baseStyles, state) => ({
+                      ...baseStyles,
+                      borderColor: state.menuIsOpen ? "red" : "#2684FF", //{formErrors.house_name_prop ? "red" : "grey"}
+                      borderWidth: state.menuIsOpen ? "2px" : "1px",
+                    }),
+                  }}
+                  inputId="scheduled"
+                  options={optionsForSchedule}
                   onChange={handleChange}
-                  className="form-control"
-                >
-                  <option value={""}>Select Schedule</option>
-                  <option value={"Recurring"}>Recurring</option>
-                  <option value={"Once"}>Once</option>
-                </select>
+                  className="search-options"
+                  defaultValue={{
+                    target: JSON.parse('{"id":"scheduled", "value":""}'),
+                    value: "",
+                    label: "Select Schedule",
+                  }}
+                />
+                <p className="helperText">Error</p>
               </div>
             </div>
           </div>

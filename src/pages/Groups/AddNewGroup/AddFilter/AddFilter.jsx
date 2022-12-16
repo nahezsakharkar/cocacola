@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import OurModal from "../../../../components/Common/OurModal/OurModal";
@@ -8,6 +8,8 @@ import Filters from "./Filters";
 function AddFilter() {
   const location = useLocation();
   const { step, group } = location.state;
+
+  const filter_form = useRef(null);
 
   const [formValues, setFormValues] = useState({});
   const [filters, setFilters] = useState({ id: "default" });
@@ -23,7 +25,7 @@ function AddFilter() {
 
   useEffect(() => {
     getFilters(step.id);
-  }, [step.id]);
+  }, [step.id, filters]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -37,7 +39,7 @@ function AddFilter() {
   const onSubmit = () => {
     handleSubmit();
   };
-  
+
   const handleSubmit = async () => {
     const data = await schedule.createFilter(formValues);
     if (data.message === "updated successfully") {
@@ -48,7 +50,8 @@ function AddFilter() {
       toast.error("There was some Error while creating a Filter");
     }
     setOpen(false);
-    window.location.reload(false);
+    filter_form.current.reset();
+    // window.location.reload(false);
   };
 
   return (
@@ -56,76 +59,78 @@ function AddFilter() {
       <h4 className="card-title">
         Adding Filters into Step {step.sequence} of Group '{group.groupname}'
       </h4>
-      <div className="filterForm">
-        <div className="filterField">
-          <div className="label">
-            <label className="col-sm-3 col-form-label">Field</label>
+      <form ref={filter_form} onSubmit={(e) => e.preventDefault()}>
+        <div className="filterForm">
+          <div className="filterField">
+            <div className="label">
+              <label className="col-sm-3 col-form-label">Field</label>
+            </div>
+            <div className="input">
+              <input
+                type="text"
+                className="form-control bg-white"
+                placeholder="Enter Field Name"
+                id="field"
+                onChange={handleChange}
+              />
+            </div>
           </div>
-          <div className="input">
-            <input
-              type="text"
-              className="form-control bg-white"
-              placeholder="Enter Field Name"
-              id="field"
-              onChange={handleChange}
-            />
+          <div className="filterField">
+            <div className="label">
+              <label className="col-sm-3 col-form-label">Operator</label>
+            </div>
+            <div className="input">
+              <select
+                id="operator"
+                onChange={handleChange}
+                className="form-control"
+              >
+                <option value="">Select Operator</option>
+                <option value="EQUALS">EQUALS</option>
+                <option value="LIKE">LIKE</option>
+              </select>
+            </div>
+          </div>
+          <div className="filterField">
+            <div className="label">
+              <label className="col-sm-3 col-form-label">Value</label>
+            </div>
+            <div className="input">
+              <input
+                id="filtervalue"
+                type="text"
+                className="form-control"
+                placeholder="Enter Field Value"
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="filterField m-auto">
+            <div className="label">
+              <label className="col-sm-3 col-form-label">Actions</label>
+            </div>
+            <div className="input">
+              <button
+                onClick={handleOpen}
+                type="button"
+                className="btn btn-dark btn-icon-text"
+              >
+                Add
+                <i className="fa fa-plus btn-icon-append"></i>
+              </button>
+              <OurModal
+                open={open}
+                setOpen={setOpen}
+                handleOpen={handleOpen}
+                handleClose={handleClose}
+                handleYes={onSubmit}
+                title={"Create Filter?"}
+                description="Do you really wish to Create a Filter? "
+              />
+            </div>
           </div>
         </div>
-        <div className="filterField">
-          <div className="label">
-            <label className="col-sm-3 col-form-label">Operator</label>
-          </div>
-          <div className="input">
-            <select
-              id="operator"
-              onChange={handleChange}
-              className="form-control"
-            >
-              <option value="">Select Operator</option>
-              <option value="EQUALS">EQUALS</option>
-              <option value="LIKE">LIKE</option>
-            </select>
-          </div>
-        </div>
-        <div className="filterField">
-          <div className="label">
-            <label className="col-sm-3 col-form-label">Value</label>
-          </div>
-          <div className="input">
-            <input
-              id="filtervalue"
-              type="text"
-              className="form-control"
-              placeholder="Enter Field Value"
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-        <div className="filterField">
-          <div className="label">
-            <label className="col-sm-3 col-form-label">Actions</label>
-          </div>
-          <div className="input">
-            <button
-              onClick={handleOpen}
-              type="button"
-              className="btn btn-dark btn-icon-text"
-            >
-              Add
-              <i className="fa fa-plus btn-icon-append"></i>
-            </button>
-            <OurModal
-              open={open}
-              setOpen={setOpen}
-              handleOpen={handleOpen}
-              handleClose={handleClose}
-              handleYes={onSubmit}
-              title={"Create Filter?"}
-              description="Do you really wish to Create a Filter? "
-            />
-          </div>
-        </div>
-      </div>
+      </form>
       <Filters filters={filters} />
     </div>
   );

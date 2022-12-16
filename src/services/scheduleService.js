@@ -15,6 +15,18 @@ export async function createGroup(formValues) {
     return response.data
 }
 
+export async function deleteGroup(id) {
+    const user = JSON.parse(localStorage.getItem(sessionKey))
+    const response = await http.delete(baseURL + "api/groups/delbyid?id=" + id, {
+        headers: {
+            Authorization: user.jwtToken
+        }
+    }
+    );
+    console.log(response)
+    return response.data
+}
+
 export async function getAllSteps(groupId) {
     const user = JSON.parse(localStorage.getItem(sessionKey))
 
@@ -104,6 +116,7 @@ export async function getGroupsByScheduleStatus(scheduledStatus) {
 
 const schedule = {
     createGroup,
+    deleteGroup,
     getAllSteps,
     getAllInterfaces,
     createStep,

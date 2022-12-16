@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { NavLink, Link, useNavigate } from "react-router-dom";
+import { NavLink, Link, useNavigate, useLocation } from "react-router-dom";
 import OurModal from "../Common/OurModal/OurModal";
 function Sidebar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -56,7 +57,22 @@ function Sidebar() {
             <ul className="nav flex-column sub-menu">
               <li className="nav-item">
                 {" "}
-                <NavLink className="nav-link" to="/AddNewGroup/AddGroup">
+                <NavLink
+                  className="nav-link"
+                  onClick={(e) => {
+                    if (location.pathname.includes("/AddNewGroup/"))
+                      e.preventDefault();
+                  }}
+                  to={
+                    location.pathname.includes("/AddNewGroup/")
+                      ? location.pathname.includes("/AddNewGroup/AddGroup")
+                        ? "/AddNewGroup/AddGroup"
+                        : location.pathname.includes("/AddNewGroup/AddStep")
+                        ? "/AddNewGroup/AddStep"
+                        : "/AddNewGroup/AddFilter"
+                      : "/AddNewGroup/AddGroup"
+                  }
+                >
                   Add New Group
                 </NavLink>
               </li>
