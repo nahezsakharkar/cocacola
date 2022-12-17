@@ -52,8 +52,8 @@ function Login() {
   const {
     values,
     errors,
-    handleSubmit: handleSubmitFormik,
     handleChange,
+    handleSubmit: handleSubmitFormik,
   } = useFormik({
     initialValues: {
       username: "",

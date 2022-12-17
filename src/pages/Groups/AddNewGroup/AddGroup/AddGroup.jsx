@@ -12,11 +12,10 @@ import auth from "../../../../services/authService";
 import schedule from "../../../../services/scheduleService";
 import OurModal from "../../../../components/Common/OurModal/OurModal";
 
-import { useFormik } from "formik";
-import * as Yup from "yup";
-
 function AddGroup() {
-  const [formValues, setFormValues] = useState({
+  const [admin, setAdmin] = useState({});
+  const [steps, setSteps] = useState([]);
+  const [values, setValues] = useState({
     groupname: "",
     scheduledstatus: "",
     scheduled: "",
@@ -24,10 +23,9 @@ function AddGroup() {
     frequency: "",
     frequencytype: "",
   });
-  const [formErrors, setFormErrors] = useState({});
-  const [admin, setAdmin] = useState({});
-  const [steps, setSteps] = useState([]);
   const [dateValue, setDateValue] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [canSubmit, setCanSubmit] = useState(false);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -47,10 +45,20 @@ function AddGroup() {
 
   useEffect(() => {
     getAdmin();
-  }, []);
+    if (Object.keys(errors).length === 0 && canSubmit) {
+      handleOpen();
+    }
+  }, [canSubmit, errors]);
 
   const capitalize = (str) =>
     str.replace(/^(.)|\s+(.)/g, (c) => c.toUpperCase());
+
+  function convertFullDateToNormalDate(str) {
+    var date = new Date(str),
+      mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+      day = ("0" + date.getDate()).slice(-2);
+    return [date.getFullYear(), mnth, day].join("-");
+  }
 
   const optionsForStatus = [
     {
@@ -97,59 +105,65 @@ function AddGroup() {
   ];
 
   const dateHandleChange = (newValue) => {
+    setCanSubmit(false);
     setDateValue(newValue);
-    if (newValue) {
-      formValues["startdate"] = newValue.toISOString().slice(0, 10);
-    }
+    values["startdate"] = convertFullDateToNormalDate(newValue);
   };
 
   const handleChange = (e) => {
+    setCanSubmit(false);
     const { id, value } = e.target;
-    setFormValues({
-      ...formValues,
+    setValues({
+      ...values,
       [id]: value,
-      frequency: Number(value),
-      groupname: capitalize(value),
-      companyid: admin["companyid"],
-      userid: admin["id"],
     });
   };
 
-  const groupSchema = Yup.object({
-    scheduledstatus: Yup.string().required("Status is Required!"),
-    scheduled: Yup.string().required("Schedule is Required!"),
-    startdate: Yup.string().required("Start Date Type is Required!"),
-    frequency: Yup.number()
-      .required("Frequency is Required!")
-      .positive()
-      .integer(),
-    frequencytype: Yup.string().required("Frequency Type is Required!"),
-    groupname: Yup.string().required("Group Name is Required!"),
-  });
+  const validate = (values) => {
+    const errors = {};
 
-  // console.log(groupSchema.isValid(formValues).then((valid) => valid));
+    if (!values.groupname) {
+      errors.groupname = "Group Name is Required!";
+    }
 
-  const {
-    values,
-    errors,
-    handleChange: handlechangeFormik,
-    handleSubmit: handlesubmitFormik,
-  } = useFormik({
-    initialValues: formValues,
-    validationSchema: groupSchema,
-    onChange: handleChange,
-    onSubmit: handleSubmit,
-  });
+    if (!values.scheduledstatus) {
+      errors.scheduledstatus = "Status is Required!";
+    }
 
-  console.log("Errors : ", errors);
-  console.log("Values : ", values);
+    if (!values.scheduled) {
+      errors.scheduled = "Schedule is Required!";
+    }
+
+    if (values.startdate === "") {
+      errors.startdate = "Start Date is Required!";
+    } else if (convertFullDateToNormalDate(values.startdate).length !== 10) {
+      errors.startdate = "Invalid Date!";
+    }
+
+    if (values.frequency === "") {
+      errors.frequency = "Frequency is Required!";
+    }
+
+    if (!values.frequencytype) {
+      errors.frequencytype = "Frequency Type is Required!";
+    }
+
+    return errors;
+  };
 
   const onSubmit = () => {
-    handleSubmit();
+    setErrors(validate(values));
+    setCanSubmit(true);
   };
 
   async function handleSubmit() {
-    const data = await schedule.createGroup(formValues);
+    const data = await schedule.createGroup({
+      ...values,
+      frequency: Number(values.frequency),
+      groupname: capitalize(values.groupname),
+      companyid: admin["companyid"],
+      userid: admin["id"],
+    });
     if (data.message === "updated successfully") {
       toast.success("Schedule was Updated Successfully");
     } else if (data.message === "added successfully") {
@@ -164,7 +178,7 @@ function AddGroup() {
 
   return (
     <div className="card-body">
-      <form onSubmit={handlesubmitFormik}>
+      <form>
         <div className="row">
           <div className="col-md-6">
             <div className="form-group row">
@@ -173,17 +187,12 @@ function AddGroup() {
               </label>
               <div className="col-sm-9">
                 <TextField
-                  error={false} //{formErrors.house_name_prop ? true : false}
+                  error={errors.groupname ? true : false}
                   id="groupname"
-                  name="groupname"
                   className="capitalize"
                   placeholder="Enter Job Group Name"
-                  // defaultValue={updateValues.house_name}
-                  onChange={handlechangeFormik}
-                  // InputProps={{
-                  //   readOnly: readOnly,
-                  // }}
-                  helperText="Error" //{formErrors.house_name}
+                  onChange={handleChange}
+                  helperText={errors.groupname}
                   variant="outlined"
                 />
               </div>
@@ -202,13 +211,19 @@ function AddGroup() {
                   styles={{
                     control: (baseStyles, state) => ({
                       ...baseStyles,
-                      borderColor: state.menuIsOpen ? "red" : "#2684FF", //{formErrors.house_name_prop ? "red" : "grey"}
-                      borderWidth: state.menuIsOpen ? "2px" : "1px",
+                      border: errors.scheduledstatus
+                        ? "1px solid #d32f2f"
+                        : "1px solid #b2b8c3",
+                      "&:hover": {
+                        border: errors.scheduledstatus
+                          ? "1px solid #d32f2f"
+                          : "1px solid black",
+                      },
                     }),
                   }}
                   inputId="scheduledstatus"
                   options={optionsForStatus}
-                  onChange={handlechangeFormik}
+                  onChange={handleChange}
                   className="search-options"
                   defaultValue={{
                     target: JSON.parse('{"id":"scheduledstatus", "value":""}'),
@@ -216,7 +231,9 @@ function AddGroup() {
                     label: "Active, Disabled...",
                   }}
                 />
-                <p className="helperText">Error</p>
+                {errors.scheduledstatus && (
+                  <p className="helperText">{errors.scheduledstatus}</p>
+                )}
               </div>
             </div>
           </div>
@@ -232,13 +249,19 @@ function AddGroup() {
                   styles={{
                     control: (baseStyles, state) => ({
                       ...baseStyles,
-                      borderColor: state.menuIsOpen ? "red" : "#2684FF", //{formErrors.house_name_prop ? "red" : "grey"}
-                      borderWidth: state.menuIsOpen ? "2px" : "1px",
+                      border: errors.scheduled
+                        ? "1px solid #d32f2f"
+                        : "1px solid #b2b8c3",
+                      "&:hover": {
+                        border: errors.scheduled
+                          ? "1px solid #d32f2f"
+                          : "1px solid black",
+                      },
                     }),
                   }}
                   inputId="scheduled"
                   options={optionsForSchedule}
-                  onChange={handlechangeFormik}
+                  onChange={handleChange}
                   className="search-options"
                   defaultValue={{
                     target: JSON.parse('{"id":"scheduled", "value":""}'),
@@ -246,7 +269,9 @@ function AddGroup() {
                     label: "Recurring, Once...",
                   }}
                 />
-                <p className="helperText">Error</p>
+                {errors.scheduled && (
+                  <p className="helperText">{errors.scheduled}</p>
+                )}
               </div>
             </div>
           </div>
@@ -258,6 +283,7 @@ function AddGroup() {
               <div className="col-sm-9">
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
+                    style={{ ".MuiDateTimePicker": { background: "red" } }}
                     inputId="startdate"
                     className="date-picker"
                     value={dateValue}
@@ -265,13 +291,21 @@ function AddGroup() {
                     renderInput={(params) => (
                       <TextField
                         name="startdate"
-                        sx={{ height: "3rem", width: "100%" }}
+                        sx={{
+                          height: "3rem",
+                          width: "100%",
+                          border: errors.startdate
+                            ? "1px solid #d32f2f"
+                            : "1px solid #b2b8c3",
+                        }}
                         {...params}
                       />
                     )}
                   />
                 </LocalizationProvider>
-                <p className="helperText">Error</p>
+                {errors.startdate && (
+                  <p className="helperText">{errors.startdate}</p>
+                )}
               </div>
             </div>
           </div>
@@ -284,22 +318,15 @@ function AddGroup() {
               </label>
               <div className="col-sm-9">
                 <TextField
-                  error={false} //{formErrors.house_name_prop ? true : false}
+                  error={errors.frequency ? true : false}
                   id="frequency"
-                  className="capitalize"
                   placeholder="Enter Frequency"
-                  // defaultValue={updateValues.house_name}
-                  onChange={handlechangeFormik}
+                  onChange={handleChange}
                   inputProps={{
                     type: "number",
                     min: 0,
                   }}
-                  InputProps={
-                    {
-                      // readOnly: readOnly,
-                    }
-                  }
-                  helperText="Error" //{formErrors.house_name}
+                  helperText={errors.frequency}
                   variant="outlined"
                 />
               </div>
@@ -318,13 +345,19 @@ function AddGroup() {
                   styles={{
                     control: (baseStyles, state) => ({
                       ...baseStyles,
-                      borderColor: state.menuIsOpen ? "red" : "#2684FF", //{formErrors.house_name_prop ? "red" : "grey"}
-                      borderWidth: state.menuIsOpen ? "2px" : "1px",
+                      border: errors.frequencytype
+                        ? "1px solid #d32f2f"
+                        : "1px solid #b2b8c3",
+                      "&:hover": {
+                        border: errors.frequencytype
+                          ? "1px solid #d32f2f"
+                          : "1px solid black",
+                      },
                     }),
                   }}
                   inputId="frequencytype"
                   options={optionsForFrequencyType}
-                  onChange={handlechangeFormik}
+                  onChange={handleChange}
                   className="search-options"
                   defaultValue={{
                     target: JSON.parse('{"id":"frequencytype", "value":""}'),
@@ -332,7 +365,9 @@ function AddGroup() {
                     label: "Min, Hour, Day...",
                   }}
                 />
-                <p className="helperText">Error</p>
+                {errors.frequencytype && (
+                  <p className="helperText">{errors.frequencytype}</p>
+                )}
               </div>
             </div>
           </div>
@@ -353,8 +388,8 @@ function AddGroup() {
         <div className="row" style={{ justifyContent: "center" }}>
           {steps.type === "S" || (
             <button
-              type="submit"
-              // onClick={handleOpen}
+              type="button"
+              onClick={onSubmit}
               className="btn btn-dark btn-icon-text"
             >
               Create Group and Add New Step
@@ -364,7 +399,7 @@ function AddGroup() {
           {steps.type === "S" && (
             <button
               type="button"
-              onClick={handleOpen}
+              onClick={onSubmit}
               className="btn btn-dark btn-icon-text"
             >
               Update Steps
@@ -377,7 +412,7 @@ function AddGroup() {
           setOpen={setOpen}
           handleOpen={handleOpen}
           handleClose={handleClose}
-          handleYes={onSubmit}
+          handleYes={handleSubmit}
           title={"Create Schedule?"}
           description="Do you really wish to Create a Schedule and proceed to adding Steps? "
         />
