@@ -17,6 +17,7 @@ import AddFilter from "./pages/Groups/AddNewGroup/AddFilter/AddFilter"
 import ShowGroups from "./pages/Groups/ShowGroups/ShowGroups"
 import ActiveJobs from "./pages/Jobs/ActiveJobs/ActiveJobs"
 import JobReport from "./pages/Jobs/JobReport/JobReport"
+import Logs from './pages/Logs/Logs';
 import Settings from "./pages/Settings/Settings"
 import Account from "./pages/UserInformation/Account/Account"
 import Logout from "./pages/UserInformation/Logout/Logout"
@@ -48,6 +49,7 @@ function App() {
           <Route path="ShowGroups" element={<ShowGroups />} />
           <Route path="ActiveJobs" element={<ActiveJobs />} />
           <Route path="JobReport" element={<JobReport />} />
+          <Route path="Logs" element={<Logs />} />
           <Route path="Settings" element={<Settings />} />
           <Route path="Account" element={<Account />} />
         </Route>

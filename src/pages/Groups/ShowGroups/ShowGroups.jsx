@@ -6,7 +6,6 @@ import LinearProgress from "@mui/material/LinearProgress";
 import DataTable from "../../../components/Common/DataTable/DataTable";
 import schedule from "../../../services/scheduleService";
 import OurModal from "../../../components/Common/OurModal/OurModal";
-import Loader from "../../../components/Common/Loader/Loader";
 import "../../../custom/css/custom.css";
 
 function ShowGroups() {
@@ -153,7 +152,6 @@ function ShowGroups() {
   const rows = groupList;
   return (
     <div className="data existingGroups">
-      <Loader open={isLoading} handleClose={isLoading} />
       <div className="title">
         <h1 className="Heading">Jobs Group</h1>
         <button

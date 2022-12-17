@@ -121,6 +121,12 @@ function Sidebar() {
           <div className="menu-heading">Interface</div>
         </li>
         <li className="nav-item">
+          <NavLink className="nav-link" to="/Logs">
+            <i className="mdi mdi-chart-gantt menu-icon"></i>
+            <span className="menu-title"> Logs</span>
+          </NavLink>
+        </li>
+        <li className="nav-item">
           <NavLink className="nav-link" to="/Settings">
             <i className="mdi mdi-settings menu-icon"></i>
             <span className="menu-title"> Settings</span>
