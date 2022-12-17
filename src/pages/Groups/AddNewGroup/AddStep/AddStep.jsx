@@ -24,7 +24,7 @@ function AddStep() {
 
   const step_form = useRef(null);
 
-  const [values, setValues] = useState({
+  const defaultValues = {
     iid: "",
     synctype: "",
     syncdate: "",
@@ -32,7 +32,21 @@ function AddStep() {
     batching: 0,
     detailedlog: 0,
     forcesync: 0,
+  };
+
+  const [selectInterfaceValue, setSelectInterfaceValue] = useState({
+    target: JSON.parse('{"id":"iid", "value":""}'),
+    value: "",
+    label: "Select Interface...",
   });
+
+  const [selectSyncTypeValue, setSelectSyncTypeValue] = useState({
+    target: JSON.parse('{"id":"synctype", "value":""}'),
+    value: "",
+    label: "Select Sync Type...",
+  });
+
+  const [values, setValues] = useState(defaultValues);
   const [dateValue, setDateValue] = useState(null);
   const [errors, setErrors] = useState({});
   const [canSubmit, setCanSubmit] = useState(false);
@@ -128,6 +142,14 @@ function AddStep() {
         [id]: e.target.checked === true ? 1 : 0,
       });
     }
+
+    if (e.target.id === "iid") {
+      setSelectInterfaceValue({ id: id, value: value, label: e.label });
+    }
+
+    if (e.target.id === "synctype") {
+      setSelectSyncTypeValue({ id: id, value: value, label: e.label });
+    }
   };
 
   const validate = (values) => {
@@ -175,6 +197,7 @@ function AddStep() {
     if (data.message === "updated successfully") {
       toast.success("Step was Updated Successfully");
       setIsLoading(false);
+      setValues({});
     } else if (data.message === "added successfully") {
       toast.success("Step was Created Successfully");
       setIsLoading(false);
@@ -184,6 +207,18 @@ function AddStep() {
     }
     getSteps(group.id);
     step_form.current.reset();
+    setValues(defaultValues);
+    setSelectInterfaceValue({
+      target: JSON.parse('{"id":"iid", "value":""}'),
+      value: "",
+      label: "Select Interface...",
+    });
+    setSelectSyncTypeValue({
+      target: JSON.parse('{"id":"synctype", "value":""}'),
+      value: "",
+      label: "Select Sync Type...",
+    });
+    setDateValue(null);
   };
 
   return (
@@ -223,6 +258,7 @@ function AddStep() {
                   }}
                   inputId="iid"
                   options={optionsForInterfaces}
+                  value={selectInterfaceValue}
                   onChange={handleChange}
                   className="search-options"
                   defaultValue={{
@@ -275,6 +311,7 @@ function AddStep() {
                   }}
                   inputId="synctype"
                   options={optionsForSyncType}
+                  value={selectSyncTypeValue}
                   onChange={handleChange}
                   className="search-options"
                   defaultValue={{

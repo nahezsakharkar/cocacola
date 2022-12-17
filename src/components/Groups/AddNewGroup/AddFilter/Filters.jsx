@@ -1,9 +1,12 @@
+import { useEffect } from "react";
 import DataTable from "../../../Common/DataTable/DataTable";
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
 
 function Filters(props) {
   const { filters, isLoading } = props;
+
+  useEffect(() => {}, [filters]);
 
   const columns = [
     { field: "field", headerName: "Field", flex: 1, width: 300 },
@@ -43,11 +46,6 @@ function Filters(props) {
       },
     },
   ];
-
-  // const rows = [
-  //   { id: 1, field: "CustomerId", operator: "=", value: 900425 },
-  //   { id: 2, field: "ProductId", operator: "LIKE", value: 900425 },
-  // ];
 
   const rows =
     Object.keys([filters].flat()[0]).length === 0
