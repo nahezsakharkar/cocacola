@@ -1,6 +1,7 @@
-import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import auth from "../../services/authService";
+import { TextField } from "@mui/material";
+import Select from "react-select";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -16,25 +17,53 @@ function Login() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const optionsForCompanyId = [
+    {
+      target: JSON.parse('{"id":"companyid", "value":"1428"}'),
+      value: "1428",
+      label: "SriLanka",
+    },
+    {
+      target: JSON.parse('{"id":"companyid", "value":"1364"}'),
+      value: "1364",
+      label: "Bangladesh",
+    },
+    {
+      target: JSON.parse('{"id":"companyid", "value":"1429"}'),
+      value: "1429",
+      label: "Nepal - A",
+    },
+    {
+      target: JSON.parse('{"id":"companyid", "value":"1430"}'),
+      value: "1430",
+      label: "Nepal - B",
+    },
+  ];
+
   const handleSubmit = async () => {
-      try {
-        await auth.login(values);
-        navigate(location.state || "/");
-      } catch (e) {
-        console.log("error :", e);
-      }
+    try {
+      await auth.login(values);
+      navigate(location.state || "/");
+    } catch (e) {
+      console.log("error :", e);
+    }
   };
 
-  const {values,errors,handleSubmit: handleSubmitFormik,handleChange} = useFormik({
+  const {
+    values,
+    errors,
+    handleSubmit: handleSubmitFormik,
+    handleChange,
+  } = useFormik({
     initialValues: {
       username: "",
       password: "",
       companyid: "",
     },
     validationSchema: LoginSchema,
-    onSubmit : () => {
+    onSubmit: () => {
       handleSubmit();
-    }
+    },
   });
 
   return (
@@ -51,50 +80,53 @@ function Login() {
                 <h6 className="font-weight-light">Sign in to continue.</h6>
                 <form className="cmxform pt-3" id="commentForm">
                   <div className="form-group">
-                    <input
-                      type="text"
-                      className="form-control form-control-lg"
+                    <TextField
+                      error={errors.username ? true : false}
                       id="username"
                       placeholder="Username"
                       onChange={handleChange}
+                      helperText={errors.username}
+                      variant="outlined"
                     />
-                    {errors.username && (
-                      <small className="form-text text-danger">
-                        {errors.username}
-                      </small>
-                    )}
                   </div>
                   <div className="form-group">
-                    <input
-                      type="password"
-                      className="form-control form-control-lg"
+                    <TextField
+                      error={errors.password ? true : false}
                       id="password"
+                      type="password"
                       placeholder="Password"
                       onChange={handleChange}
+                      helperText={errors.password}
+                      variant="outlined"
                     />
-                    {errors.password && (
-                      <small className="form-text text-danger">
-                        {errors.password}
-                      </small>
-                    )}
                   </div>
                   <div className="form-group">
-                    <select
-                      id="companyid"
-                      className="form-control form-control-lg"
-                      style={{ width: "100%" }}
+                    <Select
+                      styles={{
+                        control: (baseStyles, state) => ({
+                          ...baseStyles,
+                          border: errors.companyid
+                            ? "1px solid #d32f2f"
+                            : "1px solid #b2b8c3",
+                          "&:hover": {
+                            border: errors.companyid
+                              ? "1px solid #d32f2f"
+                              : "1px solid black",
+                          },
+                        }),
+                      }}
+                      inputId="companyid"
+                      options={optionsForCompanyId}
                       onChange={handleChange}
-                    >
-                      <option value={""}>Select Country</option>
-                      <option value={1428}>SriLanka</option>
-                      <option value={1364}>Bangladesh</option>
-                      <option value={1429}>Nepal - A</option>
-                      <option value={1430}>Nepal - B</option>
-                    </select>
+                      className="search-options"
+                      defaultValue={{
+                        target: JSON.parse('{"id":"companyid", "value":""}'),
+                        value: "",
+                        label: "Select Country...",
+                      }}
+                    />
                     {errors.companyid && (
-                      <small className="form-text text-danger">
-                        {errors.companyid}
-                      </small>
+                      <p className="helperText">{errors.companyid}</p>
                     )}
                   </div>
                   <div className="mt-3">
