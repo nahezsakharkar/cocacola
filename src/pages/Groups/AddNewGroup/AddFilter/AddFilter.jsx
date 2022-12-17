@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
+import EmptyModal from "../../../../components/Common/EmptyModal/EmptyModal";
 import OurModal from "../../../../components/Common/OurModal/OurModal";
+import Filters from "../../../../components/Groups/AddNewGroup/AddFilter/Filters";
 import schedule from "../../../../services/scheduleService";
-import Filters from "./Filters";
 
 function AddFilter() {
   const location = useLocation();
@@ -17,6 +18,8 @@ function AddFilter() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   async function getFilters(groupId) {
     const data = await schedule.getAllFilters(groupId);
@@ -41,15 +44,19 @@ function AddFilter() {
   };
 
   const handleSubmit = async () => {
+    setOpen(false);
+    setIsLoading(true);
     const data = await schedule.createFilter(formValues);
     if (data.message === "updated successfully") {
       toast.success("Filter was Updated Successfully");
+      setIsLoading(false);
     } else if (data.message === "added successfully") {
       toast.success("Filter was Created Successfully");
+      setIsLoading(false);
     } else {
       toast.error("There was some Error while creating a Filter");
+      setIsLoading(false);
     }
-    setOpen(false);
     filter_form.current.reset();
     // window.location.reload(false);
   };
@@ -118,6 +125,7 @@ function AddFilter() {
                 Add
                 <i className="fa fa-plus btn-icon-append"></i>
               </button>
+              <EmptyModal open={isLoading} />
               <OurModal
                 open={open}
                 setOpen={setOpen}
@@ -131,7 +139,7 @@ function AddFilter() {
           </div>
         </div>
       </form>
-      <Filters filters={filters} />
+      <Filters filters={filters} isLoading={isLoading} />
     </div>
   );
 }

@@ -1,7 +1,11 @@
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import Loader from "../../components/Common/Loader/Loader";
 import auth from "../../services/authService";
+
 import { TextField } from "@mui/material";
 import Select from "react-select";
+
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -16,6 +20,7 @@ const LoginSchema = Yup.object().shape({
 function Login() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const optionsForCompanyId = [
     {
@@ -43,6 +48,7 @@ function Login() {
   const handleSubmit = async () => {
     try {
       await auth.login(values);
+      setIsLoading(false);
       navigate(location.state || "/");
     } catch (e) {
       console.log("error :", e);
@@ -62,12 +68,14 @@ function Login() {
     },
     validationSchema: LoginSchema,
     onSubmit: () => {
+      setIsLoading(true);
       handleSubmit();
     },
   });
 
   return (
     <div className="container-scroller">
+      <Loader open={isLoading} />
       <div className="container-fluid page-body-wrapper full-page-wrapper">
         <div className="content-wrapper d-flex align-items-center auth">
           <div className="row w-100">

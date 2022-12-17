@@ -2,10 +2,7 @@ import Modal from "@mui/material/Modal";
 
 function Loader(props) {
   return (
-    <Modal
-      open={props.open}
-      onClose={props.handleClose}
-    >
+    <Modal open={props.open}>
       <div className="loader">
         <div
           className="d-flex justify-content-center align-items-center"
@@ -13,7 +10,7 @@ function Loader(props) {
         >
           <div
             className="spinner-border text-danger"
-            style={{ width: "3rem", height: "3rem" }}
+            style={{ width: "5rem", height: "5rem" }}
             role="status"
           ></div>
         </div>

@@ -11,6 +11,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import auth from "../../../../services/authService";
 import schedule from "../../../../services/scheduleService";
 import OurModal from "../../../../components/Common/OurModal/OurModal";
+import Loader from "../../../../components/Common/Loader/Loader";
 
 function AddGroup() {
   const [admin, setAdmin] = useState({});
@@ -29,9 +30,13 @@ function AddGroup() {
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setCanSubmit(false);
+    setOpen(false);
+  };
 
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   async function getAdmin() {
     const data = await auth.getCurrentUserDetails();
@@ -157,6 +162,7 @@ function AddGroup() {
   };
 
   async function handleSubmit() {
+    setIsLoading(true);
     const data = await schedule.createGroup({
       ...values,
       frequency: Number(values.frequency),
@@ -165,10 +171,13 @@ function AddGroup() {
       userid: admin["id"],
     });
     if (data.message === "updated successfully") {
+      setIsLoading(false);
       toast.success("Schedule was Updated Successfully");
     } else if (data.message === "added successfully") {
+      setIsLoading(false);
       toast.success("Schedule was Created Successfully");
     } else {
+      setIsLoading(false);
       toast.error("There was some Error while creating a Schedule");
     }
     setOpen(false);
@@ -178,6 +187,7 @@ function AddGroup() {
 
   return (
     <div className="card-body">
+      <Loader open={isLoading} />
       <form>
         <div className="row">
           <div className="col-md-6">
@@ -283,7 +293,6 @@ function AddGroup() {
               <div className="col-sm-9">
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
-                    style={{ ".MuiDateTimePicker": { background: "red" } }}
                     inputId="startdate"
                     className="date-picker"
                     value={dateValue}
@@ -294,9 +303,14 @@ function AddGroup() {
                         sx={{
                           height: "3rem",
                           width: "100%",
-                          border: errors.startdate
-                            ? "1px solid #d32f2f"
-                            : "1px solid #b2b8c3",
+                          border: "none",
+                          "&>.MuiInputBase-root": {
+                            position: "static",
+                            border: errors.startdate && "1px solid #d32f2f",
+                          },
+                          "&>.MuiInputBase-root:hover": {
+                            border: errors.startdate && "1px solid #d32f2f",
+                          },
                         }}
                         {...params}
                       />

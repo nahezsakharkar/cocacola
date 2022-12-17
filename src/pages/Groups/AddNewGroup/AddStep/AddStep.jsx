@@ -1,12 +1,21 @@
 import { useEffect, useState, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
+import { TextField } from "@mui/material";
+import Select from "react-select";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+
 import schedule from "../../../../services/scheduleService";
 import OurModal from "../../../../components/Common/OurModal/OurModal";
-import OrderedSteps from "./OrderedSteps";
+import OrderedSteps from "../../../../components/Groups/AddNewGroup/AddStep/OrderedSteps";
+import EmptyModal from "../../../../components/Common/EmptyModal/EmptyModal";
 
 function AddStep() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   var { group } = location.state;
 
@@ -15,16 +24,27 @@ function AddStep() {
 
   const step_form = useRef(null);
 
-  const [formValues, setFormValues] = useState({
-    gid: group.id,
+  const [values, setValues] = useState({
+    iid: "",
+    synctype: "",
+    syncdate: "",
+    batchsize: "",
     batching: 0,
     detailedlog: 0,
     forcesync: 0,
   });
+  const [dateValue, setDateValue] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [canSubmit, setCanSubmit] = useState(false);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setCanSubmit(false);
+    setOpen(false);
+  };
+
+  const [isLoading, setIsLoading] = useState(false);
 
   async function getInterfaces() {
     const data = await schedule.getAllInterfaces();
@@ -38,56 +58,132 @@ function AddStep() {
 
   useEffect(() => {
     getInterfaces();
-    getSteps(group.id);
-  }, [group.id, steps]);
+    if (group.id) {
+      getSteps(group.id);
+    } else {
+      navigate("/AddNewGroup/AddGroup");
+    }
+    if (Object.keys(errors).length === 0 && canSubmit) {
+      handleOpen();
+    }
+  }, [canSubmit, errors, group, navigate]);
+
+  function convertFullDateToNormalDate(str) {
+    var date = new Date(str),
+      mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+      day = ("0" + date.getDate()).slice(-2);
+    return [date.getFullYear(), mnth, day].join("-");
+  }
+
+  const optionsForInterfaces = interfaces.map(function (item) {
+    return {
+      target: JSON.parse(`{"id":"iid", "value":"${item.id}"}`),
+      value: item.id,
+      label: item.name,
+    };
+  });
+
+  const optionsForSyncType = [
+    {
+      target: JSON.parse('{"id":"synctype", "value":"Full"}'),
+      value: "Full",
+      label: "Full",
+    },
+    {
+      target: JSON.parse('{"id":"synctype", "value":"Delta"}'),
+      value: "Delta",
+      label: "Delta",
+    },
+  ];
+
+  const dateHandleChange = (newValue) => {
+    setCanSubmit(false);
+    setDateValue(newValue);
+    values["syncdate"] = convertFullDateToNormalDate(newValue);
+  };
 
   const handleChange = (e) => {
+    setCanSubmit(false);
     const { id, value } = e.target;
-    setFormValues({
-      ...formValues,
+    setValues({
+      ...values,
       [id]: value,
     });
 
     if (e.target.id === "batching") {
-      setFormValues({
-        ...formValues,
+      setValues({
+        ...values,
         [id]: e.target.checked === true ? 1 : 0,
       });
     }
     if (e.target.id === "forcesync") {
-      setFormValues({
-        ...formValues,
+      setValues({
+        ...values,
         [id]: e.target.checked === true ? 1 : 0,
       });
     }
     if (e.target.id === "detailedlog") {
-      setFormValues({
-        ...formValues,
+      setValues({
+        ...values,
         [id]: e.target.checked === true ? 1 : 0,
       });
     }
   };
 
+  const validate = (values) => {
+    const errors = {};
+
+    if (!values.iid) {
+      errors.iid = "Interface is Required!";
+    }
+
+    if (!values.synctype) {
+      errors.synctype = "Sync Type is Required!";
+    }
+
+    if (values.forcesync === 1) {
+      if (values.syncdate === "") {
+        errors.syncdate = "Sync Date is Required!";
+      } else if (convertFullDateToNormalDate(values.syncdate).length !== 10) {
+        errors.syncdate = "Invalid Date!";
+      }
+    }
+
+    if (values.batching === 1) {
+      if (!values.batchsize) {
+        errors.batchsize = "Batch Size is Required!";
+      }
+    }
+
+    return errors;
+  };
+
   const onSubmit = () => {
-    handleSubmit();
+    setErrors(validate(values));
+    setCanSubmit(true);
   };
 
   const handleSubmit = async () => {
+    setOpen(false);
+    setCanSubmit(false);
+    setIsLoading(true);
     const data = await schedule.createStep({
-      ...formValues,
+      ...values,
+      gid: group.id,
       sequence: steps.id === "default" ? 1 : Object.keys(steps).length + 1,
     });
     if (data.message === "updated successfully") {
       toast.success("Step was Updated Successfully");
+      setIsLoading(false);
     } else if (data.message === "added successfully") {
       toast.success("Step was Created Successfully");
+      setIsLoading(false);
     } else {
       toast.error("There was some Error while creating a Step");
+      setIsLoading(false);
     }
-    setOpen(false);
+    getSteps(group.id);
     step_form.current.reset();
-    // window.location.reload(false);
-    // navigate("/AddNewGroup/AddStep", { state: { group: group} });
   };
 
   return (
@@ -111,20 +207,31 @@ function AddStep() {
                 Interface <span className="text-danger">*</span>
               </label>
               <div className="col-sm-9">
-                <select
-                  id="iid"
+                <Select
+                  styles={{
+                    control: (baseStyles, state) => ({
+                      ...baseStyles,
+                      border: errors.iid
+                        ? "1px solid #d32f2f"
+                        : "1px solid #b2b8c3",
+                      "&:hover": {
+                        border: errors.iid
+                          ? "1px solid #d32f2f"
+                          : "1px solid black",
+                      },
+                    }),
+                  }}
+                  inputId="iid"
+                  options={optionsForInterfaces}
                   onChange={handleChange}
-                  className="form-control"
-                >
-                  <option value={""}>Select Interface</option>
-                  {interfaces.map((single) => {
-                    return (
-                      <option key={single.id} value={single.id}>
-                        {single.name}
-                      </option>
-                    );
-                  })}
-                </select>
+                  className="search-options"
+                  defaultValue={{
+                    target: JSON.parse('{"id":"iid", "value":""}'),
+                    value: "",
+                    label: "Select Interface...",
+                  }}
+                />
+                {errors.iid && <p className="helperText">{errors.iid}</p>}
               </div>
             </div>
           </div>
@@ -152,15 +259,33 @@ function AddStep() {
                 Sync Type <span className="text-danger">*</span>
               </label>
               <div className="col-sm-9">
-                <select
-                  id="synctype"
+                <Select
+                  styles={{
+                    control: (baseStyles, state) => ({
+                      ...baseStyles,
+                      border: errors.synctype
+                        ? "1px solid #d32f2f"
+                        : "1px solid #b2b8c3",
+                      "&:hover": {
+                        border: errors.synctype
+                          ? "1px solid #d32f2f"
+                          : "1px solid black",
+                      },
+                    }),
+                  }}
+                  inputId="synctype"
+                  options={optionsForSyncType}
                   onChange={handleChange}
-                  className="form-control"
-                >
-                  <option>Select Sync Type</option>
-                  <option>Full</option>
-                  <option>Delta</option>
-                </select>
+                  className="search-options"
+                  defaultValue={{
+                    target: JSON.parse('{"id":"synctype", "value":""}'),
+                    value: "",
+                    label: "Select Sync Type...",
+                  }}
+                />
+                {errors.synctype && (
+                  <p className="helperText">{errors.synctype}</p>
+                )}
               </div>
             </div>
           </div>
@@ -190,13 +315,35 @@ function AddStep() {
                 <div className="form-group row">
                   <label className="col-4 col-form-label">Sync Date</label>
                   <div className="col-sm-8">
-                    <input
-                      id="syncdate"
-                      onChange={handleChange}
-                      type="date"
-                      className="form-control"
-                      placeholder="dd/mm/yyyy"
-                    />
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePicker
+                        inputId="syncdate"
+                        className="date-picker"
+                        value={dateValue}
+                        onChange={dateHandleChange}
+                        renderInput={(params) => (
+                          <TextField
+                            name="syncdate"
+                            sx={{
+                              height: "3rem",
+                              width: "100%",
+                              border: "none",
+                              "&>.MuiInputBase-root": {
+                                position: "static",
+                                border: errors.syncdate && "1px solid #d32f2f",
+                              },
+                              "&>.MuiInputBase-root:hover": {
+                                border: errors.syncdate && "1px solid #d32f2f",
+                              },
+                            }}
+                            {...params}
+                          />
+                        )}
+                      />
+                    </LocalizationProvider>
+                    {errors.syncdate && (
+                      <p className="helperText">{errors.syncdate}</p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -230,11 +377,17 @@ function AddStep() {
                 <div className="form-group row">
                   <label className="col-4 col-form-label">Batch Size</label>
                   <div className="col-sm-6">
-                    <input
+                    <TextField
+                      error={errors.batchsize ? true : false}
                       id="batchsize"
+                      placeholder="Enter Batch Size"
                       onChange={handleChange}
-                      type="number"
-                      className="form-control"
+                      inputProps={{
+                        type: "number",
+                        min: 0,
+                      }}
+                      helperText={errors.batchsize}
+                      variant="outlined"
                     />
                   </div>
                 </div>
@@ -267,22 +420,28 @@ function AddStep() {
         <button
           type="button"
           className="btn btn-dark btn-icon-text"
-          onClick={handleOpen}
+          onClick={onSubmit}
         >
           Confirm Step
           <i className="fa fa-plus btn-icon-append"></i>
         </button>
       </div>
+      <EmptyModal open={isLoading} />
       <OurModal
         open={open}
         setOpen={setOpen}
         handleOpen={handleOpen}
         handleClose={handleClose}
-        handleYes={onSubmit}
+        handleYes={handleSubmit}
         title={"Create Step?"}
         description="Do you really wish to Create this Step? "
       />
-      <OrderedSteps group={group} steps={steps} interfaces={interfaces} />
+      <OrderedSteps
+        group={group}
+        steps={steps}
+        interfaces={interfaces}
+        isLoading={isLoading}
+      />
     </div>
   );
 }

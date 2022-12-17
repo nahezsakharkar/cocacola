@@ -30,9 +30,7 @@ function ShowGroups() {
   }
 
   useEffect(() => {
-    setTimeout(() => {
-      getGroupsData("Active,Disabled");
-    }, 5000);
+    getGroupsData("Active,Disabled");
   }, [groupList]);
 
   const openModal = (thisRow, thisOperation) => {
