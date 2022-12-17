@@ -1,42 +1,41 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import auth from "../../services/authService";
-import { toast } from "react-toastify";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
+const LoginSchema = Yup.object().shape({
+  username: Yup.string()
+    .required("Username is required")
+    .email("Please Enter A Valid Email Address"),
+  password: Yup.string().required("Password is required"),
+  companyid: Yup.number().required("Company Id is required"),
+});
 
 function Login() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [formValues, setFormValues] = useState({
-    username: "",
-    password: "",
-    companyid: "",
-  });
-
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormValues({ ...formValues, [id]: value });
-  };
 
   const handleSubmit = async () => {
-    for (let properties in formValues) {
-      if (formValues[properties].length === 0) {
-        let displayName;
-        if (properties === "username") {
-          displayName = "Username";
-        } else if (properties === "password") {
-          displayName = "Password";
-        } else if (properties === "companyid") {
-          displayName = "Country";
-        }
-        toast.error(
-          displayName +
-            " field is empty. Please Check Credentials and Try Again!"
-        );
+      try {
+        await auth.login(values);
+        navigate(location.state || "/");
+      } catch (e) {
+        console.log("error :", e);
       }
-    }
-    await auth.login(formValues);
-    navigate(location.state || "/");
   };
+
+  const {values,errors,handleSubmit: handleSubmitFormik,handleChange} = useFormik({
+    initialValues: {
+      username: "",
+      password: "",
+      companyid: "",
+    },
+    validationSchema: LoginSchema,
+    onSubmit : () => {
+      handleSubmit();
+    }
+  });
 
   return (
     <div className="container-scroller">
@@ -50,20 +49,20 @@ function Login() {
                 </div>
                 <h4>Hello! let's get started</h4>
                 <h6 className="font-weight-light">Sign in to continue.</h6>
-                <form
-                  className="cmxform pt-3"
-                  id="commentForm"
-                  onSubmit={(e) => e.preventDefault()}
-                >
+                <form className="cmxform pt-3" id="commentForm">
                   <div className="form-group">
                     <input
-                      type="email"
+                      type="text"
                       className="form-control form-control-lg"
                       id="username"
                       placeholder="Username"
                       onChange={handleChange}
-                      required
                     />
+                    {errors.username && (
+                      <small className="form-text text-danger">
+                        {errors.username}
+                      </small>
+                    )}
                   </div>
                   <div className="form-group">
                     <input
@@ -72,8 +71,12 @@ function Login() {
                       id="password"
                       placeholder="Password"
                       onChange={handleChange}
-                      required
                     />
+                    {errors.password && (
+                      <small className="form-text text-danger">
+                        {errors.password}
+                      </small>
+                    )}
                   </div>
                   <div className="form-group">
                     <select
@@ -81,7 +84,6 @@ function Login() {
                       className="form-control form-control-lg"
                       style={{ width: "100%" }}
                       onChange={handleChange}
-                      required
                     >
                       <option value={""}>Select Country</option>
                       <option value={1428}>SriLanka</option>
@@ -89,27 +91,21 @@ function Login() {
                       <option value={1429}>Nepal - A</option>
                       <option value={1430}>Nepal - B</option>
                     </select>
+                    {errors.companyid && (
+                      <small className="form-text text-danger">
+                        {errors.companyid}
+                      </small>
+                    )}
                   </div>
                   <div className="mt-3">
                     <button
                       type="submit"
                       className="btn btn-block btn-danger btn-lg font-weight-medium auth-form-btn"
-                      onClick={handleSubmit}
+                      onClick={handleSubmitFormik}
                     >
                       SIGN IN
                     </button>
                   </div>
-                  {/* <div className="my-2 d-flex justify-content-between align-items-center">
-                    <div className="form-check">
-                      <label className="form-check-label text-muted">
-                        <input type="checkbox" className="form-check-input" />
-                        Keep me signed in
-                      </label>
-                    </div>
-                    <a href=" " className="auth-link text-black">
-                      Forgot password?
-                    </a>
-                  </div> */}
                 </form>
               </div>
             </div>
