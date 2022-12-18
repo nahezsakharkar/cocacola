@@ -1,17 +1,33 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { TextField } from "@mui/material";
 import DataTable from "../../../Common/DataTable/DataTable";
-import KeyboardDoubleArrowUpIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
-import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
-import Tooltip from "@mui/material/Tooltip";
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
-import { useEffect } from "react";
 
 function OrderedSteps(props) {
   const { group, steps, interfaces, isLoading } = props;
   const navigate = useNavigate();
 
   useEffect(() => {}, [steps]);
+
+  const [rowSequence, setRowSequence] = useState({});
+
+  const handleSequenceChange = (e, row) => {
+    console.log(row)
+    const { id, value } = e.target;
+    setRowSequence({ [id]: value });
+  };
+
+  console.log(rowSequence);
+
+  const rowsSuitableSteps =
+    Object.keys([steps].flat()[0]).length === 0 ? [].flat() : [steps].flat();
+
+  const rows = rowsSuitableSteps.map((items) => {
+    const interfaceName = interfaces.find((it) => it.id === items.iid)?.name;
+    return { ...items, iname: interfaceName };
+  });
 
   const columns = [
     { field: "sequence", headerName: "Step", flex: 0.8, width: 150 },
@@ -59,31 +75,42 @@ function OrderedSteps(props) {
     },
     {
       field: "order",
-      headerName: "Order",
+      headerName: "Sequence",
       flex: 1,
       width: 180,
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            <Tooltip title="Move Up" placement="left" arrow>
-              <KeyboardDoubleArrowUpIcon />
-            </Tooltip>
-            <Tooltip title="Move Down" placement="right" arrow>
-              <KeyboardDoubleArrowDownIcon />
-            </Tooltip>
+            {rows.length > 1 && (
+              <>
+                <TextField
+                  // error={errors.sequence ? true : false}
+                  id="sequence"
+                  placeholder="Enter Batch Size"
+                  defaultValue={params.row.sequence}
+                  onChange={(e) => handleSequenceChange(e, params.row)}
+                  inputProps={{
+                    type: "number",
+                    min: 1,
+                    max: rows.length,
+                  }}
+                  // helperText={errors.sequence}
+                  variant="outlined"
+                />
+                <button
+                  type="button"
+                  className="btn btn-dark btn-icon-text btn-sm"
+                >
+                  Apply
+                  <i className="mdi mdi-file-check btn-icon-append"></i>
+                </button>
+              </>
+            )}
           </div>
         );
       },
     },
   ];
-
-  const rowsSuitableSteps =
-    Object.keys([steps].flat()[0]).length === 0 ? [].flat() : [steps].flat();
-
-  const rows = rowsSuitableSteps.map((items) => {
-    const interfaceName = interfaces.find((it) => it.id === items.iid)?.name;
-    return { ...items, iname: interfaceName };
-  });
 
   return (
     <div className="steps mt-3">

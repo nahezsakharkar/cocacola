@@ -21,7 +21,7 @@ function Settings() {
               <WifiTetheringIcon />
             </div>
             <div className="connection-inner">
-              <h4 className="Heading">VAXCEED CONNECTION</h4>
+              <h4 className="Heading">VXCEED CONNECTION</h4>
               <WifiTetheringOffIcon />
             </div>
           </div>

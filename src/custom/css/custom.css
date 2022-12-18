@@ -126,7 +126,7 @@
 
 .cellAction {
   display: flex;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 .addNewGroup > .body {

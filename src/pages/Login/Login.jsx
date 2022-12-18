@@ -51,6 +51,7 @@ function Login() {
       setIsLoading(false);
       navigate(location.state || "/");
     } catch (e) {
+      setIsLoading(false);
       console.log("error :", e);
     }
   };
