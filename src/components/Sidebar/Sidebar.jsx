@@ -81,7 +81,29 @@ function Sidebar() {
               </li>
               <li className="nav-item">
                 {" "}
-                <NavLink className="nav-link" to="/ShowGroups">
+                <NavLink
+                  className="nav-link"
+                  onClick={(e) => {
+                    if (location.pathname.includes("/EditGroups/")) {
+                      navigate("/ShowGroups");
+                    }
+                  }}
+                  to={
+                    location.pathname.includes("/ShowGroups/")
+                      ? location.pathname.includes("/ShowGroups/EditGroups/")
+                        ? location.pathname.includes(
+                            "/ShowGroups/EditGroups/EditGroup"
+                          )
+                          ? "/ShowGroups/EditGroups/EditGroup"
+                          : location.pathname.includes(
+                              "/ShowGroups/EditGroups/EditSteps"
+                            )
+                          ? "/ShowGroups/EditGroups/EditSteps"
+                          : "/ShowGroups/EditGroups/EditFilters"
+                        : "/ShowGroups/EditGroups/EditGroup"
+                      : "/ShowGroups"
+                  }
+                >
                   Show Jobs Group
                 </NavLink>
               </li>

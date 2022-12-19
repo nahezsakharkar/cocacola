@@ -41,15 +41,15 @@ function OrderedSteps(props) {
     {
       field: "action",
       headerName: "Action",
-      flex: 2,
+      flex: 1.7,
       width: 400,
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            <button type="button" className="btn btn-dark btn-icon-text btn-sm">
+            {/* <button type="button" className="btn btn-dark btn-icon-text btn-sm">
               Edit
               <i className="mdi mdi-file-check btn-icon-append"></i>
-            </button>
+            </button> */}
             <button
               type="button"
               className="btn btn-danger btn-icon-text btn-sm"
@@ -76,7 +76,7 @@ function OrderedSteps(props) {
     {
       field: "order",
       headerName: "Sequence",
-      flex: 1,
+      flex: 1.3,
       width: 180,
       renderCell: (params) => {
         return (

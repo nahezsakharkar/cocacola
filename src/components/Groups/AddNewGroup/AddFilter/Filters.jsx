@@ -30,15 +30,15 @@ function Filters(props) {
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            <button type="button" className="btn btn-dark btn-icon-text btn-sm">
+            {/* <button type="button" className="btn btn-dark btn-icon-text btn-sm">
               Edit
               <i className="mdi mdi-file-check btn-icon-append"></i>
-            </button>
+            </button> */}
             <button
               type="button"
               className="btn btn-danger btn-icon-text btn-sm"
             >
-              Delete
+              Remove
               <i className="ti-trash btn-icon-append"></i>
             </button>
           </div>
