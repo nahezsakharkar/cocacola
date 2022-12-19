@@ -12,6 +12,7 @@ import schedule from "../../../../services/scheduleService";
 import OurModal from "../../../../components/Common/OurModal/OurModal";
 import OrderedSteps from "../../../../components/Groups/AddNewGroup/AddStep/OrderedSteps";
 import EmptyModal from "../../../../components/Common/EmptyModal/EmptyModal";
+import constants from "../../../../custom/constants/constants";
 
 function AddStep() {
   const location = useLocation();
@@ -243,24 +244,16 @@ function AddStep() {
               </label>
               <div className="col-sm-9">
                 <Select
-                  styles={{
-                    control: (baseStyles, state) => ({
-                      ...baseStyles,
-                      border: errors.iid
-                        ? "1px solid #d32f2f"
-                        : "1px solid #b2b8c3",
-                      "&:hover": {
-                        border: errors.iid
-                          ? "1px solid #d32f2f"
-                          : "1px solid black",
-                      },
-                    }),
-                  }}
+                  styles={constants.reactSelectStyles(
+                    errors.iid,
+                    selectInterfaceValue.value
+                  )}
                   inputId="iid"
                   options={optionsForInterfaces}
                   value={selectInterfaceValue}
                   onChange={handleChange}
                   className="search-options"
+                  placeholder="Select Interface..."
                   defaultValue={{
                     target: JSON.parse('{"id":"iid", "value":""}'),
                     value: "",
@@ -296,24 +289,16 @@ function AddStep() {
               </label>
               <div className="col-sm-9">
                 <Select
-                  styles={{
-                    control: (baseStyles, state) => ({
-                      ...baseStyles,
-                      border: errors.synctype
-                        ? "1px solid #d32f2f"
-                        : "1px solid #b2b8c3",
-                      "&:hover": {
-                        border: errors.synctype
-                          ? "1px solid #d32f2f"
-                          : "1px solid black",
-                      },
-                    }),
-                  }}
+                  styles={constants.reactSelectStyles(
+                    errors.synctype,
+                    selectSyncTypeValue.value
+                  )}
                   inputId="synctype"
                   options={optionsForSyncType}
                   value={selectSyncTypeValue}
                   onChange={handleChange}
                   className="search-options"
+                  placeholder="Select Sync Type..."
                   defaultValue={{
                     target: JSON.parse('{"id":"synctype", "value":""}'),
                     value: "",

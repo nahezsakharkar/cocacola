@@ -7,6 +7,7 @@ import EmptyModal from "../../../../components/Common/EmptyModal/EmptyModal";
 import OurModal from "../../../../components/Common/OurModal/OurModal";
 import Filters from "../../../../components/Groups/AddNewGroup/AddFilter/Filters";
 import schedule from "../../../../services/scheduleService";
+import constants from "../../../../custom/constants/constants";
 
 function AddFilter() {
   const location = useLocation();
@@ -152,24 +153,16 @@ function AddFilter() {
             </div>
             <div className="input">
               <Select
-                styles={{
-                  control: (baseStyles, state) => ({
-                    ...baseStyles,
-                    border: errors.operator
-                      ? "1px solid #d32f2f"
-                      : "1px solid #b2b8c3",
-                    "&:hover": {
-                      border: errors.operator
-                        ? "1px solid #d32f2f"
-                        : "1px solid black",
-                    },
-                  }),
-                }}
+                styles={constants.reactSelectStyles(
+                  errors.operator,
+                  selectValue.value
+                )}
                 inputId="operator"
                 options={optionsForOperator}
                 value={selectValue}
                 onChange={handleChange}
                 className="search-options"
+                placeholder="Select Operator..."
                 defaultValue={{
                   target: JSON.parse('{"id":"operator", "value":""}'),
                   value: "",

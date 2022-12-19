@@ -8,6 +8,7 @@ import Select from "react-select";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import constants from "../../custom/constants/constants";
 
 const LoginSchema = Yup.object().shape({
   username: Yup.string()
@@ -111,28 +112,17 @@ function Login() {
                   </div>
                   <div className="form-group">
                     <Select
-                      styles={{
-                        control: (baseStyles, state) => ({
-                          ...baseStyles,
-                          border: errors.companyid
-                            ? "1px solid #d32f2f"
-                            : "1px solid #b2b8c3",
-                          "&:hover": {
-                            border: errors.companyid
-                              ? "1px solid #d32f2f"
-                              : "1px solid black",
-                          },
-                        }),
-                      }}
+                      styles={constants.reactSelectStyles(errors.companyid)}
                       inputId="companyid"
                       options={optionsForCompanyId}
                       onChange={handleChange}
                       className="search-options"
-                      defaultValue={{
-                        target: JSON.parse('{"id":"companyid", "value":""}'),
-                        value: "",
-                        label: "Select Country...",
-                      }}
+                      placeholder="Select Country..."
+                      // defaultValue={{
+                      //   target: JSON.parse('{"id":"companyid", "value":""}'),
+                      //   value: "",
+                      //   label: "Select Country...",
+                      // }}
                     />
                     {errors.companyid && (
                       <p className="helperText">{errors.companyid}</p>

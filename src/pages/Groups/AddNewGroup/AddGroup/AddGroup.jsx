@@ -12,6 +12,7 @@ import auth from "../../../../services/authService";
 import schedule from "../../../../services/scheduleService";
 import OurModal from "../../../../components/Common/OurModal/OurModal";
 import Loader from "../../../../components/Common/Loader/Loader";
+import constants from "../../../../custom/constants/constants";
 
 function AddGroup() {
   const [admin, setAdmin] = useState({});
@@ -218,28 +219,17 @@ function AddGroup() {
               </label>
               <div className="col-sm-9">
                 <Select
-                  styles={{
-                    control: (baseStyles, state) => ({
-                      ...baseStyles,
-                      border: errors.scheduledstatus
-                        ? "1px solid #d32f2f"
-                        : "1px solid #b2b8c3",
-                      "&:hover": {
-                        border: errors.scheduledstatus
-                          ? "1px solid #d32f2f"
-                          : "1px solid black",
-                      },
-                    }),
-                  }}
+                  styles={constants.reactSelectStyles(errors.scheduledstatus)}
                   inputId="scheduledstatus"
                   options={optionsForStatus}
                   onChange={handleChange}
                   className="search-options"
-                  defaultValue={{
-                    target: JSON.parse('{"id":"scheduledstatus", "value":""}'),
-                    value: "",
-                    label: "Active, Disabled...",
-                  }}
+                  placeholder="Active, Disabled..."
+                  // defaultValue={{
+                  //   target: JSON.parse('{"id":"scheduledstatus", "value":""}'),
+                  //   value: "",
+                  //   label: "Active, Disabled...",
+                  // }}
                 />
                 {errors.scheduledstatus && (
                   <p className="helperText">{errors.scheduledstatus}</p>
@@ -256,28 +246,17 @@ function AddGroup() {
               </label>
               <div className="col-sm-9">
                 <Select
-                  styles={{
-                    control: (baseStyles, state) => ({
-                      ...baseStyles,
-                      border: errors.scheduled
-                        ? "1px solid #d32f2f"
-                        : "1px solid #b2b8c3",
-                      "&:hover": {
-                        border: errors.scheduled
-                          ? "1px solid #d32f2f"
-                          : "1px solid black",
-                      },
-                    }),
-                  }}
+                  styles={constants.reactSelectStyles(errors.scheduled)}
                   inputId="scheduled"
                   options={optionsForSchedule}
                   onChange={handleChange}
                   className="search-options"
-                  defaultValue={{
-                    target: JSON.parse('{"id":"scheduled", "value":""}'),
-                    value: "",
-                    label: "Recurring, Once...",
-                  }}
+                  placeholder="Recurring, Once..."
+                  // defaultValue={{
+                  //   target: JSON.parse('{"id":"scheduled", "value":""}'),
+                  //   value: "",
+                  //   label: "Recurring, Once...",
+                  // }}
                 />
                 {errors.scheduled && (
                   <p className="helperText">{errors.scheduled}</p>
@@ -356,28 +335,17 @@ function AddGroup() {
               </label>
               <div className="col-sm-7">
                 <Select
-                  styles={{
-                    control: (baseStyles, state) => ({
-                      ...baseStyles,
-                      border: errors.frequencytype
-                        ? "1px solid #d32f2f"
-                        : "1px solid #b2b8c3",
-                      "&:hover": {
-                        border: errors.frequencytype
-                          ? "1px solid #d32f2f"
-                          : "1px solid black",
-                      },
-                    }),
-                  }}
+                  styles={constants.reactSelectStyles(errors.frequencytype)}
                   inputId="frequencytype"
                   options={optionsForFrequencyType}
                   onChange={handleChange}
                   className="search-options"
-                  defaultValue={{
-                    target: JSON.parse('{"id":"frequencytype", "value":""}'),
-                    value: "",
-                    label: "Min, Hour, Day...",
-                  }}
+                  placeholder="Min, Hour, Day..."
+                  // defaultValue={{
+                  //   target: JSON.parse('{"id":"frequencytype", "value":""}'),
+                  //   value: "",
+                  //   label: "Min, Hour, Day...",
+                  // }}
                 />
                 {errors.frequencytype && (
                   <p className="helperText">{errors.frequencytype}</p>
