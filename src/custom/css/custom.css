@@ -7,7 +7,8 @@
 
 .dashboard > .title,
 .existingGroups > .title,
-.activeJobs > .title {
+.activeJobs > .title,
+.logs > .title {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -32,6 +33,11 @@
   display: flex;
   gap: 1rem;
   height: 406.5px;
+  scale: 0.9;
+}
+
+.logs .body {
+  height: 527px;
   scale: 0.9;
 }
 
@@ -235,6 +241,6 @@
   margin-left: 14px;
 }
 
-.emptiness>.MuiBackdrop-root {
+.emptiness > .MuiBackdrop-root {
   background-color: transparent !important;
 }

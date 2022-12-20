@@ -15,6 +15,18 @@ export async function createGroup(formValues) {
     return response.data
 }
 
+export async function getGroupById(groupId) {
+    const user = JSON.parse(localStorage.getItem(sessionKey))
+
+    const response = await http.get(baseURL + "api/groups/byid?id=" + groupId, {
+        headers: {
+            Authorization: user.jwtToken
+        }
+    }
+    );
+    return response.data
+}
+
 export async function deleteGroup(id) {
     const user = JSON.parse(localStorage.getItem(sessionKey))
     const response = await http.delete(baseURL + "api/groups/delbyid?id=" + id, {
@@ -67,7 +79,7 @@ export async function createStep(formValues) {
 export async function getStepById(stepId) {
     const user = JSON.parse(localStorage.getItem(sessionKey))
 
-    const response = await http.get(baseURL + "api/groups/byid?id=" + stepId, {
+    const response = await http.get(baseURL + "api/steps/byid?id=" + stepId, {
         headers: {
             Authorization: user.jwtToken
         }
@@ -85,7 +97,6 @@ export async function getAllFilters(stepId) {
         }
     }
     );
-    // console.log(typeof(response.data.payload))
     return response.data
 }
 
@@ -113,9 +124,35 @@ export async function getGroupsByScheduleStatus(scheduledStatus) {
     return response.data;
 }
 
+export async function getGroupsByRunningStatus(RunningStatus) {
+    // Stopped,Terminated,Running
+    const user = JSON.parse(localStorage.getItem(sessionKey));
+    const response = await http.get(baseURL + "api/groups/byRunningStatus?runningstatus=" + RunningStatus,
+        {
+            headers: {
+                Authorization: user.jwtToken
+            }
+        }
+    );
+    return response.data;
+}
+
+export async function getAllJobLogs() {
+    const user = JSON.parse(localStorage.getItem(sessionKey));
+    const response = await http.get(baseURL + "api/joblogs/all",
+        {
+            headers: {
+                Authorization: user.jwtToken
+            }
+        }
+    );
+    return response.data;
+}
+
 
 const schedule = {
     createGroup,
+    getGroupById,
     deleteGroup,
     getAllSteps,
     getAllInterfaces,
@@ -123,7 +160,9 @@ const schedule = {
     getStepById,
     getAllFilters,
     createFilter,
-    getGroupsByScheduleStatus
+    getGroupsByScheduleStatus,
+    getGroupsByRunningStatus,
+    getAllJobLogs
 }
 
 export default schedule

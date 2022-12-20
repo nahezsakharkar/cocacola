@@ -1,24 +1,44 @@
+import { useState, useEffect } from "react";
 import DataTable from "../../../components/Common/DataTable/DataTable";
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
+import schedule from "../../../services/scheduleService";
 import "../../../custom/css/custom.css";
 
 function ActiveJobs() {
+  const [activeJobsList, setActiveJobsList] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  async function getActiveJobs(queryParams) {
+    const data = await schedule.getGroupsByRunningStatus(queryParams);
+    setActiveJobsList(data.payload);
+    setIsLoading(false);
+  }
+
+  // Stopped,Terminated,Running
+  useEffect(() => {
+    getActiveJobs("Running");
+  }, []);
+
+  const refresh = () => {
+    setIsLoading(true);
+    getActiveJobs("Running");
+  };
+
   const columns = [
-    { field: "jobGroup", headerName: "Job Group", flex: 2, width: 200 },
+    { field: "groupname", headerName: "Job Group", flex: 2, width: 200 },
     {
       field: "step",
       headerName: "Step",
       flex: 1.5,
       width: 150,
-      editable: true,
     },
     {
       field: "interface",
       headerName: "Interface",
       flex: 1.5,
       width: 150,
-      editable: true,
     },
     {
       field: "jobNumber",
@@ -26,66 +46,54 @@ function ActiveJobs() {
       flex: 1.5,
       type: "number",
       width: 150,
-      editable: true,
     },
     {
       field: "started",
       headerName: "Started",
       flex: 1.3,
-      //   description: "This column has a value getter and is not sortable.",
-      //   sortable: false,
       width: 130,
-      //   valueGetter: (params) =>
-      //     `${params.row.firstName || ""} ${params.row.lastName || ""}`,
     },
     {
-      field: "status",
+      field: "scheduledstatus",
       headerName: "Status",
       flex: 1.3,
       width: 130,
-      editable: true,
     },
     {
       field: "duration",
       headerName: "Duration",
       flex: 1.5,
       width: 150,
-      editable: true,
     },
     {
       field: "logs",
       headerName: "Logs",
       flex: 1.5,
       width: 150,
-      editable: true,
     },
   ];
 
-  const rows = [
-    { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-    { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-    { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-    { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-    { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-    { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-  ];
+  const rows = activeJobsList;
 
   return (
     <div className="data activeJobs">
       <div className="title">
         <h1 className="Heading">Active Jobs</h1>
-        <button type="button" className="btn btn-outline-warning btn-icon-text">
+        <button
+          type="button"
+          className="btn btn-outline-warning btn-icon-text"
+          onClick={refresh}
+        >
           <i className="mdi mdi-reload btn-icon-prepend"></i>
           Refresh
         </button>
       </div>
       <div className="body">
-        <Stack sx={{ width: "100%", color: "#f02632" }} spacing={2}>
-          <LinearProgress color="inherit" />
-        </Stack>
+        {isLoading && (
+          <Stack sx={{ width: "100%", color: "#f02632" }} spacing={2}>
+            <LinearProgress color="inherit" />
+          </Stack>
+        )}
         <DataTable columns={columns} rows={rows} toolbar />
       </div>
     </div>

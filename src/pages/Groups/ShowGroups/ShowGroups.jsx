@@ -30,7 +30,7 @@ function ShowGroups() {
 
   useEffect(() => {
     getGroupsData("Active,Disabled");
-  }, [groupList]);
+  }, []);
 
   const openModal = (thisRow, thisOperation) => {
     setRow(thisRow);
@@ -117,7 +117,15 @@ function ShowGroups() {
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            <button type="button" className="btn btn-dark btn-icon-text btn-sm">
+            <button
+              type="button"
+              className="btn btn-dark btn-icon-text btn-sm"
+              onClick={() =>
+                navigate("/ShowGroups/EditGroups/EditGroup", {
+                  state: { groupId: params.row.id },
+                })
+              }
+            >
               Edit
               <i className="mdi mdi-file-check btn-icon-append"></i>
             </button>
@@ -150,6 +158,7 @@ function ShowGroups() {
   ];
 
   const rows = groupList;
+
   return (
     <div className="data existingGroups">
       <div className="title">

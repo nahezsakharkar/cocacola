@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { TextField } from "@mui/material";
@@ -15,6 +15,12 @@ import Loader from "../../../../components/Common/Loader/Loader";
 import constants from "../../../../custom/constants/constants";
 
 function AddGroup() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const { groupId } = location.state;
+
+  const [group, setGroup] = useState({});
   const [admin, setAdmin] = useState({});
   const [steps, setSteps] = useState([]);
   const [values, setValues] = useState({
@@ -36,12 +42,16 @@ function AddGroup() {
     setOpen(false);
   };
 
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
   async function getAdmin() {
     const data = await auth.getCurrentUserDetails();
     setAdmin(data.payload);
+  }
+
+  async function getGroup(groupId) {
+    const data = await schedule.getGroupById(groupId);
+    setGroup(data.payload);
   }
 
   async function getSteps(id) {
@@ -50,11 +60,19 @@ function AddGroup() {
   }
 
   useEffect(() => {
+    if (groupId) {
+      getGroup(groupId);
+    } else {
+      navigate("/ShowGroups");
+    }
+    
     getAdmin();
     if (Object.keys(errors).length === 0 && canSubmit) {
       handleOpen();
     }
-  }, [canSubmit, errors]);
+  }, [canSubmit, errors, groupId, navigate]);
+
+  console.log(group)
 
   const capitalize = (str) =>
     str.replace(/^(.)|\s+(.)/g, (c) => c.toUpperCase());

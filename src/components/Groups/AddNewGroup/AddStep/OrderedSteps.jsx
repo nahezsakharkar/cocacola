@@ -9,7 +9,7 @@ function OrderedSteps(props) {
   const { group, steps, interfaces, isLoading } = props;
   const navigate = useNavigate();
 
-  useEffect(() => {}, [steps]);
+  useEffect(() => {}, [steps,interfaces]);
 
   const [rowSequence, setRowSequence] = useState({});
 
@@ -36,7 +36,6 @@ function OrderedSteps(props) {
       headerName: "Interface",
       flex: 1.4,
       width: 350,
-      editable: true,
     },
     {
       field: "action",

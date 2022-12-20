@@ -207,6 +207,7 @@ function AddStep() {
       setIsLoading(false);
     }
     getSteps(group.id);
+    getInterfaces();
     step_form.current.reset();
     setValues(defaultValues);
     setSelectInterfaceValue({

@@ -14,7 +14,7 @@ function AddNewGroup() {
           Fields marked with <span className="text-danger">*</span> are required
         </p>
       </div>
-      <div className="body border border-secondary rounded">
+      <div className="body border border-secondary rounded" style={{scale: ".9"}}>
         <OurStepper
           steps={steps}
           Outlet={<Outlet />}
