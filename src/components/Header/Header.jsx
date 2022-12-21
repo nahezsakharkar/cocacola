@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import auth from "../../services/authService";
 
 function Header() {
@@ -10,10 +11,10 @@ function Header() {
     const data = await auth.getCurrentUserDetails();
     setAdmin(data.payload);
   }
-  
+
   useEffect(() => {
     getAdmin();
-    setCompanyId(admin.companyid)
+    setCompanyId(admin.companyid);
     if (companyId === 1429 || companyId === 1430) {
       setCountry("np");
     } else if (companyId === 1428) {
@@ -22,13 +23,17 @@ function Header() {
       setCountry("bd");
     }
   }, [admin.companyid, companyId]);
-  
+
   return (
     <nav className="navbar col-lg-12 col-12 p-0 d-flex flex-row">
       <div className="navbar-brand-wrapper d-flex align-items-center justify-content-start">
-        <a className="navbar-brand brand-logo-mini" href="index.html">
-          <img src="images/logo-mini.svg" alt="logo" />
-        </a>
+        <Link to="/" className="navbar-brand brand-logo-mini">
+          <img
+            src="./Assets/logo-icon.png"
+            alt="logo"
+            style={{ height: "auto", width: "45px" }}
+          />
+        </Link>
       </div>
       <div className="navbar-menu-wrapper d-flex align-items-center justify-content-between">
         <div className="d-flex align-items-center">

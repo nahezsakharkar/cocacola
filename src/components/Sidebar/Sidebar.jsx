@@ -17,14 +17,14 @@ function Sidebar() {
     <nav className="sidebar sidebar-offcanvas" id="sidebar">
       <ul className="nav">
         <li className="nav-item">
-          <Link className="navbar-brand brand-logo-mini" to="/">
+          <Link to="/" className="navbar-brand brand-logo-mini">
             <img
               src="./Assets/logo-icon.png"
               alt="logo"
               style={{ height: "auto", width: "28px" }}
             />
           </Link>
-          <Link className="navbar-brand brand-logo" to="/">
+          <Link to="/" className="navbar-brand brand-logo">
             <img
               src="./Assets/logo-wide.png"
               alt="logo"
