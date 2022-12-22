@@ -7,7 +7,7 @@ function Footer() {
         <span className="text-muted text-center text-sm-left d-block d-sm-inline-block">
           Copyright © 2022{" "}
           <Link to="">
-            Cocacola
+            Coca-Cola
           </Link>
           . All rights reserved.
         </span>

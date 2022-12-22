@@ -2,7 +2,6 @@ import { Outlet } from "react-router-dom";
 
 // components ------------------------------------
 import Header from "../components/Header/Header";
-import Settings from "../components/ThemeSettings/ThemeSettings";
 import Sidebar from "../components/Sidebar/Sidebar";
 import Footer from "../components/Footer/Footer";
 
@@ -12,7 +11,6 @@ const Layout = () => {
       <div className="container-scroller">
         <Header />
         <div className="container-fluid page-body-wrapper">
-          <Settings />
           <Sidebar />
           <main className="main-panel">
             <div className="content-wrapper">
