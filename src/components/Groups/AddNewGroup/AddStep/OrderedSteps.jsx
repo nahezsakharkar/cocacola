@@ -1,39 +1,28 @@
-import { useState, useEffect } from "react";
+// import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TextField } from "@mui/material";
 import DataTable from "../../../Common/DataTable/DataTable";
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
-import schedule from "../../../../services/scheduleService";
 
 function OrderedSteps(props) {
-  const { group, isLoading } = props;
+  const { group, steps, isLoading } = props;
   const navigate = useNavigate();
 
-  const [stepsByGid, setStepsByGid] = useState({});
-  const [rowSequence, setRowSequence] = useState({});
+  // const [rowSequence, setRowSequence] = useState({});
 
-  async function getSteps(id) {
-    const data = await schedule.getStepsByGId(id);
-    setStepsByGid(data.payload);
-  }
-
-  useEffect(() => {
-    getSteps(group.id);
-  });
-
-  const handleSequenceChange = (e, row) => {
-    // console.log(row);
-    const { id, value } = e.target;
-    setRowSequence({ [id]: value });
-  };
+  // const handleSequenceChange = (e, row) => {
+  //   // console.log(row);
+  //   const { id, value } = e.target;
+  //   setRowSequence({ [id]: value });
+  // };
 
   // console.log(rowSequence);
 
   const rowsSuitableSteps =
-    Object.keys([stepsByGid].flat()[0]).length === 0
+    Object.keys([steps].flat()[0]).length === 0
       ? [].flat()
-      : [stepsByGid].flat();
+      : [steps].flat();
 
   const rows = rowsSuitableSteps
 
@@ -95,7 +84,7 @@ function OrderedSteps(props) {
                   id="sequence"
                   placeholder="Enter Batch Size"
                   defaultValue={params.row.sequence}
-                  onChange={(e) => handleSequenceChange(e, params.row)}
+                  // onChange={(e) => handleSequenceChange(e, params.row)}
                   inputProps={{
                     type: "number",
                     min: 1,

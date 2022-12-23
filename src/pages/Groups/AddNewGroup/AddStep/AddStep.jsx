@@ -19,10 +19,9 @@ function AddStep() {
   const navigate = useNavigate();
 
   var { group } = location.state;
-  // console.log(group);
 
   const [interfaces, setInterfaces] = useState([]);
-  const [steps, setSteps] = useState({ id: "default" });
+  const [steps, setSteps] = useState({});
 
   const step_form = useRef(null);
 
@@ -460,12 +459,7 @@ function AddStep() {
         title={"Create Step?"}
         description="Do you really wish to Create this Step? "
       />
-      <OrderedSteps
-        group={group}
-        // steps={steps}
-        // interfaces={interfaces}
-        isLoading={isLoading}
-      />
+      <OrderedSteps group={group} steps={steps} isLoading={isLoading} />
     </div>
   );
 }
