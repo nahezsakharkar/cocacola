@@ -19,6 +19,7 @@ function AddStep() {
   const navigate = useNavigate();
 
   var { group } = location.state;
+  // console.log(group);
 
   const [interfaces, setInterfaces] = useState([]);
   const [steps, setSteps] = useState({ id: "default" });
@@ -461,8 +462,8 @@ function AddStep() {
       />
       <OrderedSteps
         group={group}
-        steps={steps}
-        interfaces={interfaces}
+        // steps={steps}
+        // interfaces={interfaces}
         isLoading={isLoading}
       />
     </div>

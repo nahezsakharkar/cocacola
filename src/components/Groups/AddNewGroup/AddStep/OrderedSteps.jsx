@@ -4,35 +4,43 @@ import { TextField } from "@mui/material";
 import DataTable from "../../../Common/DataTable/DataTable";
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
+import schedule from "../../../../services/scheduleService";
 
 function OrderedSteps(props) {
-  const { group, steps, interfaces, isLoading } = props;
+  const { group, isLoading } = props;
   const navigate = useNavigate();
 
-  useEffect(() => {}, [steps,interfaces]);
-
+  const [stepsByGid, setStepsByGid] = useState({});
   const [rowSequence, setRowSequence] = useState({});
 
+  async function getSteps(id) {
+    const data = await schedule.getStepsByGId(id);
+    setStepsByGid(data.payload);
+  }
+
+  useEffect(() => {
+    getSteps(group.id);
+  });
+
   const handleSequenceChange = (e, row) => {
-    console.log(row)
+    // console.log(row);
     const { id, value } = e.target;
     setRowSequence({ [id]: value });
   };
 
-  console.log(rowSequence);
+  // console.log(rowSequence);
 
   const rowsSuitableSteps =
-    Object.keys([steps].flat()[0]).length === 0 ? [].flat() : [steps].flat();
+    Object.keys([stepsByGid].flat()[0]).length === 0
+      ? [].flat()
+      : [stepsByGid].flat();
 
-  const rows = rowsSuitableSteps.map((items) => {
-    const interfaceName = interfaces.find((it) => it.id === items.iid)?.name;
-    return { ...items, iname: interfaceName };
-  });
+  const rows = rowsSuitableSteps
 
   const columns = [
     { field: "sequence", headerName: "Step", flex: 0.8, width: 150 },
     {
-      field: "iname",
+      field: "interfacename",
       headerName: "Interface",
       flex: 1.4,
       width: 350,

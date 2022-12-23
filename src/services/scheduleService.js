@@ -76,6 +76,18 @@ export async function createStep(formValues) {
     return response.data
 }
 
+export async function getStepsByGId(groupId) {
+    const user = JSON.parse(localStorage.getItem(sessionKey))
+
+    const response = await http.get(baseURL + "api/steps/bygid?gid=" + groupId, {
+        headers: {
+            Authorization: user.jwtToken
+        }
+    }
+    );
+    return response.data
+}
+
 export async function getStepById(stepId) {
     const user = JSON.parse(localStorage.getItem(sessionKey))
 
@@ -157,6 +169,7 @@ const schedule = {
     getAllSteps,
     getAllInterfaces,
     createStep,
+    getStepsByGId,
     getStepById,
     getAllFilters,
     createFilter,
