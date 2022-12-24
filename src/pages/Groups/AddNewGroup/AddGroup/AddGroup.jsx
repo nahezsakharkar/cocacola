@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -7,6 +7,7 @@ import Select from "react-select";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import Tooltip from "@mui/material/Tooltip";
 
 import auth from "../../../../services/authService";
 import schedule from "../../../../services/scheduleService";
@@ -16,16 +17,49 @@ import constants from "../../../../custom/constants/constants";
 
 function AddGroup() {
   const [admin, setAdmin] = useState({});
-  const [steps, setSteps] = useState([]);
-  const [values, setValues] = useState({
+
+  const defaultValues = {
     groupname: "",
     scheduledstatus: "",
     scheduled: "",
     startdate: "",
     frequency: "",
     frequencytype: "",
-  });
+    testmode: 0,
+  };
+
+  // react-select default values
+
+  const scheduledStatusDefault = {
+    target: JSON.parse('{"id":"scheduledstatus", "value":""}'),
+    value: "",
+    label: "Active, Disabled...",
+  };
+
+  const scheduledDefault = {
+    target: JSON.parse('{"id":"scheduled", "value":""}'),
+    value: "",
+    label: "Recurring, Once...",
+  };
+
+  const frequencyTypeDefault = {
+    target: JSON.parse('{"id":"frequencytype", "value":""}'),
+    value: "",
+    label: "Min, Hour, Day...",
+  };
+
+  const [selectScheduledStatus, setSelectScheduledStatus] = useState(
+    scheduledStatusDefault
+  );
+
+  const [selectScheduled, setSelectScheduled] = useState(scheduledDefault);
+
+  const [selectFrequencyStatus, setSelectFrequencyType] =
+    useState(frequencyTypeDefault);
+
+  const [values, setValues] = useState(defaultValues);
   const [dateValue, setDateValue] = useState(null);
+  const [checkBoxValue, setCheckBoxValue] = useState(false);
   const [errors, setErrors] = useState({});
   const [canSubmit, setCanSubmit] = useState(false);
 
@@ -44,17 +78,23 @@ function AddGroup() {
     setAdmin(data.payload);
   }
 
-  async function getSteps(id) {
-    const data = await schedule.getAllSteps(id);
-    setSteps(data);
-  }
-
   useEffect(() => {
     getAdmin();
     if (Object.keys(errors).length === 0 && canSubmit) {
       handleOpen();
     }
   }, [canSubmit, errors]);
+
+  const group_form = useRef(null);
+  const reset = () => {
+    group_form.current.reset();
+    setSelectScheduledStatus(scheduledStatusDefault);
+    setSelectScheduled(scheduledDefault);
+    setSelectFrequencyType(frequencyTypeDefault);
+    setDateValue(null);
+    setCheckBoxValue(false);
+    setValues(defaultValues);
+  };
 
   const capitalize = (str) =>
     str.replace(/^(.)|\s+(.)/g, (c) => c.toUpperCase());
@@ -123,6 +163,25 @@ function AddGroup() {
       ...values,
       [id]: value,
     });
+
+    if (e.target.id === "testmode") {
+      setValues({
+        ...values,
+        [id]: e.target.checked === true ? 1 : 0,
+      });
+    }
+
+    if (e.target.id === "scheduledstatus") {
+      setSelectScheduledStatus({ id: id, value: value, label: e.label });
+    }
+
+    if (e.target.id === "scheduled") {
+      setSelectScheduled({ id: id, value: value, label: e.label });
+    }
+
+    if (e.target.id === "frequencytype") {
+      setSelectFrequencyType({ id: id, value: value, label: e.label });
+    }
   };
 
   const validate = (values) => {
@@ -182,14 +241,14 @@ function AddGroup() {
       toast.error("There was some Error while creating a Schedule");
     }
     setOpen(false);
-    getSteps(data.payload.id);
+    reset();
     navigate("/AddNewGroup/AddStep", { state: { group: data.payload } });
   }
 
   return (
     <div className="card-body">
       <Loader open={isLoading} />
-      <form>
+      <form ref={group_form}>
         <div className="row">
           <div className="col-md-6">
             <div className="form-group row">
@@ -219,17 +278,17 @@ function AddGroup() {
               </label>
               <div className="col-sm-9">
                 <Select
-                  styles={constants.reactSelectStyles(errors.scheduledstatus)}
+                  styles={constants.reactSelectStyles(
+                    errors.scheduledstatus,
+                    selectScheduledStatus.value
+                  )}
                   inputId="scheduledstatus"
                   options={optionsForStatus}
+                  value={selectScheduledStatus}
                   onChange={handleChange}
                   className="search-options"
                   placeholder="Active, Disabled..."
-                  // defaultValue={{
-                  //   target: JSON.parse('{"id":"scheduledstatus", "value":""}'),
-                  //   value: "",
-                  //   label: "Active, Disabled...",
-                  // }}
+                  defaultValue={scheduledStatusDefault}
                 />
                 {errors.scheduledstatus && (
                   <p className="helperText">{errors.scheduledstatus}</p>
@@ -246,17 +305,17 @@ function AddGroup() {
               </label>
               <div className="col-sm-9">
                 <Select
-                  styles={constants.reactSelectStyles(errors.scheduled)}
+                  styles={constants.reactSelectStyles(
+                    errors.scheduled,
+                    selectScheduled.value
+                  )}
                   inputId="scheduled"
                   options={optionsForSchedule}
+                  value={selectScheduled}
                   onChange={handleChange}
                   className="search-options"
                   placeholder="Recurring, Once..."
-                  // defaultValue={{
-                  //   target: JSON.parse('{"id":"scheduled", "value":""}'),
-                  //   value: "",
-                  //   label: "Recurring, Once...",
-                  // }}
+                  defaultValue={scheduledDefault}
                 />
                 {errors.scheduled && (
                   <p className="helperText">{errors.scheduled}</p>
@@ -335,17 +394,17 @@ function AddGroup() {
               </label>
               <div className="col-sm-7">
                 <Select
-                  styles={constants.reactSelectStyles(errors.frequencytype)}
+                  styles={constants.reactSelectStyles(
+                    errors.frequencytype,
+                    selectFrequencyStatus.value
+                  )}
                   inputId="frequencytype"
                   options={optionsForFrequencyType}
+                  value={selectFrequencyStatus}
                   onChange={handleChange}
                   className="search-options"
                   placeholder="Min, Hour, Day..."
-                  // defaultValue={{
-                  //   target: JSON.parse('{"id":"frequencytype", "value":""}'),
-                  //   value: "",
-                  //   label: "Min, Hour, Day...",
-                  // }}
+                  defaultValue={frequencyTypeDefault}
                 />
                 {errors.frequencytype && (
                   <p className="helperText">{errors.frequencytype}</p>
@@ -356,38 +415,55 @@ function AddGroup() {
           <div className="col-md-3">
             <div className="form-group row">
               <div className="mx-auto">
-                <button
-                  type="button"
-                  className="btn btn-warning btn-icon-text btn-md"
+                <Tooltip
+                  title="When checked the data is not sent to destination but makes data log files Locally."
+                  placement="bottom"
+                  arrow
                 >
-                  Test Run
-                  <i className="fa fa-flash btn-icon-append"></i>
-                </button>
+                  <div
+                    className="runTest"
+                    onClick={() => setCheckBoxValue(!checkBoxValue)}
+                  >
+                    <input
+                      id="testmode"
+                      onChange={handleChange}
+                      style={{ zoom: 1.3 }}
+                      type="checkbox"
+                      className="form-check-input"
+                      checked={checkBoxValue}
+                    />
+                    <div className="checkBoxWithIcon">
+                      <span>Test Run</span>
+                      <i className="fa fa-flash btn-icon-append"></i>
+                    </div>
+                  </div>
+                </Tooltip>
               </div>
             </div>
           </div>
         </div>
-        <div className="row" style={{ justifyContent: "center" }}>
-          {steps.type === "S" || (
+        <div className="row" style={{ justifyContent: "center", gap: "2rem" }}>
+          <button
+            type="button"
+            onClick={onSubmit}
+            className="btn btn-dark btn-icon-text"
+          >
+            Create Group and Proceed to Adding Steps
+            <i className="fa fa-plus btn-icon-append"></i>
+          </button>
+          <Tooltip
+            title="Clear All Data from the Form."
+            placement="right"
+            arrow
+          >
             <button
               type="button"
-              onClick={onSubmit}
-              className="btn btn-dark btn-icon-text"
+              onClick={reset}
+              className="btn btn-secondary btn-icon-text"
             >
-              Create Group and Add New Step
-              <i className="fa fa-plus btn-icon-append"></i>
+              Reset
             </button>
-          )}
-          {steps.type === "S" && (
-            <button
-              type="button"
-              onClick={onSubmit}
-              className="btn btn-dark btn-icon-text"
-            >
-              Update Steps
-              <i className="fa fa-plus btn-icon-append"></i>
-            </button>
-          )}
+          </Tooltip>
         </div>
         <OurModal
           open={open}

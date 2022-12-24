@@ -244,3 +244,28 @@
 .emptiness > .MuiBackdrop-root {
   background-color: transparent !important;
 }
+
+.runTest {
+  padding: 1rem 1.2rem 1rem 2.6rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 5px;
+  background-color: #ffc300;
+  user-select: none;
+}
+
+.runTest:hover {
+  cursor: pointer;
+  background-color: #deaa02;
+}
+
+.checkBoxWithIcon {
+  gap: 0.7rem;
+  display: flex;
+  align-items: center;
+}
+
+.checkBoxWithIcon span {
+  font-size: 1rem;
+}

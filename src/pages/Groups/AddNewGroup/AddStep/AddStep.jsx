@@ -7,6 +7,7 @@ import Select from "react-select";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import Tooltip from "@mui/material/Tooltip";
 
 import schedule from "../../../../services/scheduleService";
 import OurModal from "../../../../components/Common/OurModal/OurModal";
@@ -82,6 +83,22 @@ function AddStep() {
       handleOpen();
     }
   }, [canSubmit, errors, group, navigate]);
+
+  const reset = () => {
+    step_form.current.reset();
+    setSelectInterfaceValue({
+      target: JSON.parse('{"id":"iid", "value":""}'),
+      value: "",
+      label: "Select Interface...",
+    });
+    setSelectSyncTypeValue({
+      target: JSON.parse('{"id":"synctype", "value":""}'),
+      value: "",
+      label: "Select Sync Type...",
+    });
+    setDateValue(null);
+    setValues(defaultValues);
+  };
 
   function convertFullDateToNormalDate(str) {
     var date = new Date(str),
@@ -208,19 +225,7 @@ function AddStep() {
     }
     getSteps(group.id);
     getInterfaces();
-    step_form.current.reset();
-    setValues(defaultValues);
-    setSelectInterfaceValue({
-      target: JSON.parse('{"id":"iid", "value":""}'),
-      value: "",
-      label: "Select Interface...",
-    });
-    setSelectSyncTypeValue({
-      target: JSON.parse('{"id":"synctype", "value":""}'),
-      value: "",
-      label: "Select Sync Type...",
-    });
-    setDateValue(null);
+    reset();
   };
 
   return (
@@ -439,7 +444,7 @@ function AddStep() {
           </div>
         </div>
       </form>
-      <div className="row" style={{ justifyContent: "center" }}>
+      <div className="row" style={{ justifyContent: "center", gap: "2rem" }}>
         <button
           type="button"
           className="btn btn-dark btn-icon-text"
@@ -448,6 +453,15 @@ function AddStep() {
           Confirm Step
           <i className="fa fa-plus btn-icon-append"></i>
         </button>
+        <Tooltip title="Clear All Data from the Form." placement="right" arrow>
+          <button
+            type="button"
+            onClick={reset}
+            className="btn btn-secondary btn-icon-text"
+          >
+            Reset
+          </button>
+        </Tooltip>
       </div>
       <EmptyModal open={isLoading} />
       <OurModal
