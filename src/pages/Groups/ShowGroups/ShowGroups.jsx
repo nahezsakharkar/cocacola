@@ -60,6 +60,7 @@ function ShowGroups() {
     const data = await schedule.deleteGroup(row.id);
     if (data.message === "group deleted") {
       toast.success("Schedule was Deleted Successfully");
+      getGroupsData("Active,Disabled");
     } else {
       toast.error("There was some Error while deleting a Schedule");
     }
