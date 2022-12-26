@@ -1,13 +1,25 @@
-// import { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { TextField } from "@mui/material";
-import DataTable from "../../../Common/DataTable/DataTable";
-import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
+import Stack from "@mui/material/Stack";
+import DataTable from "../../../Common/DataTable/DataTable";
+import schedule from "../../../../services/scheduleService";
+import OurModal from "../../../Common/OurModal/OurModal";
 
 function OrderedSteps(props) {
-  const { group, steps, isLoading } = props;
+  const { group, steps, getSteps, isLoading } = props;
   const navigate = useNavigate();
+
+  const [row, setRow] = useState([]);
+  const [operation, setOperation] = useState("");
+  const [modalTitle, setModalTitle] = useState();
+  const [modalDesc, setModalDesc] = useState();
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   // const [rowSequence, setRowSequence] = useState({});
 
@@ -19,12 +31,47 @@ function OrderedSteps(props) {
 
   // console.log(rowSequence);
 
-  const rowsSuitableSteps =
-    Object.keys([steps].flat()[0]).length === 0
-      ? [].flat()
-      : [steps].flat();
+  const openModal = (thisRow, thisOperation) => {
+    setRow(thisRow);
+    setOperation(thisOperation);
+    if (thisOperation === "delete") {
+      setModalTitle(
+        "Delete Step with " + thisRow.interfacename + " Interface?"
+      );
+      setModalDesc(
+        "Do you really wish to Remove Step with " +
+          thisRow.interfacename +
+          " Interface from the System? This Step's data will be lost. "
+      );
+      handleOpen();
+    }
+  };
 
-  const rows = rowsSuitableSteps
+  const handleOperation = () => {
+    if (operation === "delete") {
+      handleDelete();
+    } else if (operation === "run") {
+      // handleRun();
+    } else if (operation === "disable") {
+      // handleDisable();
+    }
+  };
+
+  async function handleDelete() {
+    const data = await schedule.deleteStep(row.id);
+    if (data.message === "step deleted") {
+      toast.success("Step was Deleted Successfully");
+      getSteps(group.id);
+    } else {
+      toast.error("There was some Error while deleting this Step");
+    }
+    setOpen(false);
+  }
+
+  const rowsSuitableSteps =
+    Object.keys([steps].flat()[0]).length === 0 ? [].flat() : [steps].flat();
+
+  const rows = rowsSuitableSteps;
 
   const columns = [
     { field: "sequence", headerName: "Step", flex: 0.8, width: 150 },
@@ -49,6 +96,7 @@ function OrderedSteps(props) {
             <button
               type="button"
               className="btn btn-danger btn-icon-text btn-sm"
+              onClick={() => openModal(params.row, "delete")}
             >
               Delete
               <i className="ti-trash btn-icon-append"></i>
@@ -120,6 +168,15 @@ function OrderedSteps(props) {
           </Stack>
         )}
         <DataTable columns={columns} rows={rows} />
+        <OurModal
+          open={open}
+          setOpen={setOpen}
+          handleOpen={handleOpen}
+          handleClose={handleClose}
+          handleYes={handleOperation}
+          title={modalTitle}
+          description={modalDesc}
+        />
       </div>
     </div>
   );

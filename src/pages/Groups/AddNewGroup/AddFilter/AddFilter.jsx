@@ -13,7 +13,7 @@ function AddFilter() {
   const location = useLocation();
   const { step, group } = location.state;
 
-  const [filters, setFilters] = useState({ id: "default" });
+  const [filters, setFilters] = useState({});
   const filter_form = useRef(null);
 
   const defaultValues = {
@@ -41,8 +41,8 @@ function AddFilter() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  async function getFilters(groupId) {
-    const data = await schedule.getAllFilters(groupId);
+  async function getFilters(stepId) {
+    const data = await schedule.getAllFilters(stepId);
     setFilters(data.payload);
   }
 
@@ -216,7 +216,12 @@ function AddFilter() {
           </div>
         </div>
       </form>
-      <Filters filters={filters} isLoading={isLoading} />
+      <Filters
+        step={step}
+        filters={filters}
+        getFilters={getFilters}
+        isLoading={isLoading}
+      />
     </div>
   );
 }

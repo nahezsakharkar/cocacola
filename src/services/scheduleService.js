@@ -35,7 +35,6 @@ export async function deleteGroup(id) {
         }
     }
     );
-    console.log(response)
     return response.data
 }
 
@@ -88,6 +87,17 @@ export async function getStepById(stepId) {
     return response.data
 }
 
+export async function deleteStep(id) {
+    const user = JSON.parse(localStorage.getItem(sessionKey))
+    const response = await http.delete(baseURL + "api/steps/delbyid?id=" + id, {
+        headers: {
+            Authorization: user.jwtToken
+        }
+    }
+    );
+    return response.data
+}
+
 export async function getAllFilters(stepId) {
     const user = JSON.parse(localStorage.getItem(sessionKey))
 
@@ -104,6 +114,17 @@ export async function createFilter(formValues) {
     const user = JSON.parse(localStorage.getItem(sessionKey))
     const response = await http.post(baseURL + "api/filters/save",
         formValues, {
+        headers: {
+            Authorization: user.jwtToken
+        }
+    }
+    );
+    return response.data
+}
+
+export async function deleteFilter(id) {
+    const user = JSON.parse(localStorage.getItem(sessionKey))
+    const response = await http.delete(baseURL + "api/filters/delbyid?id=" + id, {
         headers: {
             Authorization: user.jwtToken
         }
@@ -160,9 +181,11 @@ const schedule = {
     getAllInterfaces,
     createStep,
     getStepById,
+    deleteStep,
     // Filters
     getAllFilters,
     createFilter,
+    deleteFilter,
     //Logs
     getGroupsByScheduleStatus,
     getGroupsByRunningStatus,

@@ -473,7 +473,12 @@ function AddStep() {
         title={"Create Step?"}
         description="Do you really wish to Create this Step? "
       />
-      <OrderedSteps group={group} steps={steps} isLoading={isLoading} />
+      <OrderedSteps
+        group={group}
+        steps={steps}
+        getSteps={getSteps}
+        isLoading={isLoading}
+      />
     </div>
   );
 }

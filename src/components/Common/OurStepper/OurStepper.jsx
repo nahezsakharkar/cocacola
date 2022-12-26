@@ -7,7 +7,7 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 
 const OurStepper = (props) => {
-  const { steps, Outlet, onlyBack } = props;
+  const { steps, group, Outlet, pathNames, onlyBack } = props;
   const [activeStep, setActiveStep] = useState(0);
   const [hideBack, setHideBack] = useState(true);
   const [addStepPageState, setAddStepPageState] = useState({});
@@ -15,28 +15,28 @@ const OurStepper = (props) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (location.pathname === "/AddNewGroup/AddGroup") {
+    if (location.pathname === pathNames.Group) {
       setActiveStep(0);
       setHideBack(true);
-    } else if (location.pathname === "/AddNewGroup/AddStep") {
+    } else if (location.pathname === pathNames.Steps) {
       setActiveStep(1);
       setHideBack(false);
-      setAddStepPageState(location.state.group)
-    } else if (location.pathname === "/AddNewGroup/AddFilter") {
+      setAddStepPageState(location.state.group);
+    } else if (location.pathname === pathNames.Filters) {
       setActiveStep(2);
       setHideBack(false);
     }
-  }, [location.pathname, location.state]);
+  }, [location.pathname, location.state, pathNames.Filters, pathNames.Group, pathNames.Steps]);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
-    if (location.pathname === "/AddNewGroup/AddStep") {
-      navigate("/AddNewGroup/AddGroup");
-    } else if (location.pathname === "/AddNewGroup/AddFilter") {
-      navigate("/AddNewGroup/AddStep", { state: { group: addStepPageState} });
+    if (location.pathname === pathNames.Steps) {
+      navigate(pathNames.Group);
+    } else if (location.pathname === pathNames.Filters) {
+      navigate(pathNames.Steps, { state: { group: addStepPageState } });
     }
   };
 

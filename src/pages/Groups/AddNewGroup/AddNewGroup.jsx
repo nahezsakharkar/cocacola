@@ -5,6 +5,7 @@ import "../../../custom/css/custom.css";
 function AddNewGroup() {
   // Stepper Steps
   const steps = ["Create New Group", "Add Steps", "Add Filters"];
+  const pathNames = {Group: "/AddNewGroup/AddGroup", Steps: "/AddNewGroup/AddStep", Filters: "/AddNewGroup/AddFilter"}
 
   return (
     <div className="addNewGroup">
@@ -18,6 +19,7 @@ function AddNewGroup() {
         <OurStepper
           steps={steps}
           Outlet={<Outlet />}
+          pathNames={pathNames}
           onlyBack={true}
         />
       </div>

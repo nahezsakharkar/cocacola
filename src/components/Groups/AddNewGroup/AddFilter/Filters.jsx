@@ -1,12 +1,53 @@
-import { useEffect } from "react";
-import DataTable from "../../../Common/DataTable/DataTable";
+import { useState } from "react";
+import { toast } from "react-toastify";
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
+import schedule from "../../../../services/scheduleService";
+import DataTable from "../../../Common/DataTable/DataTable";
+import OurModal from "../../../Common/OurModal/OurModal";
 
 function Filters(props) {
-  const { filters, isLoading } = props;
+  const { step, filters, getFilters, isLoading } = props;
 
-  useEffect(() => {}, [filters]);
+  const [row, setRow] = useState([]);
+  const [operation, setOperation] = useState("");
+  const [modalTitle, setModalTitle] = useState();
+  const [modalDesc, setModalDesc] = useState();
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const openModal = (thisRow, thisOperation) => {
+    setRow(thisRow);
+    setOperation(thisOperation);
+    if (thisOperation === "delete") {
+      setModalTitle("Delete Filter?");
+      setModalDesc(
+        "Do you really wish to Remove this Filter from Step with " +
+          step.interfacename +
+          " Interface from the System? This Filters's data will be lost. "
+      );
+      handleOpen();
+    }
+  };
+
+  const handleOperation = () => {
+    if (operation === "delete") {
+      handleDelete();
+    }
+  };
+
+  async function handleDelete() {
+    const data = await schedule.deleteFilter(row.id);
+    if (data.message === "filter deleted") {
+      toast.success("Step was Deleted Successfully");
+      getFilters(step.id);
+    } else {
+      toast.error("There was some Error while deleting this Step");
+    }
+    setOpen(false);
+  }
 
   const columns = [
     { field: "field", headerName: "Field", flex: 1, width: 300 },
@@ -37,6 +78,7 @@ function Filters(props) {
             <button
               type="button"
               className="btn btn-danger btn-icon-text btn-sm"
+              onClick={() => openModal(params.row, "delete")}
             >
               Remove
               <i className="ti-trash btn-icon-append"></i>
@@ -64,6 +106,15 @@ function Filters(props) {
           </Stack>
         )}
         <DataTable columns={columns} rows={rows} />
+        <OurModal
+          open={open}
+          setOpen={setOpen}
+          handleOpen={handleOpen}
+          handleClose={handleClose}
+          handleYes={handleOperation}
+          title={modalTitle}
+          description={modalDesc}
+        />
       </div>
     </div>
   );
