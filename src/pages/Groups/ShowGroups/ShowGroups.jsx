@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
+import Tooltip from "@mui/material/Tooltip";
 import DataTable from "../../../components/Common/DataTable/DataTable";
 import schedule from "../../../services/scheduleService";
 import OurModal from "../../../components/Common/OurModal/OurModal";
@@ -32,6 +33,8 @@ function ShowGroups() {
     getGroupsData("Active,Disabled");
   }, []);
 
+  // console.log(groupList)
+
   const openModal = (thisRow, thisOperation) => {
     setRow(thisRow);
     setOperation(thisOperation);
@@ -43,6 +46,14 @@ function ShowGroups() {
           " from the System? This Group's data will be lost. "
       );
       handleOpen();
+    } else if (thisOperation === "run") {
+      setModalTitle("Start " + thisRow.groupname + " Job Group?");
+      setModalDesc(
+        "Do you really wish to Start " +
+          thisRow.groupname +
+          " Job Group? This Group's Scheduler will start running. "
+      );
+      handleOpen();
     }
   };
 
@@ -50,7 +61,7 @@ function ShowGroups() {
     if (operation === "delete") {
       handleDelete();
     } else if (operation === "run") {
-      // handleRun();
+      handleRun();
     } else if (operation === "disable") {
       // handleDisable();
     }
@@ -67,15 +78,17 @@ function ShowGroups() {
     setOpen(false);
   }
 
-  // async function handleRun() {
-  //   const data = await schedule.runGroup(row.id);
-  //   if (data.message === "group deleted") {
-  //     toast.success("Schedule was Deleted Successfully");
-  //   } else {
-  //     toast.error("There was some Error while deleting a Schedule");
-  //   }
-  //   setOpen(false);
-  // }
+  async function handleRun() {
+    toast.success("Schedule was Started Successfully");
+    setOpen(false);
+    const data = await schedule.schedulerStart(row.id);
+    if (data.message === "completed") {
+      toast.success("Schedule was Completed Successfully");
+      getGroupsData("Active,Disabled");
+    } else {
+      toast.error("There was some Error while Completing a Schedule");
+    }
+  }
 
   // async function handleDisable() {
   //   const data = await schedule.disableGroup(row.id);
@@ -90,25 +103,39 @@ function ShowGroups() {
   const columns = [
     { field: "id", headerName: "Id", flex: 0.2, width: 80 },
     {
-      field: "groupname",
+      field: "groupnameStatus",
       headerName: "Job Group",
       flex: 0.8,
       // width: 270,
-      editable: true,
+      renderCell: (params) => {
+        return (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            {params.row.groupname && <span>{params.row.groupname}</span>}
+            {params.row.runningstatus === "Running" && (
+              <span style={{ color: "gray" }}>Running...</span>
+            )}
+          </div>
+        );
+      },
     },
     {
       field: "scheduled",
       headerName: "Schedule",
       flex: 0.5,
       // width: 210,
-      editable: true,
     },
     {
       field: "scheduledstatus",
       headerName: "Status",
       flex: 0.5,
       // width: 150,
-      editable: true,
     },
     {
       field: "action",
@@ -137,13 +164,34 @@ function ShowGroups() {
               Disable
               <i className="fa fa-ban btn-icon-append"></i>
             </button>
-            <button
-              type="button"
-              className="btn btn-warning btn-icon-text btn-sm"
+            <Tooltip
+              title={
+                params.row.runningstatus === "Running"
+                  ? "Schedule is already running."
+                  : ""
+              }
+              placement="top"
+              arrow
             >
-              Run
-              <i className="fa fa-flash btn-icon-append"></i>
-            </button>
+              <span>
+                <button
+                  type="button"
+                  disabled={
+                    params.row.runningstatus === "Running" ? true : false
+                  }
+                  style={
+                    params.row.runningstatus === "Running"
+                      ? { pointerEvents: "none" }
+                      : {}
+                  }
+                  className="btn btn-warning btn-icon-text btn-sm"
+                  onClick={() => openModal(params.row, "run")}
+                >
+                  Run
+                  <i className="fa fa-flash btn-icon-append"></i>
+                </button>
+              </span>
+            </Tooltip>
             <button
               type="button"
               className="btn btn-danger btn-icon-text btn-sm"

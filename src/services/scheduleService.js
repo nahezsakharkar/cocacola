@@ -170,6 +170,18 @@ export async function getAllJobLogs() {
     return response.data;
 }
 
+export async function schedulerStart(groupId) {
+    const user = JSON.parse(localStorage.getItem(sessionKey))
+
+    const response = http.get(baseURL + "api/scheduler/start?gid=" + groupId, {
+        headers: {
+            Authorization: user.jwtToken
+        }
+    }
+    );
+    return await response.data;
+}
+
 
 const schedule = {
     //Groups
@@ -189,7 +201,9 @@ const schedule = {
     //Logs
     getGroupsByScheduleStatus,
     getGroupsByRunningStatus,
-    getAllJobLogs
+    getAllJobLogs,
+    //processes
+    schedulerStart
 }
 
 export default schedule

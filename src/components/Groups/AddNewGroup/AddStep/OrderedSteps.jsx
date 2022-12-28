@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { TextField } from "@mui/material";
@@ -12,24 +12,54 @@ function OrderedSteps(props) {
   const { group, steps, getSteps, isLoading } = props;
   const navigate = useNavigate();
 
+  const [groupInfo, setGroupInfo] = useState({});
+
   const [row, setRow] = useState([]);
   const [operation, setOperation] = useState("");
   const [modalTitle, setModalTitle] = useState();
   const [modalDesc, setModalDesc] = useState();
 
+  const [fromIndex, setFromIndex] = useState(0);
+  const [toIndex, setToIndex] = useState(0);
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  // const [rowSequence, setRowSequence] = useState({});
+  async function getGroupInfo(id) {
+    const data = await schedule.getGroupById(id);
+    setGroupInfo(data.payload);
+  }
 
-  // const handleSequenceChange = (e, row) => {
-  //   // console.log(row);
-  //   const { id, value } = e.target;
-  //   setRowSequence({ [id]: value });
-  // };
+  useEffect(() => {
+    getGroupInfo(group.id);
+  }, [group.id, steps]);
 
-  // console.log(rowSequence);
+  const arrayMove = (arr, fromIndex, toIndex) => {
+    let newArray = arr;
+    var element = newArray[fromIndex];
+    newArray.splice(fromIndex, 1);
+    newArray.splice(toIndex, 0, element);
+    return newArray;
+  };
+
+  const handleSequenceChange = (e, row) => {
+    setFromIndex(row.stepSequence - 1);
+    setToIndex(e.target.value - 1);
+  };
+
+  async function handleSequenceSubmit() {
+    const data = await schedule.createGroup({
+      ...groupInfo,
+      id: groupInfo.id,
+      sids: arrayMove(groupInfo.sids, fromIndex, toIndex),
+    });
+    if (data.message === "updated successfully") {
+      toast.success("Steps Sequence was Updated Successfully");
+    } else {
+      toast.error("There was some Error while Updating the Step Sequence");
+    }
+  }
 
   const openModal = (thisRow, thisOperation) => {
     setRow(thisRow);
@@ -72,9 +102,17 @@ function OrderedSteps(props) {
     Object.keys([steps].flat()[0]).length === 0 ? [].flat() : [steps].flat();
 
   const rows = rowsSuitableSteps;
+  // console.log(rowsSuitableSteps)
+
+  // const rows = rowsSuitableSteps.map((items) => {
+  //   const sequence = groupInfo.sids.findIndex(
+  //     (number) => number === items.id
+  //   );
+  //   return { ...items, stepSequence: sequence + 1 };
+  // });
 
   const columns = [
-    { field: "sequence", headerName: "Step", flex: 0.8, width: 150 },
+    { field: "stepSequence", headerName: "Step", flex: 0.8, width: 150 },
     {
       field: "interfacename",
       headerName: "Interface",
@@ -128,22 +166,21 @@ function OrderedSteps(props) {
             {rows.length > 1 && (
               <>
                 <TextField
-                  // error={errors.sequence ? true : false}
                   id="sequence"
-                  placeholder="Enter Batch Size"
+                  placeholder="Enter Sequence Position"
                   defaultValue={params.row.sequence}
-                  // onChange={(e) => handleSequenceChange(e, params.row)}
+                  onChange={(e) => handleSequenceChange(e, params.row)}
                   inputProps={{
                     type: "number",
                     min: 1,
                     max: rows.length,
                   }}
-                  // helperText={errors.sequence}
                   variant="outlined"
                 />
                 <button
                   type="button"
                   className="btn btn-dark btn-icon-text btn-sm"
+                  onClick={handleSequenceSubmit}
                 >
                   Apply
                   <i className="mdi mdi-file-check btn-icon-append"></i>

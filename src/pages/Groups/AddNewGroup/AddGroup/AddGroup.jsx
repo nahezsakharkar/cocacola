@@ -227,6 +227,7 @@ function AddGroup() {
       ...values,
       frequency: Number(values.frequency),
       groupname: capitalize(values.groupname),
+      testmode: checkBoxValue ? 1 : 0,
       companyid: admin["companyid"],
       userid: admin["id"],
     });
