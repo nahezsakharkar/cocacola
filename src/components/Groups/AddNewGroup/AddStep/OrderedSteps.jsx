@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { TextField } from "@mui/material";
@@ -9,10 +9,8 @@ import schedule from "../../../../services/scheduleService";
 import OurModal from "../../../Common/OurModal/OurModal";
 
 function OrderedSteps(props) {
-  const { group, steps, getSteps, isLoading } = props;
+  const { groupInfo, getGroupInfo, steps, sequence, isLoading } = props;
   const navigate = useNavigate();
-
-  const [groupInfo, setGroupInfo] = useState({});
 
   const [row, setRow] = useState([]);
   const [operation, setOperation] = useState("");
@@ -25,15 +23,6 @@ function OrderedSteps(props) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  async function getGroupInfo(id) {
-    const data = await schedule.getGroupById(id);
-    setGroupInfo(data.payload);
-  }
-
-  useEffect(() => {
-    getGroupInfo(group.id);
-  }, [group.id, steps]);
 
   const arrayMove = (arr, fromIndex, toIndex) => {
     let newArray = arr;
@@ -48,14 +37,23 @@ function OrderedSteps(props) {
     setToIndex(e.target.value - 1);
   };
 
+  const convertToArrayOfObjects = (arr) => {
+    let newArr = [];
+    for (let i = 0; i < arr.length; i++) {
+      newArr.push({ id: arr[i], sequence: i + 1 });
+    }
+    return newArr;
+  };
+
   async function handleSequenceSubmit() {
-    const data = await schedule.createGroup({
-      ...groupInfo,
-      id: groupInfo.id,
-      sids: arrayMove(groupInfo.sids, fromIndex, toIndex),
-    });
-    if (data.message === "updated successfully") {
+    const newSequence = arrayMove(sequence, fromIndex, toIndex);
+    console.log(convertToArrayOfObjects(newSequence));
+    const data = await schedule.updateSequence(
+      convertToArrayOfObjects(newSequence)
+    );
+    if (data.message === "sequence updated") {
       toast.success("Steps Sequence was Updated Successfully");
+      getGroupInfo(groupInfo.id);
     } else {
       toast.error("There was some Error while Updating the Step Sequence");
     }
@@ -91,25 +89,17 @@ function OrderedSteps(props) {
     const data = await schedule.deleteStep(row.id);
     if (data.message === "step deleted") {
       toast.success("Step was Deleted Successfully");
-      getSteps(group.id);
+      getGroupInfo(groupInfo.id);
     } else {
       toast.error("There was some Error while deleting this Step");
     }
     setOpen(false);
   }
 
-  const rowsSuitableSteps =
-    Object.keys([steps].flat()[0]).length === 0 ? [].flat() : [steps].flat();
-
-  const rows = rowsSuitableSteps;
-  // console.log(rowsSuitableSteps)
-
-  // const rows = rowsSuitableSteps.map((items) => {
-  //   const sequence = groupInfo.sids.findIndex(
-  //     (number) => number === items.id
-  //   );
-  //   return { ...items, stepSequence: sequence + 1 };
-  // });
+  const rows = steps.map((items) => {
+    const seq = sequence.findIndex((number) => number === items.id);
+    return { ...items, stepSequence: seq + 1 };
+  });
 
   const columns = [
     { field: "stepSequence", headerName: "Step", flex: 0.8, width: 150 },
@@ -144,7 +134,7 @@ function OrderedSteps(props) {
               className="btn btn-warning btn-icon-text btn-sm"
               onClick={() =>
                 navigate("/AddNewGroup/AddFilter", {
-                  state: { step: params.row, group: group },
+                  state: { step: params.row, group: groupInfo },
                 })
               }
             >
@@ -168,7 +158,8 @@ function OrderedSteps(props) {
                 <TextField
                   id="sequence"
                   placeholder="Enter Sequence Position"
-                  defaultValue={params.row.sequence}
+                  key={params.row.id}
+                  defaultValue={params.row.stepSequence}
                   onChange={(e) => handleSequenceChange(e, params.row)}
                   inputProps={{
                     type: "number",

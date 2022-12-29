@@ -75,6 +75,18 @@ export async function createStep(formValues) {
     return response.data
 }
 
+export async function updateSequence(formValues) {
+    const user = JSON.parse(localStorage.getItem(sessionKey))
+    const response = await http.post(baseURL + "api/steps/updateSequence",
+        formValues, {
+        headers: {
+            Authorization: user.jwtToken
+        }
+    }
+    );
+    return response.data
+}
+
 export async function getStepById(stepId) {
     const user = JSON.parse(localStorage.getItem(sessionKey))
 
@@ -192,6 +204,7 @@ const schedule = {
     getAllSteps,
     getAllInterfaces,
     createStep,
+    updateSequence,
     getStepById,
     deleteStep,
     // Filters

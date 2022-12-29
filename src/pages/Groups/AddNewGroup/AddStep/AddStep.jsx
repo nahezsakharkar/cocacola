@@ -21,8 +21,10 @@ function AddStep() {
 
   var { group } = location.state;
 
+  const [groupInfo, setGroupInfo] = useState({});
   const [interfaces, setInterfaces] = useState([]);
-  const [steps, setSteps] = useState({});
+  const [steps, setSteps] = useState([]);
+  const [sequence, setSequence] = useState([]);
 
   const step_form = useRef(null);
 
@@ -62,20 +64,22 @@ function AddStep() {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  async function getGroupInfo(id) {
+    const data = await schedule.getGroupById(id);
+    setGroupInfo(data.payload);
+    setSteps(data.payload.steps)
+    setSequence(data.payload.sids)
+  }
+
   async function getInterfaces() {
     const data = await schedule.getAllInterfaces();
     setInterfaces(data.payload);
   }
 
-  async function getSteps(groupId) {
-    const data = await schedule.getAllSteps(groupId);
-    setSteps(data.payload);
-  }
-
   useEffect(() => {
     getInterfaces();
     if (group.id) {
-      getSteps(group.id);
+      getGroupInfo(group.id);
     } else {
       navigate("/AddNewGroup/AddGroup");
     }
@@ -210,7 +214,7 @@ function AddStep() {
     const data = await schedule.createStep({
       ...values,
       gid: group.id,
-      sequence: steps.id === "default" ? 1 : Object.keys(steps).length + 1,
+      sequence: groupInfo.steps.length === 0 ? 1 : groupInfo.steps.length + 1,
     });
     if (data.message === "updated successfully") {
       toast.success("Step was Updated Successfully");
@@ -223,7 +227,7 @@ function AddStep() {
       toast.error("There was some Error while creating a Step");
       setIsLoading(false);
     }
-    getSteps(group.id);
+    getGroupInfo(group.id);
     getInterfaces();
     reset();
   };
@@ -474,9 +478,10 @@ function AddStep() {
         description="Do you really wish to Create this Step? "
       />
       <OrderedSteps
-        group={group}
+        groupInfo={groupInfo}
+        getGroupInfo={getGroupInfo}
         steps={steps}
-        getSteps={getSteps}
+        sequence={sequence}
         isLoading={isLoading}
       />
     </div>
