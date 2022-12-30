@@ -19,6 +19,7 @@ function OrderedSteps(props) {
 
   const [fromIndex, setFromIndex] = useState(0);
   const [toIndex, setToIndex] = useState(0);
+  const [eForReset, SETEForReset] = useState();
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -33,8 +34,15 @@ function OrderedSteps(props) {
   };
 
   const handleSequenceChange = (e, row) => {
+    SETEForReset(e);
     setFromIndex(row.stepSequence - 1);
-    setToIndex(e.target.value - 1);
+    setToIndex(
+      e.target.value > rows.length
+        ? rows.length - 1
+        : Number(e.target.value) === 0
+        ? 0
+        : e.target.value - 1
+    );
   };
 
   const convertToArrayOfObjects = (arr) => {
@@ -47,7 +55,6 @@ function OrderedSteps(props) {
 
   async function handleSequenceSubmit() {
     const newSequence = arrayMove(sequence, fromIndex, toIndex);
-    console.log(convertToArrayOfObjects(newSequence));
     const data = await schedule.updateSequence(
       convertToArrayOfObjects(newSequence)
     );
@@ -57,6 +64,7 @@ function OrderedSteps(props) {
     } else {
       toast.error("There was some Error while Updating the Step Sequence");
     }
+    eForReset.target.value = "";
   }
 
   const openModal = (thisRow, thisOperation) => {
@@ -159,7 +167,7 @@ function OrderedSteps(props) {
                   id="sequence"
                   placeholder="Enter Sequence Position"
                   key={params.row.id}
-                  defaultValue={params.row.stepSequence}
+                  // defaultValue={params.row.stepSequence}
                   onChange={(e) => handleSequenceChange(e, params.row)}
                   inputProps={{
                     type: "number",
