@@ -2,6 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { TextField } from "@mui/material";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Select from "react-select";
 import EmptyModal from "../../../../components/Common/EmptyModal/EmptyModal";
 import OurModal from "../../../../components/Common/OurModal/OurModal";
@@ -28,7 +34,10 @@ function AddFilter() {
     label: "Select Operator...",
   });
 
+  const [radioButtonValue, setRadioButtonValue] = useState("text");
+
   const [values, setValues] = useState(defaultValues);
+  const [dateValue, setDateValue] = useState(null);
   const [errors, setErrors] = useState({});
   const [canSubmit, setCanSubmit] = useState(false);
 
@@ -53,6 +62,10 @@ function AddFilter() {
     }
   }, [canSubmit, errors, step]);
 
+  const handleRadioButtonChange = (e) => {
+    setRadioButtonValue(e.target.value);
+  };
+
   const optionsForOperator = [
     {
       target: JSON.parse('{"id":"operator", "value":"EQUALS"}'),
@@ -64,7 +77,40 @@ function AddFilter() {
       value: "LIKE",
       label: "LIKE",
     },
+    {
+      target: JSON.parse('{"id":"operator", "value":"LESS THAN"}'),
+      value: "LESS THAN",
+      label: "LESS THAN",
+    },
+    {
+      target: JSON.parse('{"id":"operator", "value":"LESS THAN EQUALS TO"}'),
+      value: "LESS THAN EQUALS TO",
+      label: "LESS THAN EQUALS TO",
+    },
+    {
+      target: JSON.parse('{"id":"operator", "value":"GREATER THAN"}'),
+      value: "GREATER THAN",
+      label: "GREATER THAN",
+    },
+    {
+      target: JSON.parse('{"id":"operator", "value":"GREATER THAN EQUALS TO"}'),
+      value: "GREATER THAN EQUALS TO",
+      label: "GREATER THAN EQUALS TO",
+    },
   ];
+
+  function convertFullDateToNormalDate(str) {
+    var date = new Date(str),
+      mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+      day = ("0" + date.getDate()).slice(-2);
+    return [date.getFullYear(), mnth, day].join("-");
+  }
+
+  const dateHandleChange = (newValue) => {
+    setCanSubmit(false);
+    setDateValue(newValue);
+    values["filtervalue"] = convertFullDateToNormalDate(newValue);
+  };
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -175,18 +221,72 @@ function AddFilter() {
             </div>
           </div>
           <div className="filterField">
-            <div className="label">
+            <div className="label" style={{ display: "flex" }}>
               <label className="col-sm-3 col-form-label">Value</label>
+              <RadioGroup
+                row
+                defaultValue="text"
+                name="radio-buttons-group"
+                onChange={handleRadioButtonChange}
+              >
+                <FormControlLabel
+                  sx={{ margin: "0" }}
+                  value="text"
+                  control={<Radio />}
+                  label="Text"
+                />
+                <FormControlLabel
+                  sx={{ margin: "0" }}
+                  value="date"
+                  control={<Radio />}
+                  label="Date"
+                />
+              </RadioGroup>
             </div>
             <div className="input">
-              <TextField
-                error={errors.filtervalue ? true : false}
-                id="filtervalue"
-                placeholder="Enter Field Value"
-                onChange={handleChange}
-                helperText={errors.filtervalue}
-                variant="outlined"
-              />
+              {radioButtonValue === "text" && (
+                <TextField
+                  error={errors.filtervalue ? true : false}
+                  id="filtervalue"
+                  placeholder="Enter Field Value"
+                  onChange={handleChange}
+                  helperText={errors.filtervalue}
+                  variant="outlined"
+                />
+              )}
+              {radioButtonValue === "date" && (
+                <div>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      inputId="filtervalue"
+                      className="date-picker"
+                      value={dateValue}
+                      onChange={dateHandleChange}
+                      renderInput={(params) => (
+                        <TextField
+                          name="filtervalue"
+                          sx={{
+                            height: "3rem",
+                            width: "100%",
+                            border: "none",
+                            "&>.MuiInputBase-root": {
+                              position: "static",
+                              border: errors.filtervalue && "1px solid #d32f2f",
+                            },
+                            "&>.MuiInputBase-root:hover": {
+                              border: errors.filtervalue && "1px solid #d32f2f",
+                            },
+                          }}
+                          {...params}
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
+                  {errors.filtervalue && (
+                    <p className="helperText">{errors.filtervalue}</p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
           <div className="filterField m-auto">

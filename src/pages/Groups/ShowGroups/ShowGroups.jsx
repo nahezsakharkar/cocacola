@@ -62,6 +62,7 @@ function ShowGroups() {
       handleDelete();
     } else if (operation === "run") {
       handleRun();
+      getGroupsData("Active,Disabled");
     } else if (operation === "disable") {
       // handleDisable();
     }
@@ -78,16 +79,20 @@ function ShowGroups() {
     setOpen(false);
   }
 
-  async function handleRun() {
+  function handleRun() {
     toast.success("Schedule was Started Successfully");
     setOpen(false);
-    const data = await schedule.schedulerStart(row.id);
-    if (data.message === "completed") {
-      toast.success("Schedule was Completed Successfully");
-      getGroupsData("Active,Disabled");
-    } else {
-      toast.error("There was some Error while Completing a Schedule");
-    }
+    schedule.schedulerStart(row.id);
+    getGroupsData("Active,Disabled");
+    // setTimeout(() => {
+    // }, 300);
+    // console.log(data)
+    // if (data.message === "completed") {
+    //   toast.success("Schedule was Completed Successfully");
+    //   // getGroupsData("Active,Disabled");
+    // } else {
+    //   toast.error("There was some Error while Completing a Schedule");
+    // }
   }
 
   // async function handleDisable() {
