@@ -164,6 +164,7 @@ function AddFilter() {
     getFilters(step.id);
     filter_form.current.reset();
     setValues(defaultValues);
+    setDateValue(null);
     setSelectValue({
       target: JSON.parse('{"id":"operator", "value":""}'),
       value: "",

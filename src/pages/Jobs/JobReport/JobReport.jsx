@@ -2,6 +2,10 @@ import { useState, useEffect } from "react";
 import DataTable from "../../../components/Common/DataTable/DataTable";
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
+import { TextField } from "@mui/material";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Select from "react-select";
 import schedule from "../../../services/scheduleService";
 import constants from "../../../custom/constants/constants";
@@ -32,7 +36,7 @@ function JobReport() {
   const [isLoading, setIsLoading] = useState(true);
 
   async function getJobReport(queryParams) {
-    const data = await schedule.getGroupsByRunningStatus(queryParams);
+    const data = await schedule.getJoblogReportsQueries(queryParams);
     setJobReportList(data.payload);
     setIsLoading(false);
   }
@@ -42,13 +46,28 @@ function JobReport() {
     setInterfaces(data.payload);
   }
 
-  // Stopped,Terminated,Running
+  // function getInterfaces() {
+  //   setInterfaces(JobReportList.filter((item) => {
+  //     return {
+  //       id: item.iid,
+  //       interfacename: item.interfacename,
+  //     };
+  //   }));
+  // }
+
+  async function getJobReportAll() {
+    const data = await schedule.getJoblogReportsAll();
+    setJobReportList(data.payload);
+    setIsLoading(false);
+  }
+
+  // start_date, end_date, gid, iid, job_status
   useEffect(() => {
-    getInterfaces()
-    getJobReport("Stopped,Terminated");
+    getInterfaces();
+    getJobReportAll();
   }, []);
 
-  const optionsForInterfaces  = interfaces.map(function (item) {
+  const optionsForInterfaces = interfaces.map(function (item) {
     return {
       target: JSON.parse(`{"id":"iid", "value":"${item.id}"}`),
       value: item.id,
@@ -74,55 +93,66 @@ function JobReport() {
   };
 
   const columns = [
-    { field: "groupname", headerName: "Job Group", flex: 2, width: 200 },
     {
-      field: "step",
+      field: "groupname",
+      headerName: "Job Group",
+      //  flex: 2,
+      width: 200,
+    },
+    {
+      field: "sid",
       headerName: "Step",
-      flex: 1.5,
-      width: 150,
+      // flex: 1.5,
+      width: 80,
     },
     {
-      field: "interface",
+      field: "interfacename",
       headerName: "Interface",
-      flex: 1.5,
+      // flex: 1.5,
       width: 150,
     },
     {
-      field: "jobNumber",
-      headerName: "Job Number",
-      flex: 1.5,
-      type: "number",
-      width: 150,
+      field: "jobid",
+      headerName: "Job Id",
+      // flex: 1.5,
+      width: 300,
     },
     {
-      field: "started",
+      field: "startat",
       headerName: "Started",
-      flex: 1.3,
-      width: 130,
+      // flex: 1.3,
+      width: 150,
     },
     {
-      field: "ended",
+      field: "completedat",
       headerName: "Ended",
-      flex: 1.3,
-      width: 130,
+      // flex: 1.3,
+      width: 150,
     },
     {
-      field: "scheduledstatus",
+      field: "jobstatus",
       headerName: "Status",
-      flex: 1.3,
+      // flex: 1.3,
       width: 130,
     },
     {
       field: "duration",
       headerName: "Duration",
-      flex: 1.5,
+      // flex: 1.5,
       width: 150,
+      valueGetter: (params) => {
+        const date1 = new Date(params.row.startat);
+        const date2 = new Date(params.row.completedat);
+        const diffInMs = Math.abs(date2 - date1) / (1000 * 60);
+        const diffInSs = diffInMs / 1000;
+        return diffInMs <= 1 ? diffInMs + " Minute" : diffInMs + " Minutes";
+      },
     },
     {
-      field: "logs",
+      field: "remarks",
       headerName: "Logs",
-      flex: 1.5,
-      width: 150,
+      // flex: 1.5,
+      width: 250,
     },
   ];
 
@@ -137,19 +167,67 @@ function JobReport() {
             <div className="form-group row">
               <label className="col-sm-2 col-form-label">Date from</label>
               <div className="col-sm-4">
-                <input
-                  type="date"
-                  className="form-control"
-                  placeholder="dd/mm/yyyy"
-                />
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    inputId="filtervalue"
+                    className="date-picker"
+                    // value={dateValue}
+                    // onChange={dateHandleChange}
+                    renderInput={(params) => (
+                      <TextField
+                        name="filtervalue"
+                        sx={{
+                          height: "3rem",
+                          width: "100%",
+                          border: "none",
+                          "&>.MuiInputBase-root": {
+                            position: "static",
+                            border: errors.filtervalue && "1px solid #d32f2f",
+                          },
+                          "&>.MuiInputBase-root:hover": {
+                            border: errors.filtervalue && "1px solid #d32f2f",
+                          },
+                        }}
+                        {...params}
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
+                {errors.filtervalue && (
+                  <p className="helperText">{errors.filtervalue}</p>
+                )}
               </div>
               <label className="col-sm-1 col-form-label">to</label>
               <div className="col-sm-4">
-                <input
-                  type="date"
-                  className="form-control"
-                  placeholder="dd/mm/yyyy"
-                />
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    inputId="filtervalue"
+                    className="date-picker"
+                    // value={dateValue}
+                    // onChange={dateHandleChange}
+                    renderInput={(params) => (
+                      <TextField
+                        name="filtervalue"
+                        sx={{
+                          height: "3rem",
+                          width: "100%",
+                          border: "none",
+                          "&>.MuiInputBase-root": {
+                            position: "static",
+                            border: errors.filtervalue && "1px solid #d32f2f",
+                          },
+                          "&>.MuiInputBase-root:hover": {
+                            border: errors.filtervalue && "1px solid #d32f2f",
+                          },
+                        }}
+                        {...params}
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
+                {errors.filtervalue && (
+                  <p className="helperText">{errors.filtervalue}</p>
+                )}
               </div>
             </div>
           </div>
@@ -169,7 +247,7 @@ function JobReport() {
             <div className="form-group row">
               <label className="col-sm-3 col-form-label">Interface</label>
               <div className="col-sm-9">
-              <Select
+                <Select
                   styles={constants.reactSelectStyles(
                     errors.interface,
                     selectInterfaceValue.value

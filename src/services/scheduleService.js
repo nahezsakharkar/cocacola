@@ -170,6 +170,32 @@ export async function getGroupsByRunningStatus(RunningStatus) {
     return response.data;
 }
 
+export async function getJoblogReportsAll() {
+    const user = JSON.parse(localStorage.getItem(sessionKey));
+    const response = await http.get(baseURL + "api/joblogs/report",
+        {
+            headers: {
+                Authorization: user.jwtToken
+            }
+        }
+    );
+    return response.data;
+}
+
+export async function getJoblogReportsQueries(start_date, end_date, gid, iid, job_status) {
+    // start_date, end_date, gid, iid, job_status, job_id
+    const user = JSON.parse(localStorage.getItem(sessionKey));
+    // const response = await http.get(baseURL + "api/joblogs/report?jobstatus=" + job_status + "&jobid=" + job_id + "&gid=" + gid + "&iid=" + iid + "&from=" + start_date + "&to=" + end_date,
+    const response = await http.get(baseURL + "api/joblogs/report?jobstatus=" + job_status + "&gid=" + gid + "&iid=" + iid + "&from=" + start_date + "&to=" + end_date,
+        {
+            headers: {
+                Authorization: user.jwtToken
+            }
+        }
+    );
+    return response.data;
+}
+
 export async function getAllJobLogs() {
     const user = JSON.parse(localStorage.getItem(sessionKey));
     const response = await http.get(baseURL + "api/joblogs/all",
@@ -214,6 +240,8 @@ const schedule = {
     //Logs
     getGroupsByScheduleStatus,
     getGroupsByRunningStatus,
+    getJoblogReportsAll,
+    getJoblogReportsQueries,
     getAllJobLogs,
     //processes
     schedulerStart
