@@ -163,19 +163,21 @@ function OrderedSteps(props) {
           <div className="cellAction">
             {rows.length > 1 && (
               <>
-                <TextField
-                  id="sequence"
-                  placeholder="Enter Sequence Position"
-                  key={params.row.id}
-                  // defaultValue={params.row.stepSequence}
-                  onChange={(e) => handleSequenceChange(e, params.row)}
-                  inputProps={{
-                    type: "number",
-                    min: 1,
-                    max: rows.length,
-                  }}
-                  variant="outlined"
-                />
+                <form className="myForms">
+                  <TextField
+                    id="sequence"
+                    placeholder="Enter Sequence Position"
+                    key={params.row.id}
+                    // defaultValue={params.row.stepSequence}
+                    onChange={(e) => handleSequenceChange(e, params.row)}
+                    inputProps={{
+                      type: "number",
+                      min: 1,
+                      max: rows.length,
+                    }}
+                    variant="outlined"
+                  />
+                </form>
                 <button
                   type="button"
                   className="btn btn-dark btn-icon-text btn-sm"

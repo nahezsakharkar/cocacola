@@ -245,7 +245,7 @@ function AddStep() {
           Adding Steps into {group.groupname} Group
         </h4>
       </div>
-      <form ref={step_form} onSubmit={(e) => e.preventDefault()}>
+      <form className="myForms" ref={step_form} onSubmit={(e) => e.preventDefault()}>
         <div className="row">
           <div className="col-md-8">
             <div className="form-group row">

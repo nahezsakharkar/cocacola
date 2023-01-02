@@ -177,7 +177,7 @@ function AddFilter() {
       <h4 className="card-title">
         Adding Filters into Step {step.sequence} of Group '{group.groupname}'
       </h4>
-      <form ref={filter_form} onSubmit={(e) => e.preventDefault()}>
+      <form className="myForms" ref={filter_form} onSubmit={(e) => e.preventDefault()}>
         <div className="filterForm">
           <div className="filterField">
             <div className="label">

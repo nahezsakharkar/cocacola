@@ -182,11 +182,15 @@ export async function getJoblogReportsAll() {
     return response.data;
 }
 
-export async function getJoblogReportsQueries(start_date, end_date, gid, iid, job_status) {
+export async function getJoblogReportsQueries(queries) {
     // start_date, end_date, gid, iid, job_status, job_id
+    const { startat, completedat, gid, iid, jobstatus, jobid } = queries
     const user = JSON.parse(localStorage.getItem(sessionKey));
-    // const response = await http.get(baseURL + "api/joblogs/report?jobstatus=" + job_status + "&jobid=" + job_id + "&gid=" + gid + "&iid=" + iid + "&from=" + start_date + "&to=" + end_date,
-    const response = await http.get(baseURL + "api/joblogs/report?jobstatus=" + job_status + "&gid=" + gid + "&iid=" + iid + "&from=" + start_date + "&to=" + end_date,
+
+    const query = "jobstatus=" + jobstatus + "&gid=" + gid + "&jobid=" + jobid + "&iid=" + iid + "&from=" + startat + "&to=" + completedat
+    console.log(query)
+
+    const response = await http.get(baseURL + "api/joblogs/report?" + query,
         {
             headers: {
                 Authorization: user.jwtToken

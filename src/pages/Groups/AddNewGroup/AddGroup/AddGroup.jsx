@@ -249,7 +249,7 @@ function AddGroup() {
   return (
     <div className="card-body">
       <Loader open={isLoading} />
-      <form ref={group_form}>
+      <form className="myForms" ref={group_form}>
         <div className="row">
           <div className="col-md-6">
             <div className="form-group row">

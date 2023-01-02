@@ -207,11 +207,11 @@
   text-transform: uppercase;
 }
 
-.MuiFormControl-root {
+.myForms .MuiFormControl-root {
   width: 100%;
 }
 
-.MuiInputBase-input {
+.myForms .MuiInputBase-input {
   height: 0.75rem !important;
 }
 

@@ -88,7 +88,7 @@ function Login() {
                 </div>
                 <h4>Hello! let's get started</h4>
                 <h6 className="font-weight-light">Sign in to continue.</h6>
-                <form className="cmxform pt-3" id="commentForm">
+                <form className="myForms cmxform pt-3" id="commentForm">
                   <div className="form-group">
                     <TextField
                       error={errors.username ? true : false}
