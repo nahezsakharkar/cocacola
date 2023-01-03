@@ -188,7 +188,6 @@ export async function getJoblogReportsQueries(queries) {
     const user = JSON.parse(localStorage.getItem(sessionKey));
 
     const query = "jobstatus=" + jobstatus + "&gid=" + gid + "&jobid=" + jobid + "&iid=" + iid + "&from=" + startat + "&to=" + completedat
-    console.log(query)
 
     const response = await http.get(baseURL + "api/joblogs/report?" + query,
         {
@@ -203,6 +202,23 @@ export async function getJoblogReportsQueries(queries) {
 export async function getAllJobLogs() {
     const user = JSON.parse(localStorage.getItem(sessionKey));
     const response = await http.get(baseURL + "api/joblogs/all",
+        {
+            headers: {
+                Authorization: user.jwtToken
+            }
+        }
+    );
+    return response.data;
+}
+
+export async function getJoblogsQueries(queries) {
+    // start_date, end_date, gid, iid, job_status, job_id
+    const { startat, completedat, gid, iid, jobstatus, jobid } = queries
+    const user = JSON.parse(localStorage.getItem(sessionKey));
+
+    const query = "jobstatus=" + jobstatus + "&gid=" + gid + "&jobid=" + jobid + "&iid=" + iid + "&from=" + startat + "&to=" + completedat
+
+    const response = await http.get(baseURL + "api/joblogs/all?" + query,
         {
             headers: {
                 Authorization: user.jwtToken
@@ -246,6 +262,7 @@ const schedule = {
     getGroupsByRunningStatus,
     getJoblogReportsAll,
     getJoblogReportsQueries,
+    getJoblogsQueries,
     getAllJobLogs,
     //processes
     schedulerStart
