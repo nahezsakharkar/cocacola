@@ -13,6 +13,7 @@ import "../../custom/css/custom.css";
 
 function Logs() {
   const [logsList, setLogsList] = useState([]);
+  const [logs, setLogs] = useState({})
 
   const defaultValues = {
     startat: "",
@@ -68,6 +69,7 @@ function Logs() {
 
   async function getLogs(pageNumber) {
     const data = await schedule.getAllJobLogs(pageNumber === 0 ? 15 : 15 * (pageNumber + 1));
+    setLogs(data)
     setLogsList(data.payload);
     setIsLoading(false);
     // interfaces from existing reports
@@ -459,7 +461,8 @@ function Logs() {
           </Stack>
         )}
         <DataTable
-          pageSize={14}
+          pageSize={15}
+          rowCount={logs.id}
           onPageChange={(newPage) => handlePageChange(newPage)}
           columns={columns}
           rows={rows}
