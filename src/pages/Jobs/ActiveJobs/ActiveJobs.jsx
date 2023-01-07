@@ -10,66 +10,76 @@ function ActiveJobs() {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  async function getActiveJobs(queryParams) {
-    const data = await schedule.getGroupsByRunningStatus(queryParams);
+  async function getActiveJobs() {
+    const data = await schedule.getActiveJobsQueries();
     setActiveJobsList(data.payload);
     setIsLoading(false);
   }
 
-  // Stopped,Terminated,Running
   useEffect(() => {
-    getActiveJobs("Running");
+    getActiveJobs();
   }, []);
 
   const refresh = () => {
     setIsLoading(true);
-    getActiveJobs("Running");
+    getActiveJobs();
   };
 
   const columns = [
-    { field: "groupname", headerName: "Job Group", flex: 2, width: 200 },
     {
-      field: "step",
+      field: "groupname",
+      headerName: "Job Group",
+      //  flex: 2,
+      width: 200,
+    },
+    {
+      field: "sid",
       headerName: "Step",
-      flex: 1.5,
-      width: 150,
+      // flex: 1.5,
+      width: 80,
     },
     {
-      field: "interface",
+      field: "interfacename",
       headerName: "Interface",
-      flex: 1.5,
+      // flex: 1.5,
       width: 150,
     },
     {
-      field: "jobNumber",
-      headerName: "Job Number",
-      flex: 1.5,
-      type: "number",
-      width: 150,
+      field: "jobid",
+      headerName: "Job Id",
+      // flex: 1.5,
+      width: 300,
     },
     {
-      field: "started",
+      field: "startat",
       headerName: "Started",
-      flex: 1.3,
-      width: 130,
+      // flex: 1.3,
+      width: 150,
     },
     {
-      field: "scheduledstatus",
+      field: "jobstatus",
       headerName: "Status",
-      flex: 1.3,
+      // flex: 1.3,
       width: 130,
     },
     {
       field: "duration",
       headerName: "Duration",
-      flex: 1.5,
+      // flex: 1.5,
       width: 150,
+      valueGetter: (params) => {
+        const date1 = new Date(params.row.startat);
+        const date2 = new Date(params.row.completedat);
+        const diffInMs = Math.abs(date2 - date1) / (1000 * 60);
+        // const diffInSs = diffInMs / 1000;
+        return diffInMs <= 1 ? diffInMs + " Minute" : diffInMs + " Minutes";
+      },
     },
     {
-      field: "logs",
+      field: "remarks",
       headerName: "Logs",
-      flex: 1.5,
-      width: 150,
+      // flex: 1.5,
+      width: 250,
     },
   ];
 

@@ -102,6 +102,11 @@ function Logs() {
     getLogs(pageNumber);
   }, [pageNumber]);
 
+  const handlePageChange = (newPage) => {
+    setIsLoading(true)
+    setPageNumber(newPage)
+  }
+
   const refresh = () => {
     setIsLoading(true);
     getLogs();
@@ -455,7 +460,7 @@ function Logs() {
         )}
         <DataTable
           pageSize={14}
-          onPageChange={(newPage) => setPageNumber(newPage)}
+          onPageChange={(newPage) => handlePageChange(newPage)}
           columns={columns}
           rows={rows}
           toolbar

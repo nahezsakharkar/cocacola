@@ -170,6 +170,20 @@ export async function getGroupsByRunningStatus(RunningStatus) {
     return response.data;
 }
 
+export async function getActiveJobsQueries() {
+
+    const user = JSON.parse(localStorage.getItem(sessionKey));
+
+    const response = await http.get(baseURL + "api/joblogs/report?jobstatus=Running",
+        {
+            headers: {
+                Authorization: user.jwtToken
+            }
+        }
+    );
+    return response.data;
+}
+
 export async function getJoblogReportsAll() {
     const user = JSON.parse(localStorage.getItem(sessionKey));
     const response = await http.get(baseURL + "api/joblogs/report",
@@ -260,6 +274,7 @@ const schedule = {
     //Logs
     getGroupsByScheduleStatus,
     getGroupsByRunningStatus,
+    getActiveJobsQueries,
     getJoblogReportsAll,
     getJoblogReportsQueries,
     getAllJobLogs,
