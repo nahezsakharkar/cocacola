@@ -57,6 +57,7 @@ function Logs() {
   const [interfaces, setInterfaces] = useState([]);
   const [jobGroups, setJobGroups] = useState([]);
   const [jobStatus, setJobStatus] = useState([]);
+  const [pageNumber, setPageNumber] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   async function getFilteredJobLogs(queryParams) {
@@ -65,8 +66,8 @@ function Logs() {
     setIsLoading(false);
   }
 
-  async function getLogs() {
-    const data = await schedule.getAllJobLogs();
+  async function getLogs(pageNumber) {
+    const data = await schedule.getAllJobLogs(pageNumber === 0 ? 15 : 15 * (pageNumber + 1));
     setLogsList(data.payload);
     setIsLoading(false);
     // interfaces from existing reports
@@ -98,8 +99,8 @@ function Logs() {
   }
 
   useEffect(() => {
-    getLogs();
-  }, []);
+    getLogs(pageNumber);
+  }, [pageNumber]);
 
   const refresh = () => {
     setIsLoading(true);
@@ -288,7 +289,7 @@ function Logs() {
         </button>
       </div>
       <form className="myForms">
-        <div className="row mt-2 p-4">
+        <div className="row mt-2 pt-4">
           <div className="col-md-6">
             <div className="form-group row">
               <label className="col-sm-2 col-form-label">Date from</label>
@@ -452,7 +453,13 @@ function Logs() {
             <LinearProgress color="inherit" />
           </Stack>
         )}
-        <DataTable pageSize={15} columns={columns} rows={rows} toolbar />
+        <DataTable
+          pageSize={14}
+          onPageChange={(newPage) => setPageNumber(newPage)}
+          columns={columns}
+          rows={rows}
+          toolbar
+        />
       </div>
     </div>
   );

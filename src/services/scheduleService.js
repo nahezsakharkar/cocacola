@@ -199,9 +199,9 @@ export async function getJoblogReportsQueries(queries) {
     return response.data;
 }
 
-export async function getAllJobLogs() {
+export async function getAllJobLogs(pageSize) {
     const user = JSON.parse(localStorage.getItem(sessionKey));
-    const response = await http.get(baseURL + "api/joblogs/all",
+    const response = await http.get(baseURL + "api/joblogs/all?page=0&size=" + pageSize,
         {
             headers: {
                 Authorization: user.jwtToken
@@ -262,8 +262,8 @@ const schedule = {
     getGroupsByRunningStatus,
     getJoblogReportsAll,
     getJoblogReportsQueries,
-    getJoblogsQueries,
     getAllJobLogs,
+    getJoblogsQueries,
     //processes
     schedulerStart
 }

@@ -4,18 +4,18 @@ import Loader from "../../components/Common/Loader/Loader";
 import auth from "../../services/authService";
 
 import { TextField } from "@mui/material";
-import Select from "react-select";
+// import Select from "react-select";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import constants from "../../custom/constants/constants";
+// import constants from "../../custom/constants/constants";
 
 const LoginSchema = Yup.object().shape({
   username: Yup.string()
     .required("Username is required")
     .email("Please Enter A Valid Email Address"),
   password: Yup.string().required("Password is required"),
-  companyid: Yup.number().required("Company Id is required"),
+  // companyid: Yup.number().required("Company Id is required"),
 });
 
 function Login() {
@@ -23,28 +23,28 @@ function Login() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
-  const optionsForCompanyId = [
-    {
-      target: JSON.parse('{"id":"companyid", "value":"1428"}'),
-      value: "1428",
-      label: "SriLanka",
-    },
-    {
-      target: JSON.parse('{"id":"companyid", "value":"1364"}'),
-      value: "1364",
-      label: "Bangladesh",
-    },
-    {
-      target: JSON.parse('{"id":"companyid", "value":"1429"}'),
-      value: "1429",
-      label: "Nepal - A",
-    },
-    {
-      target: JSON.parse('{"id":"companyid", "value":"1430"}'),
-      value: "1430",
-      label: "Nepal - B",
-    },
-  ];
+  // const optionsForCompanyId = [
+  //   {
+  //     target: JSON.parse('{"id":"companyid", "value":"1428"}'),
+  //     value: "1428",
+  //     label: "SriLanka",
+  //   },
+  //   {
+  //     target: JSON.parse('{"id":"companyid", "value":"1364"}'),
+  //     value: "1364",
+  //     label: "Bangladesh",
+  //   },
+  //   {
+  //     target: JSON.parse('{"id":"companyid", "value":"1429"}'),
+  //     value: "1429",
+  //     label: "Nepal - A",
+  //   },
+  //   {
+  //     target: JSON.parse('{"id":"companyid", "value":"1430"}'),
+  //     value: "1430",
+  //     label: "Nepal - B",
+  //   },
+  // ];
 
   const handleSubmit = async () => {
     try {
@@ -66,7 +66,7 @@ function Login() {
     initialValues: {
       username: "",
       password: "",
-      companyid: "",
+      // companyid: "",
     },
     validationSchema: LoginSchema,
     onSubmit: () => {
@@ -110,7 +110,7 @@ function Login() {
                       variant="outlined"
                     />
                   </div>
-                  <div className="form-group">
+                  {/* <div className="form-group">
                     <Select
                       styles={constants.reactSelectStyles(errors.companyid)}
                       inputId="companyid"
@@ -127,7 +127,7 @@ function Login() {
                     {errors.companyid && (
                       <p className="helperText">{errors.companyid}</p>
                     )}
-                  </div>
+                  </div> */}
                   <div className="mt-3">
                     <button
                       type="submit"

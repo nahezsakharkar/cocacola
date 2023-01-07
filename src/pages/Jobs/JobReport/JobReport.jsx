@@ -271,7 +271,7 @@ function JobReport() {
       <div className="title">
         <h1 className="Heading">Job Report</h1>
         <form className="myForms">
-          <div className="row mt-2 p-4">
+          <div className="row mt-2 pt-4">
             <div className="col-md-6">
               <div className="form-group row">
                 <label className="col-sm-2 col-form-label">Date from</label>

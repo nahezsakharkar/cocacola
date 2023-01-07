@@ -8,14 +8,14 @@ function AddNewGroup() {
   const pathNames = {Group: "/AddNewGroup/AddGroup", Steps: "/AddNewGroup/AddStep", Filters: "/AddNewGroup/AddFilter"}
 
   return (
-    <div className="addNewGroup">
+    <div className="addNewGroup" style={{scale : ".8"}}>
       <div className="title">
         <h1 className="Heading">Add New Group</h1>
         <p className="card-description">
           Fields marked with <span className="text-danger">*</span> are required
         </p>
       </div>
-      <div className="body border border-secondary rounded" style={{scale: ".8"}}>
+      <div className="body border border-secondary rounded">
         <OurStepper
           steps={steps}
           Outlet={<Outlet />}

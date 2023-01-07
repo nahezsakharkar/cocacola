@@ -24,21 +24,21 @@ function EditGroup() {
   const { group } = useOutletContext();
 
   const defaultValues = {
-    groupname: group.groupname,
-    scheduledstatus: group.scheduledstatus,
-    scheduled: group.scheduled,
-    startdate: group.startdate,
-    frequency: group.frequency,
-    frequencytype: group.frequencytype,
-    testmode: group.testmode,
+    groupname: group.groupname || "",
+    scheduledstatus: group.scheduledstatus || "",
+    scheduled: group.scheduled || "",
+    startdate: group.startdate || "",
+    frequency: group.frequency || "",
+    frequencytype: group.frequencytype || "",
+    testmode: group.testmode || "",
   };
 
   // react-select default values
 
   const scheduledStatusDefault = {
-    target: JSON.parse('{"id":"scheduledstatus", "value":""}'),
-    value: "",
-    label: "Active, Disabled...",
+    target: JSON.parse(`{"id":"scheduledstatus", "value": "${group.scheduledstatus || ""}" }`),
+    value: group.scheduledstatus,
+    label: group.scheduledstatus,
   };
 
   const scheduledDefault = {
@@ -68,8 +68,6 @@ function EditGroup() {
   const [errors, setErrors] = useState({});
   const [canSubmit, setCanSubmit] = useState(false);
 
-  const [updateValues, setUpdateValues] = useState(defaultValues);
-
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -86,11 +84,22 @@ function EditGroup() {
   }
 
   useEffect(() => {
+    setValues({
+      groupname: group.groupname || "",
+      scheduledstatus: group.scheduledstatus || "",
+      scheduled: group.scheduled || "",
+      startdate: group.startdate || "",
+      frequency: group.frequency || "",
+      frequencytype: group.frequencytype || "",
+      testmode: group.testmode || "",
+    });
     getAdmin();
     if (Object.keys(errors).length === 0 && canSubmit) {
       handleOpen();
     }
-  }, [canSubmit, errors]);
+  }, [canSubmit, errors, group]);
+
+  console.log(values);
 
   const group_form = useRef(null);
   const reset = () => {
@@ -255,7 +264,7 @@ function EditGroup() {
   return (
     <div className="card-body">
       <Loader open={isLoading} />
-      <form ref={group_form}>
+      <form className="myForms" ref={group_form}>
         <div className="row">
           <div className="col-md-6">
             <div className="form-group row">
@@ -268,7 +277,7 @@ function EditGroup() {
                   id="groupname"
                   className="capitalize"
                   placeholder="Enter Job Group Name"
-                  defaultValue={updateValues.id || ""}
+                  value={values.groupname}
                   onChange={handleChange}
                   helperText={errors.groupname}
                   variant="outlined"
@@ -296,7 +305,6 @@ function EditGroup() {
                   onChange={handleChange}
                   className="search-options"
                   placeholder="Active, Disabled..."
-                  defaultValue={scheduledStatusDefault}
                 />
                 {errors.scheduledstatus && (
                   <p className="helperText">{errors.scheduledstatus}</p>
@@ -456,8 +464,16 @@ function EditGroup() {
             onClick={onSubmit}
             className="btn btn-dark btn-icon-text"
           >
-            Create Group and Proceed to Adding Steps
-            <i className="fa fa-plus btn-icon-append"></i>
+            Edit Group
+            <i className="fa fa-edit btn-icon-append"></i>
+          </button>
+          <button
+            type="button"
+            onClick={onSubmit}
+            className="btn btn-dark btn-icon-text"
+          >
+            Save Changes
+            <i className="fa fa-cloud-upload btn-icon-append"></i>
           </button>
           <Tooltip
             title="Clear All Data from the Form."
