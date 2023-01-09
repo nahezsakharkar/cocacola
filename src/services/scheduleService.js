@@ -171,9 +171,7 @@ export async function getGroupsByRunningStatus(RunningStatus) {
 }
 
 export async function getActiveJobsQueries() {
-
     const user = JSON.parse(localStorage.getItem(sessionKey));
-
     const response = await http.get(baseURL + "api/joblogs/report?jobstatus=Running",
         {
             headers: {

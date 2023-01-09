@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import OurStepper from "../../../components/Common/OurStepper/OurStepper";
 import schedule from "../../../services/scheduleService";
+import Loader from "../../../components/Common/Loader/Loader";
 import "../../../custom/css/custom.css";
 
 function EditGroups() {
@@ -10,6 +11,7 @@ function EditGroups() {
   const location = useLocation();
 
   const locationState = location.state;
+  const [isLoading, setIsLoading] = useState(true);
 
   const [group, setGroup] = useState({});
   const steps = ["Edit Group", "Edit Steps", "Edit Filters"];
@@ -22,6 +24,7 @@ function EditGroups() {
   async function getGroup(id) {
     const data = await schedule.getGroupById(id);
     setGroup(data.payload);
+    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -33,20 +36,18 @@ function EditGroups() {
   }, [locationState, navigate]);
 
   return (
-    <div className="addNewGroup">
+    <div className="addNewGroup" style={{ scale: ".8" }}>
+      <Loader open={isLoading} />
       <div className="title">
         <h1 className="Heading">Edit {group.groupname} Group</h1>
         <p className="card-description">
           Fields marked with <span className="text-danger">*</span> are required
         </p>
       </div>
-      <div
-        className="body border border-secondary rounded"
-        style={{ scale: ".8" }}
-      >
+      <div className="body border border-secondary rounded">
         <OurStepper
           steps={steps} // stepper steps
-          Outlet={<Outlet context={{ group }} />}
+          Outlet={<Outlet context={{ group, getGroup }} />}
           pathNames={pathNames}
           onlyBack={true}
         />

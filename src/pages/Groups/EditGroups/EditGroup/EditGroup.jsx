@@ -9,19 +9,21 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Tooltip from "@mui/material/Tooltip";
 
-import auth from "../../../../services/authService";
+// import auth from "../../../../services/authService";
 import schedule from "../../../../services/scheduleService";
 import OurModal from "../../../../components/Common/OurModal/OurModal";
 import Loader from "../../../../components/Common/Loader/Loader";
 import constants from "../../../../custom/constants/constants";
 
 function EditGroup() {
-  const [admin, setAdmin] = useState({});
+  // const [admin, setAdmin] = useState({});
+
+  const [isEditable, setIsEditable] = useState(false);
 
   const location = useLocation();
   const locationState = location.state;
 
-  const { group } = useOutletContext();
+  const { group, getGroup } = useOutletContext();
 
   const defaultValues = {
     groupname: group.groupname || "",
@@ -30,27 +32,33 @@ function EditGroup() {
     startdate: group.startdate || "",
     frequency: group.frequency || "",
     frequencytype: group.frequencytype || "",
-    testmode: group.testmode || "",
+    testmode: group.testmode || 0,
   };
 
   // react-select default values
 
   const scheduledStatusDefault = {
-    target: JSON.parse(`{"id":"scheduledstatus", "value": "${group.scheduledstatus || ""}" }`),
+    target: JSON.parse(
+      `{"id":"scheduledstatus", "value": "${group.scheduledstatus || ""}" }`
+    ),
     value: group.scheduledstatus,
     label: group.scheduledstatus,
   };
 
   const scheduledDefault = {
-    target: JSON.parse('{"id":"scheduled", "value":""}'),
-    value: "",
-    label: "Recurring, Once...",
+    target: JSON.parse(
+      `{"id":"scheduled", "value": "${group.scheduled || ""}" }`
+    ),
+    value: group.scheduled,
+    label: group.scheduled,
   };
 
   const frequencyTypeDefault = {
-    target: JSON.parse('{"id":"frequencytype", "value":""}'),
-    value: "",
-    label: "Min, Hour, Day...",
+    target: JSON.parse(
+      `{"id":"frequencytype", "value": "${group.frequencytype || ""}" }`
+    ),
+    value: group.frequencytype,
+    label: group.frequencytype,
   };
 
   const [selectScheduledStatus, setSelectScheduledStatus] = useState(
@@ -78,37 +86,68 @@ function EditGroup() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
-  async function getAdmin() {
-    const data = await auth.getCurrentUserDetails();
-    setAdmin(data.payload);
-  }
+  // async function getAdmin() {
+  //   const data = await auth.getCurrentUserDetails();
+  //   setAdmin(data.payload);
+  // }
 
   useEffect(() => {
-    setValues({
-      groupname: group.groupname || "",
-      scheduledstatus: group.scheduledstatus || "",
-      scheduled: group.scheduled || "",
-      startdate: group.startdate || "",
-      frequency: group.frequency || "",
-      frequencytype: group.frequencytype || "",
-      testmode: group.testmode || "",
-    });
-    getAdmin();
+    // ------------- setting default values -------------
+    if (isEditable === false) {
+      setValues({
+        groupname: group.groupname || "",
+        scheduledstatus: group.scheduledstatus || "",
+        scheduled: group.scheduled || "",
+        startdate: group.startdate || "",
+        frequency: group.frequency || "",
+        frequencytype: group.frequencytype || "",
+        testmode: group.testmode || "",
+      });
+      setSelectScheduledStatus({
+        target: JSON.parse(
+          `{"id":"scheduledstatus", "value": "${group.scheduledstatus || ""}" }`
+        ),
+        value: group.scheduledstatus,
+        label: group.scheduledstatus,
+      });
+      setSelectScheduled({
+        target: JSON.parse(
+          `{"id":"scheduled", "value": "${group.scheduled || ""}" }`
+        ),
+        value: group.scheduled,
+        label: group.scheduled,
+      });
+      setSelectFrequencyType({
+        target: JSON.parse(
+          `{"id":"frequencytype", "value": "${group.frequencytype || ""}" }`
+        ),
+        value: group.frequencytype,
+        label: group.frequencytype,
+      });
+      setDateValue(new Date(group.startdate));
+      setCheckBoxValue(group.testmode === 1 ? true : false);
+    }
+    // ------------- setting default values -------------
+    // getAdmin();
     if (Object.keys(errors).length === 0 && canSubmit) {
       handleOpen();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canSubmit, errors, group]);
+
+  // check if objects are equal
+  const areObjectsEqual = (...objects) =>
+    objects.every((obj) => JSON.stringify(obj) === JSON.stringify(objects[0]));
 
   console.log(values);
 
   const group_form = useRef(null);
   const reset = () => {
-    group_form.current.reset();
     setSelectScheduledStatus(scheduledStatusDefault);
     setSelectScheduled(scheduledDefault);
     setSelectFrequencyType(frequencyTypeDefault);
-    setDateValue(null);
-    setCheckBoxValue(false);
+    setDateValue(new Date(group.startdate));
+    setCheckBoxValue(group.testmode === 1 ? true : false);
     setValues(defaultValues);
   };
 
@@ -183,7 +222,14 @@ function EditGroup() {
     if (e.target.id === "testmode") {
       setValues({
         ...values,
-        [id]: e.target.checked === true ? 1 : 0,
+        [id]:
+          isEditable === false
+            ? checkBoxValue === true
+              ? 1
+              : 0
+            : checkBoxValue === false
+            ? 1
+            : 0,
       });
     }
 
@@ -240,12 +286,12 @@ function EditGroup() {
   async function handleSubmit() {
     setIsLoading(true);
     const data = await schedule.createGroup({
+      ...group,
       ...values,
       frequency: Number(values.frequency),
       groupname: capitalize(values.groupname),
-      companyid: admin["companyid"],
-      userid: admin["id"],
     });
+    getGroup(group.id);
     if (data.message === "updated successfully") {
       setIsLoading(false);
       toast.success("Schedule was Updated Successfully");
@@ -258,7 +304,9 @@ function EditGroup() {
     }
     setOpen(false);
     reset();
-    navigate("/AddNewGroup/AddStep", { state: { group: data.payload } });
+    setIsEditable(false);
+    setCanSubmit(false);
+    // navigate("/AddNewGroup/AddStep", { state: { group: data.payload } });
   }
 
   return (
@@ -281,6 +329,9 @@ function EditGroup() {
                   onChange={handleChange}
                   helperText={errors.groupname}
                   variant="outlined"
+                  InputProps={{
+                    readOnly: !isEditable,
+                  }}
                 />
               </div>
             </div>
@@ -305,6 +356,8 @@ function EditGroup() {
                   onChange={handleChange}
                   className="search-options"
                   placeholder="Active, Disabled..."
+                  isSearchable={isEditable}
+                  menuIsOpen={!isEditable ? false : undefined}
                 />
                 {errors.scheduledstatus && (
                   <p className="helperText">{errors.scheduledstatus}</p>
@@ -332,6 +385,8 @@ function EditGroup() {
                   className="search-options"
                   placeholder="Recurring, Once..."
                   defaultValue={scheduledDefault}
+                  isSearchable={isEditable}
+                  menuIsOpen={!isEditable ? false : undefined}
                 />
                 {errors.scheduled && (
                   <p className="helperText">{errors.scheduled}</p>
@@ -369,6 +424,7 @@ function EditGroup() {
                         {...params}
                       />
                     )}
+                    readOnly={!isEditable}
                   />
                 </LocalizationProvider>
                 {errors.startdate && (
@@ -389,6 +445,7 @@ function EditGroup() {
                   error={errors.frequency ? true : false}
                   id="frequency"
                   placeholder="Enter Frequency"
+                  value={values.frequency}
                   onChange={handleChange}
                   inputProps={{
                     type: "number",
@@ -396,6 +453,9 @@ function EditGroup() {
                   }}
                   helperText={errors.frequency}
                   variant="outlined"
+                  InputProps={{
+                    readOnly: !isEditable,
+                  }}
                 />
               </div>
             </div>
@@ -421,6 +481,8 @@ function EditGroup() {
                   className="search-options"
                   placeholder="Min, Hour, Day..."
                   defaultValue={frequencyTypeDefault}
+                  isSearchable={isEditable}
+                  menuIsOpen={!isEditable ? false : undefined}
                 />
                 {errors.frequencytype && (
                   <p className="helperText">{errors.frequencytype}</p>
@@ -438,15 +500,26 @@ function EditGroup() {
                 >
                   <div
                     className="runTest"
-                    onClick={() => setCheckBoxValue(!checkBoxValue)}
+                    onClick={(e) => {
+                      if (isEditable === false) {
+                        e.preventDefault();
+                      } else {
+                        setCheckBoxValue(!checkBoxValue);
+                        setValues({
+                          ...values,
+                          testmode: checkBoxValue === false ? 1 : 0,
+                        });
+                      }
+                    }}
                   >
                     <input
                       id="testmode"
                       onChange={handleChange}
-                      style={{ zoom: 1.3 }}
+                      style={{ zoom: 1.3, accentColor: "#f02632" }}
                       type="checkbox"
                       className="form-check-input"
                       checked={checkBoxValue}
+                      onClick={(e) => (!isEditable ? e.preventDefault() : "")}
                     />
                     <div className="checkBoxWithIcon">
                       <span>Test Run</span>
@@ -459,35 +532,41 @@ function EditGroup() {
           </div>
         </div>
         <div className="row" style={{ justifyContent: "center", gap: "2rem" }}>
-          <button
-            type="button"
-            onClick={onSubmit}
-            className="btn btn-dark btn-icon-text"
-          >
-            Edit Group
-            <i className="fa fa-edit btn-icon-append"></i>
-          </button>
-          <button
-            type="button"
-            onClick={onSubmit}
-            className="btn btn-dark btn-icon-text"
-          >
-            Save Changes
-            <i className="fa fa-cloud-upload btn-icon-append"></i>
-          </button>
-          <Tooltip
-            title="Clear All Data from the Form."
-            placement="right"
-            arrow
-          >
+          {isEditable ? (
+            <>
+              <button
+                type="button"
+                onClick={onSubmit}
+                className="btn btn-dark btn-icon-text"
+                disabled={areObjectsEqual(defaultValues, values) ? true : false}
+              >
+                Save Changes
+                <i className="fa fa-cloud-upload btn-icon-append"></i>
+              </button>
+              <Tooltip
+                title="Clear All Data from the Form."
+                placement="right"
+                arrow
+              >
+                <button
+                  type="button"
+                  onClick={reset}
+                  className="btn btn-secondary btn-icon-text"
+                >
+                  Reset
+                </button>
+              </Tooltip>
+            </>
+          ) : (
             <button
               type="button"
-              onClick={reset}
-              className="btn btn-secondary btn-icon-text"
+              onClick={() => setIsEditable(true)}
+              className="btn btn-dark btn-icon-text"
             >
-              Reset
+              Edit Group
+              <i className="fa fa-edit btn-icon-append"></i>
             </button>
-          </Tooltip>
+          )}
         </div>
         <OurModal
           open={open}
@@ -495,8 +574,8 @@ function EditGroup() {
           handleOpen={handleOpen}
           handleClose={handleClose}
           handleYes={handleSubmit}
-          title={"Create Schedule?"}
-          description="Do you really wish to Create a Schedule and proceed to adding Steps? "
+          title={"Update Schedule?"}
+          description="Do you really wish to Update this Schedule? "
         />
       </form>
     </div>
