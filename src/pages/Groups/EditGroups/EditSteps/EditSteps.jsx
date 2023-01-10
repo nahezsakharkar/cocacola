@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useOutletContext } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { TextField } from "@mui/material";
@@ -7,6 +7,7 @@ import Select from "react-select";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import Tooltip from "@mui/material/Tooltip";
 
 import schedule from "../../../../services/scheduleService";
 import OurModal from "../../../../components/Common/OurModal/OurModal";
@@ -14,14 +15,19 @@ import OrderedSteps from "../../../../components/Groups/AddNewGroup/AddStep/Orde
 import EmptyModal from "../../../../components/Common/EmptyModal/EmptyModal";
 import constants from "../../../../custom/constants/constants";
 
-function AddStep() {
+function EditSteps() {
   const location = useLocation();
   const navigate = useNavigate();
 
   // var { group } = location.state;
+  const { group, getGroup } = useOutletContext();
 
   const [interfaces, setInterfaces] = useState([]);
-  const [steps, setSteps] = useState({ id: "default" });
+  const [steps, setSteps] = useState([]);
+  const [sequence, setSequence] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isEditable, setIsEditable] = useState(false);
+  const [step, setStep] = useState({});
 
   const step_form = useRef(null);
 
@@ -66,22 +72,34 @@ function AddStep() {
     setInterfaces(data.payload);
   }
 
-  async function getSteps(groupId) {
-    const data = await schedule.getAllSteps(groupId);
-    setSteps(data.payload);
-  }
+  useEffect(() => {
+    getInterfaces();
+    setSteps(group.steps);
+    setSequence(group.sids);
+    if (Object.keys(errors).length === 0 && canSubmit) {
+      handleOpen();
+    }
+  }, [canSubmit, errors, group]);
 
-  // useEffect(() => {
-  //   getInterfaces();
-  //   if (group.id) {
-  //     getSteps(group.id);
-  //   } else {
-  //     navigate("/AddNewGroup/AddGroup");
-  //   }
-  //   if (Object.keys(errors).length === 0 && canSubmit) {
-  //     handleOpen();
-  //   }
-  // }, [canSubmit, errors, group, navigate]);
+  // check if objects are equal
+  const areObjectsEqual = (...objects) =>
+    objects.every((obj) => JSON.stringify(obj) === JSON.stringify(objects[0]));
+
+  const reset = () => {
+    step_form.current.reset();
+    setSelectInterfaceValue({
+      target: JSON.parse('{"id":"iid", "value":""}'),
+      value: "",
+      label: "Select Interface...",
+    });
+    setSelectSyncTypeValue({
+      target: JSON.parse('{"id":"synctype", "value":""}'),
+      value: "",
+      label: "Select Sync Type...",
+    });
+    setDateValue(null);
+    setValues(defaultValues);
+  };
 
   function convertFullDateToNormalDate(str) {
     var date = new Date(str),
@@ -186,44 +204,156 @@ function AddStep() {
     setCanSubmit(true);
   };
 
-  // const handleSubmit = async () => {
-  //   setOpen(false);
-  //   setCanSubmit(false);
-  //   setIsLoading(true);
-  //   const data = await schedule.createStep({
-  //     ...values,
-  //     gid: group.id,
-  //     sequence: steps.id === "default" ? 1 : Object.keys(steps).length + 1,
-  //   });
-  //   if (data.message === "updated successfully") {
-  //     toast.success("Step was Updated Successfully");
-  //     setIsLoading(false);
-  //     setValues({});
-  //   } else if (data.message === "added successfully") {
-  //     toast.success("Step was Created Successfully");
-  //     setIsLoading(false);
-  //   } else {
-  //     toast.error("There was some Error while creating a Step");
-  //     setIsLoading(false);
-  //   }
-  //   getSteps(group.id);
-  //   step_form.current.reset();
-  //   setValues(defaultValues);
-  //   setSelectInterfaceValue({
-  //     target: JSON.parse('{"id":"iid", "value":""}'),
-  //     value: "",
-  //     label: "Select Interface...",
-  //   });
-  //   setSelectSyncTypeValue({
-  //     target: JSON.parse('{"id":"synctype", "value":""}'),
-  //     value: "",
-  //     label: "Select Sync Type...",
-  //   });
-  //   setDateValue(null);
-  // };
+  const handleSubmit = async () => {
+    setOpen(false);
+    setCanSubmit(false);
+    setIsLoading(true);
+    const data = await schedule.createStep({
+      ...values,
+      gid: group.id,
+      sequence: group.steps.length === 0 ? 1 : group.steps.length + 1,
+    });
+    if (data.message === "updated successfully") {
+      toast.success("Step was Updated Successfully");
+      setIsLoading(false);
+      setValues({});
+    } else if (data.message === "added successfully") {
+      toast.success("Step was Created Successfully");
+      setIsLoading(false);
+    } else {
+      toast.error("There was some Error while creating a Step");
+      setIsLoading(false);
+    }
+    getGroup(group.id);
+    getInterfaces();
+    reset();
+  };
+
+  // edit functions
+
+  const optionsForInterfacesEdit = interfaces.map(function (item) {
+    return {
+      target: JSON.parse(`{"id":"iid", "value":"${item.id}"}`),
+      value: item.id,
+      label: item.name,
+    };
+  });
+
+  const optionsForSyncTypeEdit = [
+    {
+      target: JSON.parse('{"id":"synctype", "value":"Full"}'),
+      value: "Full",
+      label: "Full",
+    },
+    {
+      target: JSON.parse('{"id":"synctype", "value":"Delta"}'),
+      value: "Delta",
+      label: "Delta",
+    },
+  ];
+
+  const dateHandleChangeEdit = (newValue) => {
+    setCanSubmit(false);
+    setDateValue(newValue);
+    values["syncdate"] = convertFullDateToNormalDate(newValue);
+  };
+
+  const handleChangeEdit = (e) => {
+    setCanSubmit(false);
+    const { id, value } = e.target;
+    setValues({
+      ...values,
+      [id]: value,
+    });
+
+    if (e.target.id === "batching") {
+      setValues({
+        ...values,
+        [id]: e.target.checked === true ? 1 : 0,
+      });
+    }
+    if (e.target.id === "forcesync") {
+      setValues({
+        ...values,
+        [id]: e.target.checked === true ? 1 : 0,
+      });
+    }
+    if (e.target.id === "detailedlog") {
+      setValues({
+        ...values,
+        [id]: e.target.checked === true ? 1 : 0,
+      });
+    }
+
+    if (e.target.id === "iid") {
+      setSelectInterfaceValue({ id: id, value: value, label: e.label });
+    }
+
+    if (e.target.id === "synctype") {
+      setSelectSyncTypeValue({ id: id, value: value, label: e.label });
+    }
+  };
+
+  const validateEdit = (values) => {
+    const errors = {};
+
+    if (!values.iid) {
+      errors.iid = "Interface is Required!";
+    }
+
+    if (!values.synctype) {
+      errors.synctype = "Sync Type is Required!";
+    }
+
+    if (values.forcesync === 1) {
+      if (values.syncdate === "") {
+        errors.syncdate = "Sync Date is Required!";
+      } else if (convertFullDateToNormalDate(values.syncdate).length !== 10) {
+        errors.syncdate = "Invalid Date!";
+      }
+    }
+
+    if (values.batching === 1) {
+      if (!values.batchsize) {
+        errors.batchsize = "Batch Size is Required!";
+      }
+    }
+
+    return errors;
+  };
+
+  const onSubmitEdit = () => {
+    setErrors(validate(values));
+    setCanSubmit(true);
+  };
+
+  const handleSubmitEdit = async () => {
+    setOpen(false);
+    setCanSubmit(false);
+    setIsLoading(true);
+    const data = await schedule.createStep({
+      ...values,
+      gid: group.id,
+      sequence: group.steps.length === 0 ? 1 : group.steps.length + 1,
+    });
+    if (data.message === "updated successfully") {
+      toast.success("Step was Updated Successfully");
+      setIsLoading(false);
+      setValues({});
+    } else if (data.message === "added successfully") {
+      toast.success("Step was Created Successfully");
+      setIsLoading(false);
+    } else {
+      toast.error("There was some Error while creating a Step");
+      setIsLoading(false);
+    }
+    getGroup(group.id);
+    getInterfaces();
+    // resetEdit();
+  };
 
   return (
-    <div className="card-body border border-secondary rounded mb-3">
+    <div className="card-body border border-secondary rounded mt-3 mb-3">
       <div
         style={{
           display: "flex",
@@ -232,39 +362,44 @@ function AddStep() {
         }}
       >
         <h4 className="card-title">
-          {/* Adding Steps into {group.groupname} Group */}
+          {isEditing ? "Updating" : "Adding"} Steps into {group.groupname} Group
         </h4>
       </div>
-      <form ref={step_form} onSubmit={(e) => e.preventDefault()}>
-        <div className="row">
-          <div className="col-md-8">
-            <div className="form-group row">
-              <label className="col-sm-3 col-form-label">
-                Interface <span className="text-danger">*</span>
-              </label>
-              <div className="col-sm-9">
-                <Select
-                  styles={constants.reactSelectStyles(
-                    errors.iid,
-                    selectInterfaceValue.value
-                  )}
-                  inputId="iid"
-                  options={optionsForInterfaces}
-                  value={selectInterfaceValue}
-                  onChange={handleChange}
-                  className="search-options"
-                  placeholder="Select Interface..."
-                  defaultValue={{
-                    target: JSON.parse('{"id":"iid", "value":""}'),
-                    value: "",
-                    label: "Select Interface...",
-                  }}
-                />
-                {errors.iid && <p className="helperText">{errors.iid}</p>}
+      {/* form */}
+      {isEditing ? (
+        // update form
+        <>
+          <form
+            className="myForms"
+            ref={step_form}
+            onSubmit={(e) => e.preventDefault()}
+          >
+            <div className="row">
+              <div className="col-md-8">
+                <div className="form-group row">
+                  <label className="col-sm-3 col-form-label">
+                    Interface <span className="text-danger">*</span>
+                  </label>
+                  <div className="col-sm-9">
+                    <Select
+                      styles={constants.reactSelectStyles(
+                        errors.iid,
+                        // selectInterfaceValueEdit.value
+                      )}
+                      inputId="iid"
+                      options={optionsForInterfacesEdit}
+                      // value={selectInterfaceValueEdit}
+                      onChange={handleChangeEdit}
+                      className="search-options"
+                      placeholder="Select Interface..."
+                      isSearchable={isEditable}
+                      menuIsOpen={!isEditable ? false : undefined}
+                    />
+                    {errors.iid && <p className="helperText">{errors.iid}</p>}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          {/* <div className="col-md-6">
+              {/* <div className="col-md-6">
           <div className="form-group row">
             <label className="col-sm-3 col-form-label">
               Company Code<span className="text-danger">*</span>
@@ -280,192 +415,481 @@ function AddStep() {
             </div>
           </div>
         </div> */}
-        </div>
-        <div className="row">
-          <div className="col-md-6">
-            <div className="form-group row">
-              <label className="col-sm-3 col-form-label">
-                Sync Type <span className="text-danger">*</span>
-              </label>
-              <div className="col-sm-9">
-                <Select
-                  styles={constants.reactSelectStyles(
-                    errors.synctype,
-                    selectSyncTypeValue.value
-                  )}
-                  inputId="synctype"
-                  options={optionsForSyncType}
-                  value={selectSyncTypeValue}
-                  onChange={handleChange}
-                  className="search-options"
-                  placeholder="Select Sync Type..."
-                  defaultValue={{
-                    target: JSON.parse('{"id":"synctype", "value":""}'),
-                    value: "",
-                    label: "Select Sync Type...",
-                  }}
-                />
-                {errors.synctype && (
-                  <p className="helperText">{errors.synctype}</p>
-                )}
-              </div>
             </div>
-          </div>
-          <div className="col-6">
             <div className="row">
               <div className="col-md-6">
-                <div className="form-group row d-flex">
-                  <label className="col-sm-8 col-form-label">
-                    Enable Force Sync Date
-                  </label>
-                  <div className="col-sm-1">
-                    <div className="form-check">
-                      <label className="form-check-label">
-                        <input
-                          id="forcesync"
-                          onChange={handleChange}
-                          type="checkbox"
-                          className="form-check-input"
-                        />
-                        <i className="input-helper"></i>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-6">
                 <div className="form-group row">
-                  <label className="col-4 col-form-label">Sync Date</label>
-                  <div className="col-sm-8">
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <DatePicker
-                        inputId="syncdate"
-                        className="date-picker"
-                        value={dateValue}
-                        onChange={dateHandleChange}
-                        renderInput={(params) => (
-                          <TextField
-                            name="syncdate"
-                            sx={{
-                              height: "3rem",
-                              width: "100%",
-                              border: "none",
-                              "&>.MuiInputBase-root": {
-                                position: "static",
-                                border: errors.syncdate && "1px solid #d32f2f",
-                              },
-                              "&>.MuiInputBase-root:hover": {
-                                border: errors.syncdate && "1px solid #d32f2f",
-                              },
-                            }}
-                            {...params}
-                          />
-                        )}
-                      />
-                    </LocalizationProvider>
-                    {errors.syncdate && (
-                      <p className="helperText">{errors.syncdate}</p>
+                  <label className="col-sm-3 col-form-label">
+                    Sync Type <span className="text-danger">*</span>
+                  </label>
+                  <div className="col-sm-9">
+                    <Select
+                      styles={constants.reactSelectStyles(
+                        errors.synctype,
+                        selectSyncTypeValue.value
+                      )}
+                      inputId="synctype"
+                      options={optionsForSyncType}
+                      value={selectSyncTypeValue}
+                      onChange={handleChange}
+                      className="search-options"
+                      placeholder="Select Sync Type..."
+                      defaultValue={{
+                        target: JSON.parse('{"id":"synctype", "value":""}'),
+                        value: "",
+                        label: "Select Sync Type...",
+                      }}
+                    />
+                    {errors.synctype && (
+                      <p className="helperText">{errors.synctype}</p>
                     )}
                   </div>
                 </div>
               </div>
+              <div className="col-6">
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="form-group row d-flex">
+                      <label className="col-sm-8 col-form-label">
+                        Enable Force Sync Date
+                      </label>
+                      <div className="col-sm-1">
+                        <div className="form-check">
+                          <label className="form-check-label">
+                            <input
+                              id="forcesync"
+                              onChange={handleChange}
+                              type="checkbox"
+                              className="form-check-input"
+                            />
+                            <i className="input-helper"></i>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="form-group row">
+                      <label className="col-4 col-form-label">Sync Date</label>
+                      <div className="col-sm-8">
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                          <DatePicker
+                            inputId="syncdate"
+                            className="date-picker"
+                            value={dateValue}
+                            onChange={dateHandleChange}
+                            renderInput={(params) => (
+                              <TextField
+                                name="syncdate"
+                                sx={{
+                                  height: "3rem",
+                                  width: "100%",
+                                  border: "none",
+                                  "&>.MuiInputBase-root": {
+                                    position: "static",
+                                    border:
+                                      errors.syncdate && "1px solid #d32f2f",
+                                  },
+                                  "&>.MuiInputBase-root:hover": {
+                                    border:
+                                      errors.syncdate && "1px solid #d32f2f",
+                                  },
+                                }}
+                                {...params}
+                              />
+                            )}
+                          />
+                        </LocalizationProvider>
+                        {errors.syncdate && (
+                          <p className="helperText">{errors.syncdate}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-12">
             <div className="row">
-              <div className="col-md-3">
-                <div className="form-group row d-flex">
-                  <label className="col-sm-6 col-form-label">
-                    Enable Batch
-                  </label>
-                  <div className="col-sm-2">
-                    <div className="form-check">
-                      <label className="form-check-label">
-                        <input
-                          id="batching"
-                          onChange={handleChange}
-                          type="checkbox"
-                          className="form-check-input"
-                        />
-                        <i className="input-helper"></i>
+              <div className="col-12">
+                <div className="row">
+                  <div className="col-md-3">
+                    <div className="form-group row d-flex">
+                      <label className="col-sm-6 col-form-label">
+                        Enable Batch
                       </label>
+                      <div className="col-sm-2">
+                        <div className="form-check">
+                          <label className="form-check-label">
+                            <input
+                              id="batching"
+                              onChange={handleChange}
+                              type="checkbox"
+                              className="form-check-input"
+                            />
+                            <i className="input-helper"></i>
+                          </label>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div className="col-md-5">
-                <div className="form-group row">
-                  <label className="col-4 col-form-label">Batch Size</label>
-                  <div className="col-sm-6">
-                    <TextField
-                      error={errors.batchsize ? true : false}
-                      id="batchsize"
-                      placeholder="Enter Batch Size"
-                      onChange={handleChange}
-                      inputProps={{
-                        type: "number",
-                        min: 0,
-                      }}
-                      helperText={errors.batchsize}
-                      variant="outlined"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-4">
-                <div className="form-group row d-flex">
-                  <label className="col-sm-6 col-form-label">
-                    Enable Detailed Logs
-                  </label>
-                  <div className="col-sm-3">
-                    <div className="form-check">
-                      <label className="form-check-label">
-                        <input
-                          id="detailedlog"
+                  <div className="col-md-5">
+                    <div className="form-group row">
+                      <label className="col-4 col-form-label">Batch Size</label>
+                      <div className="col-sm-6">
+                        <TextField
+                          error={errors.batchsize ? true : false}
+                          id="batchsize"
+                          placeholder="Enter Batch Size"
                           onChange={handleChange}
-                          type="checkbox"
-                          className="form-check-input"
+                          inputProps={{
+                            type: "number",
+                            min: 0,
+                          }}
+                          helperText={errors.batchsize}
+                          variant="outlined"
                         />
-                        <i className="input-helper"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-4">
+                    <div className="form-group row d-flex">
+                      <label className="col-sm-6 col-form-label">
+                        Enable Detailed Logs
                       </label>
+                      <div className="col-sm-3">
+                        <div className="form-check">
+                          <label className="form-check-label">
+                            <input
+                              id="detailedlog"
+                              onChange={handleChange}
+                              type="checkbox"
+                              className="form-check-input"
+                            />
+                            <i className="input-helper"></i>
+                          </label>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+          </form>
+          <div
+            className="row"
+            style={{ justifyContent: "center", gap: "2rem" }}
+          >
+            {isEditable ? (
+              <>
+                <button
+                  type="button"
+                  onClick={onSubmit}
+                  className="btn btn-dark btn-icon-text"
+                  disabled={
+                    areObjectsEqual(defaultValues, values) ? true : false
+                  }
+                >
+                  Save Changes
+                  <i className="fa fa-cloud-upload btn-icon-append"></i>
+                </button>
+                <Tooltip
+                  title="Clear All Data from the Form."
+                  placement="right"
+                  arrow
+                >
+                  <button
+                    type="button"
+                    onClick={reset}
+                    className="btn btn-secondary btn-icon-text"
+                  >
+                    Reset
+                  </button>
+                </Tooltip>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setIsEditable(true)}
+                  className="btn btn-dark btn-icon-text"
+                >
+                  Edit Step
+                  <i className="fa fa-edit btn-icon-append"></i>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(false)}
+                  className="btn btn-dark btn-icon-text"
+                >
+                  Cancel Edit
+                  <i className="fa fa-edit btn-icon-append"></i>
+                </button>
+              </>
+            )}
           </div>
-        </div>
-      </form>
-      <div className="row" style={{ justifyContent: "center" }}>
-        <button
-          type="button"
-          className="btn btn-dark btn-icon-text"
-          onClick={onSubmit}
-        >
-          Confirm Step
-          <i className="fa fa-plus btn-icon-append"></i>
-        </button>
-      </div>
+        </>
+      ) : (
+        // add form
+        <>
+          <form
+            className="myForms"
+            ref={step_form}
+            onSubmit={(e) => e.preventDefault()}
+          >
+            <div className="row">
+              <div className="col-md-8">
+                <div className="form-group row">
+                  <label className="col-sm-3 col-form-label">
+                    Interface <span className="text-danger">*</span>
+                  </label>
+                  <div className="col-sm-9">
+                    <Select
+                      styles={constants.reactSelectStyles(
+                        errors.iid,
+                        selectInterfaceValue.value
+                      )}
+                      inputId="iid"
+                      options={optionsForInterfaces}
+                      value={selectInterfaceValue}
+                      onChange={handleChange}
+                      className="search-options"
+                      placeholder="Select Interface..."
+                      defaultValue={{
+                        target: JSON.parse('{"id":"iid", "value":""}'),
+                        value: "",
+                        label: "Select Interface...",
+                      }}
+                    />
+                    {errors.iid && <p className="helperText">{errors.iid}</p>}
+                  </div>
+                </div>
+              </div>
+              {/* <div className="col-md-6">
+          <div className="form-group row">
+            <label className="col-sm-3 col-form-label">
+              Company Code<span className="text-danger">*</span>
+            </label>
+            <div className="col-sm-9">
+              <select className="form-control">
+                <option>Select Company Code</option>
+                <option>1429</option>
+                <option>1430</option>
+                <option>1364</option>
+                <option>1428</option>
+              </select>
+            </div>
+          </div>
+        </div> */}
+            </div>
+            <div className="row">
+              <div className="col-md-6">
+                <div className="form-group row">
+                  <label className="col-sm-3 col-form-label">
+                    Sync Type <span className="text-danger">*</span>
+                  </label>
+                  <div className="col-sm-9">
+                    <Select
+                      styles={constants.reactSelectStyles(
+                        errors.synctype,
+                        selectSyncTypeValue.value
+                      )}
+                      inputId="synctype"
+                      options={optionsForSyncType}
+                      value={selectSyncTypeValue}
+                      onChange={handleChange}
+                      className="search-options"
+                      placeholder="Select Sync Type..."
+                      defaultValue={{
+                        target: JSON.parse('{"id":"synctype", "value":""}'),
+                        value: "",
+                        label: "Select Sync Type...",
+                      }}
+                    />
+                    {errors.synctype && (
+                      <p className="helperText">{errors.synctype}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="col-6">
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="form-group row d-flex">
+                      <label className="col-sm-8 col-form-label">
+                        Enable Force Sync Date
+                      </label>
+                      <div className="col-sm-1">
+                        <div className="form-check">
+                          <label className="form-check-label">
+                            <input
+                              id="forcesync"
+                              onChange={handleChange}
+                              type="checkbox"
+                              className="form-check-input"
+                            />
+                            <i className="input-helper"></i>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="form-group row">
+                      <label className="col-4 col-form-label">Sync Date</label>
+                      <div className="col-sm-8">
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                          <DatePicker
+                            inputId="syncdate"
+                            className="date-picker"
+                            value={dateValue}
+                            onChange={dateHandleChange}
+                            renderInput={(params) => (
+                              <TextField
+                                name="syncdate"
+                                sx={{
+                                  height: "3rem",
+                                  width: "100%",
+                                  border: "none",
+                                  "&>.MuiInputBase-root": {
+                                    position: "static",
+                                    border:
+                                      errors.syncdate && "1px solid #d32f2f",
+                                  },
+                                  "&>.MuiInputBase-root:hover": {
+                                    border:
+                                      errors.syncdate && "1px solid #d32f2f",
+                                  },
+                                }}
+                                {...params}
+                              />
+                            )}
+                          />
+                        </LocalizationProvider>
+                        {errors.syncdate && (
+                          <p className="helperText">{errors.syncdate}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12">
+                <div className="row">
+                  <div className="col-md-3">
+                    <div className="form-group row d-flex">
+                      <label className="col-sm-6 col-form-label">
+                        Enable Batch
+                      </label>
+                      <div className="col-sm-2">
+                        <div className="form-check">
+                          <label className="form-check-label">
+                            <input
+                              id="batching"
+                              onChange={handleChange}
+                              type="checkbox"
+                              className="form-check-input"
+                            />
+                            <i className="input-helper"></i>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-5">
+                    <div className="form-group row">
+                      <label className="col-4 col-form-label">Batch Size</label>
+                      <div className="col-sm-6">
+                        <TextField
+                          error={errors.batchsize ? true : false}
+                          id="batchsize"
+                          placeholder="Enter Batch Size"
+                          onChange={handleChange}
+                          inputProps={{
+                            type: "number",
+                            min: 0,
+                          }}
+                          helperText={errors.batchsize}
+                          variant="outlined"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-4">
+                    <div className="form-group row d-flex">
+                      <label className="col-sm-6 col-form-label">
+                        Enable Detailed Logs
+                      </label>
+                      <div className="col-sm-3">
+                        <div className="form-check">
+                          <label className="form-check-label">
+                            <input
+                              id="detailedlog"
+                              onChange={handleChange}
+                              type="checkbox"
+                              className="form-check-input"
+                            />
+                            <i className="input-helper"></i>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div
+            className="row"
+            style={{ justifyContent: "center", gap: "2rem" }}
+          >
+            <button
+              type="button"
+              className="btn btn-dark btn-icon-text"
+              onClick={onSubmit}
+            >
+              Confirm Step
+              <i className="fa fa-plus btn-icon-append"></i>
+            </button>
+            <Tooltip
+              title="Clear All Data from the Form."
+              placement="right"
+              arrow
+            >
+              <button
+                type="button"
+                onClick={reset}
+                className="btn btn-secondary btn-icon-text"
+              >
+                Reset
+              </button>
+            </Tooltip>
+          </div>
+        </>
+      )}
       <EmptyModal open={isLoading} />
       <OurModal
         open={open}
         setOpen={setOpen}
         handleOpen={handleOpen}
         handleClose={handleClose}
-        // handleYes={handleSubmit}
+        handleYes={handleSubmit}
         title={"Create Step?"}
         description="Do you really wish to Create this Step? "
       />
       <OrderedSteps
-        // group={group}
+        editable={location.pathname === "/ShowGroups/EditGroups/EditSteps"}
+        groupInfo={group}
+        getGroupInfo={getGroup}
         steps={steps}
-        interfaces={interfaces}
+        sequence={sequence}
         isLoading={isLoading}
+        setIsEditing={setIsEditing}
+        setStep={setStep}
       />
     </div>
   );
 }
 
-export default AddStep;
+export default EditSteps;

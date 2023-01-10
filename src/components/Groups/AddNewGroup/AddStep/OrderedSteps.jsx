@@ -9,7 +9,16 @@ import schedule from "../../../../services/scheduleService";
 import OurModal from "../../../Common/OurModal/OurModal";
 
 function OrderedSteps(props) {
-  const { groupInfo, getGroupInfo, steps, sequence, isLoading } = props;
+  const {
+    editable,
+    groupInfo,
+    getGroupInfo,
+    steps,
+    sequence,
+    isLoading,
+    setIsEditing,
+    setStep,
+  } = props;
   const navigate = useNavigate();
 
   const [row, setRow] = useState([]);
@@ -70,6 +79,18 @@ function OrderedSteps(props) {
   const openModal = (thisRow, thisOperation) => {
     setRow(thisRow);
     setOperation(thisOperation);
+    if (thisOperation === "edit") {
+      setModalTitle(
+        "Update Step with " + thisRow.interfacename + " Interface?"
+      );
+      setModalDesc(
+        "Do you really wish to Update Step with " +
+          thisRow.interfacename +
+          " Interface to the System? This Step's data will be Updated. "
+      );
+      setIsEditing(true);
+      // handleOpen();
+    }
     if (thisOperation === "delete") {
       setModalTitle(
         "Delete Step with " + thisRow.interfacename + " Interface?"
@@ -84,13 +105,17 @@ function OrderedSteps(props) {
   };
 
   const handleOperation = () => {
-    if (operation === "delete") {
+    if (operation === "edit") {
+      handleEdit();
+    } else if (operation === "delete") {
       handleDelete();
-    } else if (operation === "run") {
-      // handleRun();
     } else if (operation === "disable") {
       // handleDisable();
     }
+  };
+
+  const handleEdit = () => {
+    setStep(row);
   };
 
   async function handleDelete() {
@@ -104,10 +129,12 @@ function OrderedSteps(props) {
     setOpen(false);
   }
 
-  const rows = steps.map((items) => {
-    const seq = sequence.findIndex((number) => number === items.id);
-    return { ...items, stepSequence: seq + 1 };
-  });
+  const rows = !steps
+    ? []
+    : steps.map((items) => {
+        const seq = sequence.findIndex((number) => number === items.id);
+        return { ...items, stepSequence: seq + 1 };
+      });
 
   const columns = [
     { field: "stepSequence", headerName: "Step", flex: 0.8, width: 150 },
@@ -125,10 +152,16 @@ function OrderedSteps(props) {
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            {/* <button type="button" className="btn btn-dark btn-icon-text btn-sm">
-              Edit
-              <i className="mdi mdi-file-check btn-icon-append"></i>
-            </button> */}
+            {editable && (
+              <button
+                type="button"
+                className="btn btn-dark btn-icon-text btn-sm"
+                onClick={() => openModal(params.row, "edit")}
+              >
+                Edit
+                <i className="mdi mdi-file-check btn-icon-append"></i>
+              </button>
+            )}
             <button
               type="button"
               className="btn btn-danger btn-icon-text btn-sm"

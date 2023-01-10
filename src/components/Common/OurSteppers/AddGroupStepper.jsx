@@ -6,8 +6,8 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 
-const OurStepper = (props) => {
-  const { steps, group, Outlet, pathNames, onlyBack } = props;
+const AddGroupStepper = (props) => {
+  const { steps, Outlet, pathNames, onlyBack } = props;
   const [activeStep, setActiveStep] = useState(0);
   const [hideBack, setHideBack] = useState(true);
   const [addStepPageState, setAddStepPageState] = useState({});
@@ -90,4 +90,4 @@ const OurStepper = (props) => {
   );
 };
 
-export default OurStepper;
+export default AddGroupStepper;

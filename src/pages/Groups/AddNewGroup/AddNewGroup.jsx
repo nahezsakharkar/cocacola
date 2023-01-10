@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import OurStepper from "../../../components/Common/OurStepper/OurStepper";
+import AddGroupStepper from "../../../components/Common/OurSteppers/AddGroupStepper";
 import "../../../custom/css/custom.css";
 
 function AddNewGroup() {
@@ -16,7 +16,7 @@ function AddNewGroup() {
         </p>
       </div>
       <div className="body border border-secondary rounded">
-        <OurStepper
+        <AddGroupStepper
           steps={steps}
           Outlet={<Outlet />}
           pathNames={pathNames}

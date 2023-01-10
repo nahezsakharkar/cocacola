@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import OurStepper from "../../../components/Common/OurStepper/OurStepper";
+import EditGroupStepper from "../../../components/Common/OurSteppers/EditGroupStepper";
 import schedule from "../../../services/scheduleService";
 import Loader from "../../../components/Common/Loader/Loader";
 import "../../../custom/css/custom.css";
@@ -16,6 +16,7 @@ function EditGroups() {
   const [group, setGroup] = useState({});
   const steps = ["Edit Group", "Edit Steps", "Edit Filters"];
   const pathNames = {
+    Show: "/ShowGroups",
     Group: "/ShowGroups/EditGroups/EditGroup",
     Steps: "/ShowGroups/EditGroups/EditSteps",
     Filters: "/ShowGroups/EditGroups/EditFilters",
@@ -45,11 +46,11 @@ function EditGroups() {
         </p>
       </div>
       <div className="body border border-secondary rounded">
-        <OurStepper
+        <EditGroupStepper
+          group={group}
           steps={steps} // stepper steps
           Outlet={<Outlet context={{ group, getGroup }} />}
           pathNames={pathNames}
-          onlyBack={true}
         />
       </div>
     </div>
