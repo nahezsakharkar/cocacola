@@ -27,7 +27,6 @@ function EditSteps() {
   const [sequence, setSequence] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
-  const [step, setStep] = useState({});
 
   const step_form = useRef(null);
 
@@ -58,6 +57,43 @@ function EditSteps() {
   const [errors, setErrors] = useState({});
   const [canSubmit, setCanSubmit] = useState(false);
 
+  // edit states --------------------------------
+  const [step, setStep] = useState({});
+
+  const defaultValuesEdit = {
+    iid: step.iid || "",
+    synctype: step.synctype || "",
+    syncdate: step.syncdate || "",
+    batchsize: step.batchsize || "",
+    batching: step.batching || 0,
+    detailedlog: step.detailedlog || 0,
+    forcesync: step.forcesync || 0,
+  };
+
+  const [selectInterfaceDefaultValueEdit, setSelectInterfaceDefaultValueEdit] =
+    useState({
+      target: JSON.parse(`{"id":"iid", "value": "${step.iid || ""}" }`),
+      value: step.iid,
+      label: step.interfacename,
+    });
+
+  const [selectSyncTypeValueEdit, setSelectSyncTypeValueEdit] = useState({
+    target: JSON.parse(`{"id":"synctype", "value": "${step.synctype || ""}" }`),
+    value: step.synctype,
+    label: step.synctype,
+  });
+
+  const [checkBoxForceSyncValue, setCheckBoxForceSyncValue] = useState(false);
+  const [checkBoxBatchValue, setCheckBoxBatchValue] = useState(false);
+  const [checkBoxLogsValue, setCheckBoxLogsValue] = useState(false);
+
+  const [valuesEdit, setValuesEdit] = useState(defaultValuesEdit);
+  const [dateValueEdit, setDateValueEdit] = useState(null);
+  const [errorsEdit, setErrorsEdit] = useState({});
+  const [canSubmitEdit, setCanSubmitEdit] = useState(false);
+
+  // -------------------------------------------------
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -76,10 +112,51 @@ function EditSteps() {
     getInterfaces();
     setSteps(group.steps);
     setSequence(group.sids);
+
+    // for edit  ----------------
+    setValuesEdit({
+      iid: step.iid || "",
+      synctype: step.synctype || "",
+      syncdate: step.syncdate || "",
+      batchsize: step.batchsize || "",
+      batching: step.batching || 0,
+      detailedlog: step.detailedlog || 0,
+      forcesync: step.forcesync || 0,
+    });
+    setSelectInterfaceDefaultValueEdit({
+      target: JSON.parse(`{"id":"iid", "value": "${step.iid || ""}" }`),
+      value: step.iid,
+      label: step.interfacename,
+    });
+
+    setSelectSyncTypeValueEdit({
+      target: JSON.parse(
+        `{"id":"synctype", "value": "${step.synctype || ""}" }`
+      ),
+      value: step.synctype,
+      label: step.synctype,
+    });
+    setCheckBoxForceSyncValue(
+      (!step.forcesync ? 0 : step.forcesync) === 1 ? true : false
+    );
+    setDateValueEdit(
+      (!step.syncdate ? "Na" : step.syncdate) !== "Na"
+        ? new Date(step.syncdate)
+        : null
+    );
+    setCheckBoxBatchValue(
+      (!step.batching ? 0 : step.batching) === 1 ? true : false
+    );
+    setCheckBoxLogsValue(
+      (!step.detailedlog ? 0 : step.detailedlog) === 1 ? true : false
+    );
+
+    // --------------------------
+
     if (Object.keys(errors).length === 0 && canSubmit) {
       handleOpen();
     }
-  }, [canSubmit, errors, group]);
+  }, [canSubmit, errors, group, isEditable, step]);
 
   // check if objects are equal
   const areObjectsEqual = (...objects) =>
@@ -231,13 +308,20 @@ function EditSteps() {
 
   // edit functions
 
-  const optionsForInterfacesEdit = interfaces.map(function (item) {
-    return {
-      target: JSON.parse(`{"id":"iid", "value":"${item.id}"}`),
-      value: item.id,
-      label: item.name,
-    };
-  });
+  const optionsForInterfacesEdit = [
+    {
+      target: JSON.parse(`{"id":"iid", "value": "${step.iid || ""}" }`),
+      value: step.iid,
+      label: step.interfacename,
+    },
+    ...interfaces.map(function (item) {
+      return {
+        target: JSON.parse(`{"id":"iid", "value":"${item.id}"}`),
+        value: item.id,
+        label: item.name,
+      };
+    }),
+  ];
 
   const optionsForSyncTypeEdit = [
     {
@@ -253,44 +337,81 @@ function EditSteps() {
   ];
 
   const dateHandleChangeEdit = (newValue) => {
-    setCanSubmit(false);
-    setDateValue(newValue);
-    values["syncdate"] = convertFullDateToNormalDate(newValue);
+    setCanSubmitEdit(false);
+    setDateValueEdit(newValue);
+    valuesEdit["syncdate"] = convertFullDateToNormalDate(newValue);
+  };
+
+  const handleEdit = (row) => {
+    setStep(row);
   };
 
   const handleChangeEdit = (e) => {
-    setCanSubmit(false);
+    console.log(e)
+    setCanSubmitEdit(false);
     const { id, value } = e.target;
-    setValues({
-      ...values,
+    setValuesEdit({
+      ...valuesEdit,
       [id]: value,
     });
 
     if (e.target.id === "batching") {
-      setValues({
-        ...values,
-        [id]: e.target.checked === true ? 1 : 0,
+      setCheckBoxBatchValue(
+        isEditable ? !checkBoxBatchValue : checkBoxBatchValue
+      );
+      setValuesEdit({
+        ...valuesEdit,
+        [id]:
+          isEditable === false
+            ? checkBoxBatchValue === true
+              ? 1
+              : 0
+            : checkBoxBatchValue === false
+            ? 1
+            : 0,
       });
     }
     if (e.target.id === "forcesync") {
-      setValues({
-        ...values,
-        [id]: e.target.checked === true ? 1 : 0,
+      setCheckBoxForceSyncValue(
+        isEditable ? !checkBoxForceSyncValue : checkBoxForceSyncValue
+      );
+      setValuesEdit({
+        ...valuesEdit,
+        [id]:
+          isEditable === false
+            ? checkBoxForceSyncValue === true
+              ? 1
+              : 0
+            : checkBoxForceSyncValue === false
+            ? 1
+            : 0,
       });
     }
     if (e.target.id === "detailedlog") {
-      setValues({
-        ...values,
-        [id]: e.target.checked === true ? 1 : 0,
+      setCheckBoxLogsValue(isEditable ? !checkBoxLogsValue : checkBoxLogsValue);
+      setValuesEdit({
+        ...valuesEdit,
+        [id]:
+          isEditable === false
+            ? checkBoxLogsValue === true
+              ? 1
+              : 0
+            : checkBoxLogsValue === false
+            ? 1
+            : 0,
       });
     }
 
     if (e.target.id === "iid") {
-      setSelectInterfaceValue({ id: id, value: value, label: e.label });
+      setSelectInterfaceDefaultValueEdit({
+        id: id,
+        value: value,
+        label: e.label,
+      });
     }
 
     if (e.target.id === "synctype") {
-      setSelectSyncTypeValue({ id: id, value: value, label: e.label });
+      setSelectSyncTypeValueEdit({ id: id, value: value, label: e.label });
     }
   };
 
@@ -323,23 +444,23 @@ function EditSteps() {
   };
 
   const onSubmitEdit = () => {
-    setErrors(validate(values));
-    setCanSubmit(true);
+    setErrorsEdit(validate(values));
+    setCanSubmitEdit(true);
   };
 
   const handleSubmitEdit = async () => {
     setOpen(false);
-    setCanSubmit(false);
+    setCanSubmitEdit(false);
     setIsLoading(true);
     const data = await schedule.createStep({
-      ...values,
+      ...valuesEdit,
       gid: group.id,
       sequence: group.steps.length === 0 ? 1 : group.steps.length + 1,
     });
     if (data.message === "updated successfully") {
       toast.success("Step was Updated Successfully");
       setIsLoading(false);
-      setValues({});
+      setValuesEdit({});
     } else if (data.message === "added successfully") {
       toast.success("Step was Created Successfully");
       setIsLoading(false);
@@ -383,19 +504,21 @@ function EditSteps() {
                   <div className="col-sm-9">
                     <Select
                       styles={constants.reactSelectStyles(
-                        errors.iid,
-                        // selectInterfaceValueEdit.value
+                        errorsEdit.iid,
+                        selectInterfaceDefaultValueEdit.value
                       )}
                       inputId="iid"
                       options={optionsForInterfacesEdit}
-                      // value={selectInterfaceValueEdit}
+                      value={selectInterfaceDefaultValueEdit}
                       onChange={handleChangeEdit}
                       className="search-options"
                       placeholder="Select Interface..."
                       isSearchable={isEditable}
                       menuIsOpen={!isEditable ? false : undefined}
                     />
-                    {errors.iid && <p className="helperText">{errors.iid}</p>}
+                    {errorsEdit.iid && (
+                      <p className="helperText">{errorsEdit.iid}</p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -425,23 +548,20 @@ function EditSteps() {
                   <div className="col-sm-9">
                     <Select
                       styles={constants.reactSelectStyles(
-                        errors.synctype,
-                        selectSyncTypeValue.value
+                        errorsEdit.synctype,
+                        selectSyncTypeValueEdit.value
                       )}
                       inputId="synctype"
-                      options={optionsForSyncType}
-                      value={selectSyncTypeValue}
-                      onChange={handleChange}
+                      options={optionsForSyncTypeEdit}
+                      value={selectSyncTypeValueEdit}
+                      onChange={handleChangeEdit}
                       className="search-options"
                       placeholder="Select Sync Type..."
-                      defaultValue={{
-                        target: JSON.parse('{"id":"synctype", "value":""}'),
-                        value: "",
-                        label: "Select Sync Type...",
-                      }}
+                      isSearchable={isEditable}
+                      menuIsOpen={!isEditable ? false : undefined}
                     />
-                    {errors.synctype && (
-                      <p className="helperText">{errors.synctype}</p>
+                    {errorsEdit.synctype && (
+                      <p className="helperText">{errorsEdit.synctype}</p>
                     )}
                   </div>
                 </div>
@@ -458,9 +578,13 @@ function EditSteps() {
                           <label className="form-check-label">
                             <input
                               id="forcesync"
-                              onChange={handleChange}
+                              onChange={handleChangeEdit}
                               type="checkbox"
                               className="form-check-input"
+                              checked={checkBoxForceSyncValue}
+                              onClick={(e) =>
+                                !isEditable ? e.preventDefault() : ""
+                              }
                             />
                             <i className="input-helper"></i>
                           </label>
@@ -476,8 +600,8 @@ function EditSteps() {
                           <DatePicker
                             inputId="syncdate"
                             className="date-picker"
-                            value={dateValue}
-                            onChange={dateHandleChange}
+                            value={dateValueEdit}
+                            onChange={dateHandleChangeEdit}
                             renderInput={(params) => (
                               <TextField
                                 name="syncdate"
@@ -488,11 +612,13 @@ function EditSteps() {
                                   "&>.MuiInputBase-root": {
                                     position: "static",
                                     border:
-                                      errors.syncdate && "1px solid #d32f2f",
+                                      errorsEdit.syncdate &&
+                                      "1px solid #d32f2f",
                                   },
                                   "&>.MuiInputBase-root:hover": {
                                     border:
-                                      errors.syncdate && "1px solid #d32f2f",
+                                      errorsEdit.syncdate &&
+                                      "1px solid #d32f2f",
                                   },
                                 }}
                                 {...params}
@@ -500,8 +626,8 @@ function EditSteps() {
                             )}
                           />
                         </LocalizationProvider>
-                        {errors.syncdate && (
-                          <p className="helperText">{errors.syncdate}</p>
+                        {errorsEdit.syncdate && (
+                          <p className="helperText">{errorsEdit.syncdate}</p>
                         )}
                       </div>
                     </div>
@@ -522,9 +648,13 @@ function EditSteps() {
                           <label className="form-check-label">
                             <input
                               id="batching"
-                              onChange={handleChange}
+                              onChange={handleChangeEdit}
                               type="checkbox"
                               className="form-check-input"
+                              checked={checkBoxBatchValue}
+                              onClick={(e) =>
+                                !isEditable ? e.preventDefault() : ""
+                              }
                             />
                             <i className="input-helper"></i>
                           </label>
@@ -537,16 +667,20 @@ function EditSteps() {
                       <label className="col-4 col-form-label">Batch Size</label>
                       <div className="col-sm-6">
                         <TextField
-                          error={errors.batchsize ? true : false}
+                          error={errorsEdit.batchsize ? true : false}
                           id="batchsize"
                           placeholder="Enter Batch Size"
-                          onChange={handleChange}
+                          value={valuesEdit.batchsize}
+                          onChange={handleChangeEdit}
                           inputProps={{
                             type: "number",
                             min: 0,
                           }}
-                          helperText={errors.batchsize}
+                          helperText={errorsEdit.batchsize}
                           variant="outlined"
+                          InputProps={{
+                            readOnly: !isEditable,
+                          }}
                         />
                       </div>
                     </div>
@@ -561,9 +695,13 @@ function EditSteps() {
                           <label className="form-check-label">
                             <input
                               id="detailedlog"
-                              onChange={handleChange}
+                              onChange={handleChangeEdit}
                               type="checkbox"
                               className="form-check-input"
+                              checked={checkBoxLogsValue}
+                              onClick={(e) =>
+                                !isEditable ? e.preventDefault() : ""
+                              }
                             />
                             <i className="input-helper"></i>
                           </label>
@@ -586,7 +724,9 @@ function EditSteps() {
                   onClick={onSubmit}
                   className="btn btn-dark btn-icon-text"
                   disabled={
-                    areObjectsEqual(defaultValues, values) ? true : false
+                    areObjectsEqual(defaultValuesEdit, valuesEdit)
+                      ? true
+                      : false
                   }
                 >
                   Save Changes
@@ -594,7 +734,7 @@ function EditSteps() {
                 </button>
                 <Tooltip
                   title="Clear All Data from the Form."
-                  placement="right"
+                  placement="bottom"
                   arrow
                 >
                   <button
@@ -605,6 +745,17 @@ function EditSteps() {
                     Reset
                   </button>
                 </Tooltip>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsEditing(false);
+                    setIsEditable(false);
+                  }}
+                  className="btn btn-dark btn-icon-text"
+                >
+                  <i className="ti-close btn-icon-prepend"></i>
+                  Cancel Edit
+                </button>
               </>
             ) : (
               <>
@@ -621,8 +772,8 @@ function EditSteps() {
                   onClick={() => setIsEditing(false)}
                   className="btn btn-dark btn-icon-text"
                 >
+                  <i className="ti-close btn-icon-prepend"></i>
                   Cancel Edit
-                  <i className="fa fa-edit btn-icon-append"></i>
                 </button>
               </>
             )}
@@ -886,7 +1037,7 @@ function EditSteps() {
         sequence={sequence}
         isLoading={isLoading}
         setIsEditing={setIsEditing}
-        setStep={setStep}
+        handleEdit={handleEdit}
       />
     </div>
   );

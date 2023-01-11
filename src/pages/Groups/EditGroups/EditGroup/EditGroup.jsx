@@ -139,8 +139,6 @@ function EditGroup() {
   const areObjectsEqual = (...objects) =>
     objects.every((obj) => JSON.stringify(obj) === JSON.stringify(objects[0]));
 
-  console.log(values);
-
   const group_form = useRef(null);
   const reset = () => {
     setSelectScheduledStatus(scheduledStatusDefault);
@@ -545,7 +543,7 @@ function EditGroup() {
               </button>
               <Tooltip
                 title="Clear All Data from the Form."
-                placement="right"
+                placement="bottom"
                 arrow
               >
                 <button
@@ -556,6 +554,14 @@ function EditGroup() {
                   Reset
                 </button>
               </Tooltip>
+              <button
+                  type="button"
+                  onClick={() => setIsEditable(false)}
+                  className="btn btn-dark btn-icon-text"
+                >
+                  <i className="ti-close btn-icon-prepend"></i>
+                  Cancel Edit
+                </button>
             </>
           ) : (
             <button

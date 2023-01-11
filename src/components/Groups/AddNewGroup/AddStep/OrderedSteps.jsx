@@ -17,7 +17,7 @@ function OrderedSteps(props) {
     sequence,
     isLoading,
     setIsEditing,
-    setStep,
+    handleEdit,
   } = props;
   const navigate = useNavigate();
 
@@ -80,16 +80,8 @@ function OrderedSteps(props) {
     setRow(thisRow);
     setOperation(thisOperation);
     if (thisOperation === "edit") {
-      setModalTitle(
-        "Update Step with " + thisRow.interfacename + " Interface?"
-      );
-      setModalDesc(
-        "Do you really wish to Update Step with " +
-          thisRow.interfacename +
-          " Interface to the System? This Step's data will be Updated. "
-      );
       setIsEditing(true);
-      // handleOpen();
+      handleEdit(thisRow);
     }
     if (thisOperation === "delete") {
       setModalTitle(
@@ -105,17 +97,11 @@ function OrderedSteps(props) {
   };
 
   const handleOperation = () => {
-    if (operation === "edit") {
-      handleEdit();
-    } else if (operation === "delete") {
+    if (operation === "delete") {
       handleDelete();
     } else if (operation === "disable") {
       // handleDisable();
     }
-  };
-
-  const handleEdit = () => {
-    setStep(row);
   };
 
   async function handleDelete() {

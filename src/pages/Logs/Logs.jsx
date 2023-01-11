@@ -13,7 +13,7 @@ import "../../custom/css/custom.css";
 
 function Logs() {
   const [logsList, setLogsList] = useState([]);
-  const [logs, setLogs] = useState({})
+  const [logs, setLogs] = useState({});
 
   const defaultValues = {
     startat: "",
@@ -67,9 +67,12 @@ function Logs() {
     setIsLoading(false);
   }
 
-  async function getLogs(pageNumber) {
-    const data = await schedule.getAllJobLogs(pageNumber === 0 ? 15 : 15 * (pageNumber + 1));
-    setLogs(data)
+  async function getLogs(pgNumber) {
+    console.log(pgNumber);
+    const data = await schedule.getAllJobLogs(
+      pgNumber === 0 ? 15 : 15 * (pgNumber + 1)
+    );
+    setLogs(data);
     setLogsList(data.payload);
     setIsLoading(false);
     // interfaces from existing reports
@@ -105,13 +108,13 @@ function Logs() {
   }, [pageNumber]);
 
   const handlePageChange = (newPage) => {
-    setIsLoading(true)
-    setPageNumber(newPage)
-  }
+    setIsLoading(true);
+    setPageNumber(newPage);
+  };
 
   const refresh = () => {
     setIsLoading(true);
-    getLogs();
+    getLogs(pageNumber);
   };
 
   const optionsForInterfaces = interfaces.map(function (item) {
@@ -207,7 +210,7 @@ function Logs() {
     setDateValue2(null);
     setFilterQueryParams(defaultValues);
     setIsLoading(true);
-    getLogs();
+    getLogs(0);
   };
 
   const columns = [
