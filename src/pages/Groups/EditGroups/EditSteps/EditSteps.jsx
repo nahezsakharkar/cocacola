@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useLocation, useNavigate, useOutletContext } from "react-router-dom";
+import { useLocation, useOutletContext } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { TextField } from "@mui/material";
@@ -17,7 +17,6 @@ import constants from "../../../../custom/constants/constants";
 
 function EditSteps() {
   const location = useLocation();
-  const navigate = useNavigate();
 
   // var { group } = location.state;
   const { group, getGroup } = useOutletContext();
@@ -113,7 +112,7 @@ function EditSteps() {
     const data = await schedule.getAllInterfaces();
     setInterfaces(data.payload);
   }
-  
+
   // async function getStep() {
   //   const data = await schedule.getStepById(step.id);
   //   setStep(data.payload);
@@ -194,6 +193,7 @@ function EditSteps() {
     if (Object.keys(errorsEdit).length === 0 && canSubmitEdit) {
       openModal("update");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     canSubmit,
     errors,
@@ -536,8 +536,8 @@ function EditSteps() {
       gid: group.id,
       sequence: step.sequence,
     });
-    setIsEditing(false)
-    setIsEditable(false)
+    setIsEditing(false);
+    setIsEditable(false);
     setStepDataSaveChangesClicked(false);
     if (data.message === "updated successfully") {
       toast.success("Step was Updated Successfully");
@@ -703,6 +703,7 @@ function EditSteps() {
                                 {...params}
                               />
                             )}
+                            readOnly={!isEditable}
                           />
                         </LocalizationProvider>
                         {errorsEdit.syncdate && (

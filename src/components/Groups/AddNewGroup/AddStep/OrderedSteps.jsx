@@ -160,8 +160,8 @@ function OrderedSteps(props) {
               type="button"
               className="btn btn-warning btn-icon-text btn-sm"
               onClick={() =>
-                navigate("/AddNewGroup/AddFilter", {
-                  state: { step: params.row, group: groupInfo },
+                navigate(editable ? "/ShowGroups/EditGroups/EditFilters" : "/AddNewGroup/AddFilter", {
+                  state: { step: params.row, groupId: groupInfo.id },
                 })
               }
             >

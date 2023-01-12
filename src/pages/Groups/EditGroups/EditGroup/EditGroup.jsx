@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate, useLocation, useOutletContext } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { TextField } from "@mui/material";
@@ -19,9 +19,6 @@ function EditGroup() {
   // const [admin, setAdmin] = useState({});
 
   const [isEditable, setIsEditable] = useState(false);
-
-  const location = useLocation();
-  const locationState = location.state;
 
   const { group, getGroup } = useOutletContext();
 
@@ -83,7 +80,6 @@ function EditGroup() {
     setOpen(false);
   };
 
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
   // async function getAdmin() {
@@ -304,7 +300,6 @@ function EditGroup() {
     reset();
     setIsEditable(false);
     setCanSubmit(false);
-    // navigate("/AddNewGroup/AddStep", { state: { group: data.payload } });
   }
 
   return (
@@ -555,13 +550,13 @@ function EditGroup() {
                 </button>
               </Tooltip>
               <button
-                  type="button"
-                  onClick={() => setIsEditable(false)}
-                  className="btn btn-dark btn-icon-text"
-                >
-                  <i className="ti-close btn-icon-prepend"></i>
-                  Cancel Edit
-                </button>
+                type="button"
+                onClick={() => setIsEditable(false)}
+                className="btn btn-dark btn-icon-text"
+              >
+                <i className="ti-close btn-icon-prepend"></i>
+                Cancel Edit
+              </button>
             </>
           ) : (
             <button

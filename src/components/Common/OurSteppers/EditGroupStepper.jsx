@@ -39,7 +39,7 @@ const EditGroupStepper = (props) => {
     } else if (location.pathname === pathNames.Steps) {
       navigate(pathNames.Group, { state: { groupId: group.id } });
     } else if (location.pathname === pathNames.Filters) {
-      navigate(pathNames.Steps, { state: { group: group } });
+      navigate(pathNames.Steps, { state: { groupId: group.id, group: group } });
     }
   };
 

@@ -7,7 +7,15 @@ import DataTable from "../../../Common/DataTable/DataTable";
 import OurModal from "../../../Common/OurModal/OurModal";
 
 function Filters(props) {
-  const { step, filters, getFilters, isLoading } = props;
+  const {
+    editable,
+    step,
+    filters,
+    getFilters,
+    isLoading,
+    setIsEditing,
+    handleEdit,
+  } = props;
 
   const [row, setRow] = useState([]);
   const [operation, setOperation] = useState("");
@@ -21,6 +29,10 @@ function Filters(props) {
   const openModal = (thisRow, thisOperation) => {
     setRow(thisRow);
     setOperation(thisOperation);
+    if (thisOperation === "edit") {
+      setIsEditing(true);
+      handleEdit(thisRow);
+    }
     if (thisOperation === "delete") {
       setModalTitle("Delete Filter?");
       setModalDesc(
@@ -71,10 +83,16 @@ function Filters(props) {
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            {/* <button type="button" className="btn btn-dark btn-icon-text btn-sm">
-              Edit
-              <i className="mdi mdi-file-check btn-icon-append"></i>
-            </button> */}
+            {editable && (
+              <button
+                type="button"
+                className="btn btn-dark btn-icon-text btn-sm"
+                onClick={() => openModal(params.row, "edit")}
+              >
+                Edit
+                <i className="mdi mdi-file-check btn-icon-append"></i>
+              </button>
+            )}
             <button
               type="button"
               className="btn btn-danger btn-icon-text btn-sm"
