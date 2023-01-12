@@ -90,6 +90,8 @@ function EditSteps() {
   const [valuesEdit, setValuesEdit] = useState(defaultValuesEdit);
   const [dateValueEdit, setDateValueEdit] = useState(null);
   const [errorsEdit, setErrorsEdit] = useState({});
+  const [stepDataSaveChangesClicked, setStepDataSaveChangesClicked] =
+    useState(false);
   const [canSubmitEdit, setCanSubmitEdit] = useState(false);
 
   // -------------------------------------------------
@@ -101,6 +103,9 @@ function EditSteps() {
     setCanSubmitEdit(false);
     setOpen(false);
   };
+  const [operation, setOperation] = useState("");
+  const [modalTitle, setModalTitle] = useState();
+  const [modalDesc, setModalDesc] = useState();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -108,6 +113,33 @@ function EditSteps() {
     const data = await schedule.getAllInterfaces();
     setInterfaces(data.payload);
   }
+  
+  // async function getStep() {
+  //   const data = await schedule.getStepById(step.id);
+  //   setStep(data.payload);
+  // }
+
+  const openModal = (thisOperation) => {
+    setOperation(thisOperation);
+    if (thisOperation === "create") {
+      setModalTitle("Create Step?");
+      setModalDesc("Do you really wish to Create this Step?");
+      handleOpen();
+    }
+    if (thisOperation === "update") {
+      setModalTitle("Update Step?");
+      setModalDesc("Do you really wish to Update this Step?");
+      handleOpen();
+    }
+  };
+
+  const handleOperation = () => {
+    if (operation === "create") {
+      handleSubmit();
+    } else if (operation === "update") {
+      handleSubmitEdit();
+    }
+  };
 
   useEffect(() => {
     getInterfaces();
@@ -115,53 +147,62 @@ function EditSteps() {
     setSequence(group.sids);
 
     // for edit  ----------------
-    setValuesEdit({
-      iid: step.iid || "",
-      synctype: step.synctype || "",
-      syncdate: step.syncdate || "",
-      batchsize: step.batchsize || "",
-      batching: step.batching || 0,
-      detailedlog: step.detailedlog || 0,
-      forcesync: step.forcesync || 0,
-    });
-    setSelectInterfaceDefaultValueEdit({
-      target: JSON.parse(`{"id":"iid", "value": "${step.iid || ""}" }`),
-      value: step.iid,
-      label: step.interfacename,
-    });
+    if (stepDataSaveChangesClicked === false) {
+      setValuesEdit({
+        iid: step.iid || "",
+        synctype: step.synctype || "",
+        syncdate: step.syncdate || "",
+        batchsize: step.batchsize || "",
+        batching: step.batching || 0,
+        detailedlog: step.detailedlog || 0,
+        forcesync: step.forcesync || 0,
+      });
+      setSelectInterfaceDefaultValueEdit({
+        target: JSON.parse(`{"id":"iid", "value": "${step.iid || ""}" }`),
+        value: step.iid,
+        label: step.interfacename,
+      });
 
-    setSelectSyncTypeValueEdit({
-      target: JSON.parse(
-        `{"id":"synctype", "value": "${step.synctype || ""}" }`
-      ),
-      value: step.synctype,
-      label: step.synctype,
-    });
-    setCheckBoxForceSyncValue(
-      (!step.forcesync ? 0 : step.forcesync) === 1 ? true : false
-    );
-    setDateValueEdit(
-      (!step.syncdate ? "Na" : step.syncdate) !== "Na"
-        ? new Date(step.syncdate)
-        : null
-    );
-    setCheckBoxBatchValue(
-      (!step.batching ? 0 : step.batching) === 1 ? true : false
-    );
-    setCheckBoxLogsValue(
-      (!step.detailedlog ? 0 : step.detailedlog) === 1 ? true : false
-    );
-
+      setSelectSyncTypeValueEdit({
+        target: JSON.parse(
+          `{"id":"synctype", "value": "${step.synctype || ""}" }`
+        ),
+        value: step.synctype,
+        label: step.synctype,
+      });
+      setCheckBoxForceSyncValue(
+        (!step.forcesync ? 0 : step.forcesync) === 1 ? true : false
+      );
+      setDateValueEdit(
+        (!step.syncdate ? "Na" : step.syncdate) !== "Na"
+          ? new Date(step.syncdate)
+          : null
+      );
+      setCheckBoxBatchValue(
+        (!step.batching ? 0 : step.batching) === 1 ? true : false
+      );
+      setCheckBoxLogsValue(
+        (!step.detailedlog ? 0 : step.detailedlog) === 1 ? true : false
+      );
+    }
     // --------------------------
 
     if (Object.keys(errors).length === 0 && canSubmit) {
-      handleOpen();
+      openModal("create");
     }
 
     if (Object.keys(errorsEdit).length === 0 && canSubmitEdit) {
-      handleOpen();
+      openModal("update");
     }
-  }, [canSubmit, canSubmitEdit, errors, errorsEdit, group, isEditable, step]);
+  }, [
+    canSubmit,
+    errors,
+    group,
+    canSubmitEdit,
+    errorsEdit,
+    step,
+    stepDataSaveChangesClicked,
+  ]);
 
   // check if objects are equal
   const areObjectsEqual = (...objects) =>
@@ -384,7 +425,6 @@ function EditSteps() {
   };
 
   const handleChangeEdit = (e) => {
-    console.log(e);
     setCanSubmitEdit(false);
     const { id, value } = e.target;
     setValuesEdit({
@@ -482,6 +522,7 @@ function EditSteps() {
 
   const onSubmitEdit = () => {
     setErrorsEdit(validateEdit(valuesEdit));
+    setStepDataSaveChangesClicked(true);
     setCanSubmitEdit(true);
   };
 
@@ -491,9 +532,13 @@ function EditSteps() {
     setIsLoading(true);
     const data = await schedule.createStep({
       ...valuesEdit,
+      id: step.id,
       gid: group.id,
-      sequence: group.steps.length === 0 ? 1 : group.steps.length + 1,
+      sequence: step.sequence,
     });
+    setIsEditing(false)
+    setIsEditable(false)
+    setStepDataSaveChangesClicked(false);
     if (data.message === "updated successfully") {
       toast.success("Step was Updated Successfully");
       setIsLoading(false);
@@ -507,7 +552,7 @@ function EditSteps() {
     }
     getGroup(group.id);
     getInterfaces();
-    // resetEdit();
+    resetEdit();
   };
 
   return (
@@ -527,11 +572,8 @@ function EditSteps() {
       {isEditing ? (
         // update form
         <>
-          <form
-            className="myForms"
-            ref={step_form}
-            onSubmit={(e) => e.preventDefault()}
-          >
+          {false ? "update form" : ""}
+          <form className="myForms" onSubmit={(e) => e.preventDefault()}>
             <div className="row">
               <div className="col-md-8">
                 <div className="form-group row">
@@ -787,6 +829,11 @@ function EditSteps() {
                   onClick={() => {
                     setIsEditing(false);
                     setIsEditable(false);
+                    setStepDataSaveChangesClicked(false);
+                    setErrors({});
+                    setErrorsEdit({});
+                    setCanSubmit(false);
+                    setCanSubmitEdit(false);
                   }}
                   className="btn btn-dark btn-icon-text"
                 >
@@ -806,7 +853,15 @@ function EditSteps() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setIsEditing(false)}
+                  onClick={() => {
+                    setIsEditing(false);
+                    setIsEditable(false);
+                    setStepDataSaveChangesClicked(false);
+                    setErrors({});
+                    setErrorsEdit({});
+                    setCanSubmit(false);
+                    setCanSubmitEdit(false);
+                  }}
                   className="btn btn-dark btn-icon-text"
                 >
                   <i className="ti-close btn-icon-prepend"></i>
@@ -994,6 +1049,7 @@ function EditSteps() {
                           id="batchsize"
                           placeholder="Enter Batch Size"
                           onChange={handleChange}
+                          // defaultValue={null}
                           inputProps={{
                             type: "number",
                             min: 0,
@@ -1062,9 +1118,9 @@ function EditSteps() {
         setOpen={setOpen}
         handleOpen={handleOpen}
         handleClose={handleClose}
-        handleYes={handleSubmit}
-        title={"Create Step?"}
-        description="Do you really wish to Create this Step? "
+        handleYes={handleOperation}
+        title={modalTitle}
+        description={modalDesc}
       />
       <OrderedSteps
         editable={location.pathname === "/ShowGroups/EditGroups/EditSteps"}
