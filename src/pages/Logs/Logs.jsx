@@ -298,166 +298,166 @@ function Logs() {
           Refresh
         </button>
       </div>
-      <form className="myForms">
-        <div className="row mt-2 pt-4">
-          <div className="col-md-6">
-            <div className="form-group row">
-              <label className="col-sm-2 col-form-label">Date from</label>
-              <div className="col-sm-4">
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker
-                    inputId="startat"
-                    className="date-picker"
-                    value={dateValue1}
-                    onChange={dateHandleChange1}
-                    renderInput={(params) => (
-                      <TextField
-                        name="startat"
-                        sx={{
-                          height: "3rem",
-                          width: "100%",
-                          border: "none",
-                          // "&>.MuiInputBase-root": {
-                          //   position: "static",
-                          //   border: errors.startat && "1px solid #d32f2f",
-                          // },
-                          // "&>.MuiInputBase-root:hover": {
-                          //   border: errors.startat && "1px solid #d32f2f",
-                          // },
-                        }}
-                        {...params}
-                      />
-                    )}
-                  />
-                </LocalizationProvider>
-                {/* {errors.startat && (
+      <div className="body">
+        <form className="myForms">
+          <div className="row mt-2 pt-4">
+            <div className="col-md-6">
+              <div className="form-group row">
+                <label className="col-sm-2 col-form-label">Date from</label>
+                <div className="col-sm-4">
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      inputId="startat"
+                      className="date-picker"
+                      value={dateValue1}
+                      onChange={dateHandleChange1}
+                      renderInput={(params) => (
+                        <TextField
+                          name="startat"
+                          sx={{
+                            height: "3rem",
+                            width: "100%",
+                            border: "none",
+                            // "&>.MuiInputBase-root": {
+                            //   position: "static",
+                            //   border: errors.startat && "1px solid #d32f2f",
+                            // },
+                            // "&>.MuiInputBase-root:hover": {
+                            //   border: errors.startat && "1px solid #d32f2f",
+                            // },
+                          }}
+                          {...params}
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
+                  {/* {errors.startat && (
                   <p className="helperText">{errors.startat}</p>
                 )} */}
-              </div>
-              <label className="col-sm-1 col-form-label">to</label>
-              <div className="col-sm-4">
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker
-                    inputId="completedat"
-                    className="date-picker"
-                    value={dateValue2}
-                    onChange={dateHandleChange2}
-                    renderInput={(params) => (
-                      <TextField
-                        name="completedat"
-                        sx={{
-                          height: "3rem",
-                          width: "100%",
-                          border: "none",
-                          // "&>.MuiInputBase-root": {
-                          //   position: "static",
-                          //   border: errors.completedat && "1px solid #d32f2f",
-                          // },
-                          // "&>.MuiInputBase-root:hover": {
-                          //   border: errors.completedat && "1px solid #d32f2f",
-                          // },
-                        }}
-                        {...params}
-                      />
-                    )}
-                  />
-                </LocalizationProvider>
-                {/* {errors.completedat && (
+                </div>
+                <label className="col-sm-1 col-form-label">to</label>
+                <div className="col-sm-4">
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      inputId="completedat"
+                      className="date-picker"
+                      value={dateValue2}
+                      onChange={dateHandleChange2}
+                      renderInput={(params) => (
+                        <TextField
+                          name="completedat"
+                          sx={{
+                            height: "3rem",
+                            width: "100%",
+                            border: "none",
+                            // "&>.MuiInputBase-root": {
+                            //   position: "static",
+                            //   border: errors.completedat && "1px solid #d32f2f",
+                            // },
+                            // "&>.MuiInputBase-root:hover": {
+                            //   border: errors.completedat && "1px solid #d32f2f",
+                            // },
+                          }}
+                          {...params}
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
+                  {/* {errors.completedat && (
                   <p className="helperText">{errors.completedat}</p>
                 )} */}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="col-md-6">
-            <div className="form-group row">
-              <label className="col-sm-3 col-form-label">Job Group</label>
-              <div className="col-sm-9">
-                <Select
-                  styles={constants.reactSelectStyles(
-                    // errors.gid,
-                    false,
-                    selectJobGroupValue.value
-                  )}
-                  inputId="gid"
-                  options={filteredOptionsForJobGroups}
-                  value={selectJobGroupValue}
-                  onChange={handleChange}
-                  className="search-options"
-                  placeholder="Select Job Group..."
-                  defaultValue={jobGroupDefault}
-                />
-                {/* {errors.gid && <p className="helperText">{errors.gid}</p>} */}
+            <div className="col-md-6">
+              <div className="form-group row">
+                <label className="col-sm-3 col-form-label">Job Group</label>
+                <div className="col-sm-9">
+                  <Select
+                    styles={constants.reactSelectStyles(
+                      // errors.gid,
+                      false,
+                      selectJobGroupValue.value
+                    )}
+                    inputId="gid"
+                    options={filteredOptionsForJobGroups}
+                    value={selectJobGroupValue}
+                    onChange={handleChange}
+                    className="search-options"
+                    placeholder="Select Job Group..."
+                    defaultValue={jobGroupDefault}
+                  />
+                  {/* {errors.gid && <p className="helperText">{errors.gid}</p>} */}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="col-md-5">
-            <div className="form-group row">
-              <label className="col-sm-3 col-form-label">Interface</label>
-              <div className="col-sm-9">
-                <Select
-                  styles={constants.reactSelectStyles(
-                    // errors.iid,
-                    false,
-                    selectInterfaceValue.value
-                  )}
-                  inputId="iid"
-                  options={filteredOptionsForInterfaces}
-                  value={selectInterfaceValue}
-                  onChange={handleChange}
-                  className="search-options"
-                  placeholder="Select Interface..."
-                  defaultValue={interfaceDefault}
-                />
-                {/* {errors.iid && <p className="helperText">{errors.iid}</p>} */}
+            <div className="col-md-5">
+              <div className="form-group row">
+                <label className="col-sm-3 col-form-label">Interface</label>
+                <div className="col-sm-9">
+                  <Select
+                    styles={constants.reactSelectStyles(
+                      // errors.iid,
+                      false,
+                      selectInterfaceValue.value
+                    )}
+                    inputId="iid"
+                    options={filteredOptionsForInterfaces}
+                    value={selectInterfaceValue}
+                    onChange={handleChange}
+                    className="search-options"
+                    placeholder="Select Interface..."
+                    defaultValue={interfaceDefault}
+                  />
+                  {/* {errors.iid && <p className="helperText">{errors.iid}</p>} */}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="col-md-4">
-            <div className="form-group row">
-              <label className="col-sm-3 col-form-label">Status</label>
-              <div className="col-sm-9">
-                <Select
-                  styles={constants.reactSelectStyles(
-                    // errors.jobstatus,
-                    false,
-                    selectJobStatusValue.value
-                  )}
-                  inputId="jobstatus"
-                  options={filteredOptionsForJobStatus}
-                  value={selectJobStatusValue}
-                  onChange={handleChange}
-                  className="search-options"
-                  placeholder="Select Job Status..."
-                  defaultValue={jobStatusDefault}
-                />
-                {/* {errors.jobstatus && (
+            <div className="col-md-4">
+              <div className="form-group row">
+                <label className="col-sm-3 col-form-label">Status</label>
+                <div className="col-sm-9">
+                  <Select
+                    styles={constants.reactSelectStyles(
+                      // errors.jobstatus,
+                      false,
+                      selectJobStatusValue.value
+                    )}
+                    inputId="jobstatus"
+                    options={filteredOptionsForJobStatus}
+                    value={selectJobStatusValue}
+                    onChange={handleChange}
+                    className="search-options"
+                    placeholder="Select Job Status..."
+                    defaultValue={jobStatusDefault}
+                  />
+                  {/* {errors.jobstatus && (
                   <p className="helperText">{errors.jobstatus}</p>
                 )} */}
+                </div>
               </div>
             </div>
-          </div>
-          <div
-            className="col-md-3"
-            style={{ display: "flex", height: "fit-content", gap: "1rem" }}
-          >
-            <button
-              type="button"
-              className="btn btn-dark btn-rounded btn-fw ml-5"
-              onClick={handleSubmit}
+            <div
+              className="col-md-3"
+              style={{ display: "flex", height: "fit-content", gap: "1rem" }}
             >
-              Go!
-            </button>
-            <button
-              type="button"
-              className="btn btn-secondary btn-rounded btn-fw"
-              onClick={reset}
-            >
-              Reset
-            </button>
+              <button
+                type="button"
+                className="btn btn-dark btn-rounded btn-fw ml-5"
+                onClick={handleSubmit}
+              >
+                Go!
+              </button>
+              <button
+                type="button"
+                className="btn btn-secondary btn-rounded btn-fw"
+                onClick={reset}
+              >
+                Reset
+              </button>
+            </div>
           </div>
-        </div>
-      </form>
-      <div className="body">
+        </form>
         {isLoading && (
           <Stack sx={{ width: "100%", color: "#f02632" }} spacing={2}>
             <LinearProgress color="inherit" />

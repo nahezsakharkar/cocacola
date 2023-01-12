@@ -37,7 +37,18 @@ function EditGroups() {
   }, [locationState, navigate]);
 
   return (
-    <div className="addNewGroup" style={{ scale: ".8" }}>
+    <div
+      className="addNewGroup"
+      style={{
+        scale: ".8",
+        margin:
+          location.pathname === pathNames.Steps
+            ? "-130px -160px"
+            : location.pathname === pathNames.Filters
+            ? "-100px -160px"
+            : "-70px -160px",
+      }}
+    >
       <Loader open={isLoading} />
       <div className="title">
         <h1 className="Heading">Edit {group.groupname} Group</h1>

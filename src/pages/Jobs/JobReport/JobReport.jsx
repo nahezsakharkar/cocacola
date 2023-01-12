@@ -270,6 +270,8 @@ function JobReport() {
     <div className="data jobReport">
       <div className="title">
         <h1 className="Heading">Job Report</h1>
+      </div>
+      <div className="body">
         <form className="myForms">
           <div className="row mt-2 pt-4">
             <div className="col-md-6">
@@ -429,8 +431,6 @@ function JobReport() {
             </div>
           </div>
         </form>
-      </div>
-      <div className="body">
         {isLoading && (
           <Stack sx={{ width: "100%", color: "#f02632" }} spacing={2}>
             <LinearProgress color="inherit" />

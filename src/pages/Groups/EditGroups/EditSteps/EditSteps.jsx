@@ -98,6 +98,7 @@ function EditSteps() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setCanSubmit(false);
+    setCanSubmitEdit(false);
     setOpen(false);
   };
 
@@ -156,7 +157,11 @@ function EditSteps() {
     if (Object.keys(errors).length === 0 && canSubmit) {
       handleOpen();
     }
-  }, [canSubmit, errors, group, isEditable, step]);
+
+    if (Object.keys(errorsEdit).length === 0 && canSubmitEdit) {
+      handleOpen();
+    }
+  }, [canSubmit, canSubmitEdit, errors, errorsEdit, group, isEditable, step]);
 
   // check if objects are equal
   const areObjectsEqual = (...objects) =>
@@ -346,8 +351,40 @@ function EditSteps() {
     setStep(row);
   };
 
+  const resetEdit = () => {
+    setSelectInterfaceDefaultValueEdit({
+      target: JSON.parse(`{"id":"iid", "value": "${step.iid || ""}" }`),
+      value: step.iid,
+      label: step.interfacename,
+    });
+
+    setSelectSyncTypeValueEdit({
+      target: JSON.parse(
+        `{"id":"synctype", "value": "${step.synctype || ""}" }`
+      ),
+      value: step.synctype,
+      label: step.synctype,
+    });
+    setCheckBoxForceSyncValue(
+      (!step.forcesync ? 0 : step.forcesync) === 1 ? true : false
+    );
+    setDateValueEdit(
+      (!step.syncdate ? "Na" : step.syncdate) !== "Na"
+        ? new Date(step.syncdate)
+        : null
+    );
+    setCheckBoxBatchValue(
+      (!step.batching ? 0 : step.batching) === 1 ? true : false
+    );
+    setCheckBoxLogsValue(
+      (!step.detailedlog ? 0 : step.detailedlog) === 1 ? true : false
+    );
+
+    setValuesEdit(defaultValuesEdit);
+  };
+
   const handleChangeEdit = (e) => {
-    console.log(e)
+    console.log(e);
     setCanSubmitEdit(false);
     const { id, value } = e.target;
     setValuesEdit({
@@ -444,7 +481,7 @@ function EditSteps() {
   };
 
   const onSubmitEdit = () => {
-    setErrorsEdit(validate(values));
+    setErrorsEdit(validateEdit(valuesEdit));
     setCanSubmitEdit(true);
   };
 
@@ -721,7 +758,7 @@ function EditSteps() {
               <>
                 <button
                   type="button"
-                  onClick={onSubmit}
+                  onClick={onSubmitEdit}
                   className="btn btn-dark btn-icon-text"
                   disabled={
                     areObjectsEqual(defaultValuesEdit, valuesEdit)
@@ -739,7 +776,7 @@ function EditSteps() {
                 >
                   <button
                     type="button"
-                    onClick={reset}
+                    onClick={resetEdit}
                     className="btn btn-secondary btn-icon-text"
                   >
                     Reset

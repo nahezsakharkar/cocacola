@@ -1,5 +1,22 @@
-.main-panel {
-  scale: .9;
+@media (min-width: 992px) {
+  .main-panel {
+    margin-left: 190px !important;
+    width: calc(100% - 190px) !important;
+  }
+}
+
+.content-wrapper {
+  scale: 0.9;
+  padding: 0rem 2.5rem;
+}
+
+.existingGroups, .activeJobs, .jobReport, .logs {
+  margin-bottom: -35px;
+}
+
+.footer {
+  scale: 0.9;
+  padding: 25px 1rem;
 }
 
 .data,
@@ -27,13 +44,16 @@
 
 .existingGroups .body,
 .activeJobs .body {
-  height: 406.5px;
+  height: 562.1px;
   scale: 0.9;
 }
 
 .jobReport .body {
-  height: 423.5px;
-  /* scale: 0.9; */
+  display: flex;
+  flex-direction: column;
+  height:  765.5px;
+  scale: 0.9;
+  margin-top: -50px;
 }
 
 .dashboard .body,
@@ -45,8 +65,11 @@
 }
 
 .logs .body {
-  height: 527.5px;
-  /* scale: 0.9; */
+  display: flex;
+  flex-direction: column;
+  height:  765.5px;
+  scale: 0.9;
+  margin-top: -45px;
 }
 
 .dashboard .body .connection,
