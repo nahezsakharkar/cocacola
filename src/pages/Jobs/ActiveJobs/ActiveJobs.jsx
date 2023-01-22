@@ -51,6 +51,12 @@ function ActiveJobs() {
       width: 300,
     },
     {
+      field: "companyid",
+      headerName: "Company Id",
+      // flex: 0.4,
+      width: 150,
+    },
+    {
       field: "startat",
       headerName: "Started",
       // flex: 1.3,

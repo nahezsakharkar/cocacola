@@ -252,6 +252,12 @@ function Logs() {
       width: 300,
     },
     {
+      field: "companyid",
+      headerName: "Company Id",
+      // flex: 0.4,
+      width: 150,
+    },
+    {
       field: "remarks",
       headerName: "Remarks",
       // flex: 3,

@@ -122,6 +122,8 @@ function OrderedSteps(props) {
         return { ...items, stepSequence: seq + 1 };
       });
 
+      console.log(rows)
+
   const columns = [
     { field: "stepSequence", headerName: "Step", flex: 0.8, width: 150 },
     {
@@ -129,6 +131,12 @@ function OrderedSteps(props) {
       headerName: "Interface",
       flex: 1.4,
       width: 350,
+    },
+    {
+      field: "companyid",
+      headerName: "Company Id",
+      flex: 0.8,
+      // width: 150,
     },
     {
       field: "action",

@@ -66,7 +66,7 @@ function Filters(props) {
     {
       field: "operator",
       headerName: "Operator",
-      flex: 0.5,
+      flex: 0.8,
       width: 150,
     },
     {
@@ -75,10 +75,16 @@ function Filters(props) {
       flex: 1,
       width: 300,
     },
+    // {
+    //   field: "companyid",
+    //   headerName: "Company Id",
+    //   flex: 0.4,
+    //   // width: 150,
+    // },
     {
       field: "action",
       headerName: "Action",
-      flex: 1.2,
+      flex: 1,
       width: 250,
       renderCell: (params) => {
         return (
@@ -111,6 +117,8 @@ function Filters(props) {
     Object.keys([filters].flat()[0]).length === 0
       ? [].flat()
       : [filters].flat();
+
+  // console.log(rows)
 
   return (
     <div className="filters mt-3">

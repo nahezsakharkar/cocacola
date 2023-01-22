@@ -143,6 +143,12 @@ function ShowGroups() {
       // width: 150,
     },
     {
+      field: "companyid",
+      headerName: "Company Id",
+      flex: 0.4,
+      // width: 140,
+    },
+    {
       field: "action",
       headerName: "Action",
       flex: 1.5,
