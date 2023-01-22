@@ -9,6 +9,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Tooltip from "@mui/material/Tooltip";
 
+import auth from "../../../../services/authService";
 import schedule from "../../../../services/scheduleService";
 import OurModal from "../../../../components/Common/OurModal/OurModal";
 import OrderedSteps from "../../../../components/Groups/AddNewGroup/AddStep/OrderedSteps";
@@ -21,6 +22,8 @@ function AddStep() {
 
   var { group } = location.state;
 
+  const [admin, setAdmin] = useState({});
+  const [companyId, setCompanyId] = useState([]);
   const [groupInfo, setGroupInfo] = useState({});
   const [interfaces, setInterfaces] = useState([]);
   const [steps, setSteps] = useState([]);
@@ -50,6 +53,12 @@ function AddStep() {
     label: "Select Sync Type...",
   });
 
+  const [selectCountryCodeValue, setSelectCountryCodeValue] = useState({
+    target: JSON.parse('{"id":"companyid", "value":""}'),
+    value: "",
+    label: "Select Country Code...",
+  });
+
   const [values, setValues] = useState(defaultValues);
   const [dateValue, setDateValue] = useState(null);
   const [errors, setErrors] = useState({});
@@ -64,11 +73,16 @@ function AddStep() {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  async function getAdmin() {
+    const data = await auth.getCurrentUserDetails();
+    setAdmin(data.payload);
+  }
+
   async function getGroupInfo(id) {
     const data = await schedule.getGroupById(id);
     setGroupInfo(data.payload);
-    setSteps(data.payload.steps)
-    setSequence(data.payload.sids)
+    setSteps(data.payload.steps);
+    setSequence(data.payload.sids);
   }
 
   async function getInterfaces() {
@@ -77,6 +91,8 @@ function AddStep() {
   }
 
   useEffect(() => {
+    getAdmin();
+    setCompanyId(admin.companyid ? admin.companyid.split(",") : []);
     getInterfaces();
     if (group.id) {
       getGroupInfo(group.id);
@@ -86,7 +102,7 @@ function AddStep() {
     if (Object.keys(errors).length === 0 && canSubmit) {
       handleOpen();
     }
-  }, [canSubmit, errors, group, navigate]);
+  }, [admin.companyid, canSubmit, errors, group, navigate]);
 
   const reset = () => {
     step_form.current.reset();
@@ -99,6 +115,11 @@ function AddStep() {
       target: JSON.parse('{"id":"synctype", "value":""}'),
       value: "",
       label: "Select Sync Type...",
+    });
+    setSelectCountryCodeValue({
+      target: JSON.parse('{"id":"companyid", "value":""}'),
+      value: "",
+      label: "Select Country Code...",
     });
     setDateValue(null);
     setValues(defaultValues);
@@ -116,6 +137,34 @@ function AddStep() {
       target: JSON.parse(`{"id":"iid", "value":"${item.id}"}`),
       value: item.id,
       label: item.name,
+    };
+  });
+
+  const convertToArrayOfObjects = (arr) => {
+    let newArr = [];
+    for (let i = 0; i < arr.length; i++) {
+      newArr.push({
+        id: arr[i],
+        country:
+          arr[i] === "1428"
+            ? "SriLanka"
+            : arr[i] === "1429"
+            ? "Nepal A"
+            : arr[i] === "1430"
+            ? "Nepal B"
+            : "Bangladesh",
+      });
+    }
+    return newArr;
+  };
+
+  const optionsForCompanyId = convertToArrayOfObjects(companyId).map(function (
+    item
+  ) {
+    return {
+      target: JSON.parse(`{"id":"companyid", "value":"${item.id}"}`),
+      value: item.id,
+      label: item.country + " (" + item.id + ") ",
     };
   });
 
@@ -171,6 +220,9 @@ function AddStep() {
 
     if (e.target.id === "synctype") {
       setSelectSyncTypeValue({ id: id, value: value, label: e.label });
+    }
+    if (e.target.id === "companyid") {
+      setSelectCountryCodeValue({ id: id, value: value, label: e.label });
     }
   };
 
@@ -245,9 +297,13 @@ function AddStep() {
           Adding Steps into {group.groupname} Group
         </h4>
       </div>
-      <form className="myForms" ref={step_form} onSubmit={(e) => e.preventDefault()}>
+      <form
+        className="myForms"
+        ref={step_form}
+        onSubmit={(e) => e.preventDefault()}
+      >
         <div className="row">
-          <div className="col-md-8">
+          <div className="col-md-6">
             <div className="form-group row">
               <label className="col-sm-3 col-form-label">
                 Interface <span className="text-danger">*</span>
@@ -274,22 +330,35 @@ function AddStep() {
               </div>
             </div>
           </div>
-          {/* <div className="col-md-6">
-          <div className="form-group row">
-            <label className="col-sm-3 col-form-label">
-              Company Code<span className="text-danger">*</span>
-            </label>
-            <div className="col-sm-9">
-              <select className="form-control">
-                <option>Select Company Code</option>
-                <option>1429</option>
-                <option>1430</option>
-                <option>1364</option>
-                <option>1428</option>
-              </select>
+          <div className="col-md-6">
+            <div className="form-group row">
+              <label className="col-sm-3 col-form-label">
+                Company Code<span className="text-danger">*</span>
+              </label>
+              <div className="col-sm-9">
+                <Select
+                  styles={constants.reactSelectStyles(
+                    errors.companyid,
+                    selectCountryCodeValue.value
+                  )}
+                  inputId="companyid"
+                  options={optionsForCompanyId}
+                  value={selectCountryCodeValue}
+                  onChange={handleChange}
+                  className="search-options"
+                  placeholder="Select Company Code.."
+                  defaultValue={{
+                    target: JSON.parse('{"id":"companyid", "value":""}'),
+                    value: "",
+                    label: "Select Company Code...",
+                  }}
+                />
+                {errors.companyid && (
+                  <p className="helperText">{errors.companyid}</p>
+                )}
+              </div>
             </div>
           </div>
-        </div> */}
         </div>
         <div className="row">
           <div className="col-md-6">

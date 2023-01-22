@@ -56,7 +56,8 @@ export async function getAllInterfaces() {
 
     const response = await http.get(baseURL + "api/interfaces/all", {
         headers: {
-            Authorization: user.jwtToken
+            Authorization: user.jwtToken,
+            Companyid: user.companyid
         }
     }
     );
@@ -65,8 +66,9 @@ export async function getAllInterfaces() {
 
 export async function createStep(formValues) {
     const user = JSON.parse(localStorage.getItem(sessionKey))
+    console.log({ ...formValues, companyid: user.companyid })
     const response = await http.post(baseURL + "api/steps/save",
-        formValues, {
+        { ...formValues, companyid: user.companyid }, {
         headers: {
             Authorization: user.jwtToken
         }
@@ -150,7 +152,8 @@ export async function getGroupsByScheduleStatus(scheduledStatus) {
     const response = await http.get(baseURL + "api/groups/byScheduledStatus?scheduledstatus=" + scheduledStatus,
         {
             headers: {
-                Authorization: user.jwtToken
+                Authorization: user.jwtToken,
+                Companyid: user.companyid
             }
         }
     );
@@ -175,7 +178,8 @@ export async function getActiveJobsQueries() {
     const response = await http.get(baseURL + "api/joblogs/report?jobstatus=Running",
         {
             headers: {
-                Authorization: user.jwtToken
+                Authorization: user.jwtToken,
+                Companyid: user.companyid
             }
         }
     );
@@ -216,7 +220,8 @@ export async function getAllJobLogs(pageSize) {
     const response = await http.get(baseURL + "api/joblogs/all?page=0&size=" + pageSize,
         {
             headers: {
-                Authorization: user.jwtToken
+                Authorization: user.jwtToken,
+                Companyid: user.companyid
             }
         }
     );
@@ -233,7 +238,8 @@ export async function getJoblogsQueries(queries) {
     const response = await http.get(baseURL + "api/joblogs/all?" + query,
         {
             headers: {
-                Authorization: user.jwtToken
+                Authorization: user.jwtToken,
+                Companyid: user.companyid
             }
         }
     );

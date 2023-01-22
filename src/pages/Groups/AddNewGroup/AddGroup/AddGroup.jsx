@@ -228,7 +228,7 @@ function AddGroup() {
       frequency: Number(values.frequency),
       groupname: capitalize(values.groupname),
       testmode: checkBoxValue ? 1 : 0,
-      companyid: admin["companyid"],
+      // companyid: admin["companyid"],
       userid: admin["id"],
     });
     if (data.message === "updated successfully") {

@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import auth from "../../services/authService";
 
 function Header() {
-  const [companyId, setCompanyId] = useState(0);
-  const [country, setCountry] = useState("");
+  const [companyId, setCompanyId] = useState([]);
   const [admin, setAdmin] = useState({});
 
   async function getAdmin() {
@@ -14,15 +13,8 @@ function Header() {
 
   useEffect(() => {
     getAdmin();
-    setCompanyId(admin.companyid);
-    if (companyId === 1429 || companyId === 1430) {
-      setCountry("np");
-    } else if (companyId === 1428) {
-      setCountry("lk");
-    } else if (companyId === 1364) {
-      setCountry("bd");
-    }
-  }, [admin.companyid, companyId]);
+    setCompanyId(admin.companyid ? admin.companyid.split(",") : []);
+  }, [admin.companyid]);
 
   return (
     <nav className="navbar col-lg-12 col-12 p-0 d-flex flex-row">
@@ -67,13 +59,33 @@ function Header() {
           </li>
         </ul>
         <ul className="navbar-nav navbar-nav-right">
-          <li className="nav-item">
-            <i
-              className={`flag-icon flag-icon-${country} icon-md`}
-              // style={{ fontSize: "1.75rem" }}
-            ></i>{" "}
-            {country ? country.toUpperCase() : null}
-          </li>
+          {companyId.includes("1428") && (
+            <li className="nav-item">
+              <i
+                className={`flag-icon flag-icon-lk icon-md`}
+                // style={{ fontSize: "1.75rem" }}
+              ></i>{" "}
+              LK
+            </li>
+          )}
+          {companyId.includes("1429" || "1430") && (
+            <li className="nav-item">
+              <i
+                className={`flag-icon flag-icon-np icon-md`}
+                // style={{ fontSize: "1.75rem" }}
+              ></i>{" "}
+              NP
+            </li>
+          )}
+          {companyId.includes("1364") && (
+            <li className="nav-item">
+              <i
+                className={`flag-icon flag-icon-bd icon-md`}
+                // style={{ fontSize: "1.75rem" }}
+              ></i>{" "}
+              BD
+            </li>
+          )}
 
           {/* <li className="nav-item dropdown">
             <a

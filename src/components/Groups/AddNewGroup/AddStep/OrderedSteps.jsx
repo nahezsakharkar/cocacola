@@ -28,7 +28,7 @@ function OrderedSteps(props) {
 
   const [fromIndex, setFromIndex] = useState(0);
   const [toIndex, setToIndex] = useState(0);
-  const [eForReset, SETEForReset] = useState();
+  const [eForReset, SetEForReset] = useState();
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -43,7 +43,7 @@ function OrderedSteps(props) {
   };
 
   const handleSequenceChange = (e, row) => {
-    SETEForReset(e);
+    SetEForReset(e);
     setFromIndex(row.stepSequence - 1);
     setToIndex(
       e.target.value > rows.length
