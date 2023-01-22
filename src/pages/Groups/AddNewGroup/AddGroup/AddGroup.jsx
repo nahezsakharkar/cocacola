@@ -17,6 +17,7 @@ import constants from "../../../../custom/constants/constants";
 
 function AddGroup() {
   const [admin, setAdmin] = useState({});
+  const [companyId, setCompanyId] = useState([]);
 
   const defaultValues = {
     groupname: "",
@@ -57,6 +58,12 @@ function AddGroup() {
   const [selectFrequencyStatus, setSelectFrequencyType] =
     useState(frequencyTypeDefault);
 
+  const [selectCountryCodeValue, setSelectCountryCodeValue] = useState({
+    target: JSON.parse('{"id":"companyid", "value":""}'),
+    value: "",
+    label: "Select Country Code...",
+  });
+
   const [values, setValues] = useState(defaultValues);
   const [dateValue, setDateValue] = useState(null);
   const [checkBoxValue, setCheckBoxValue] = useState(false);
@@ -80,10 +87,11 @@ function AddGroup() {
 
   useEffect(() => {
     getAdmin();
+    setCompanyId(admin.companyid ? admin.companyid.split(",") : []);
     if (Object.keys(errors).length === 0 && canSubmit) {
       handleOpen();
     }
-  }, [canSubmit, errors]);
+  }, [admin.companyid, canSubmit, errors]);
 
   const group_form = useRef(null);
   const reset = () => {
@@ -91,6 +99,11 @@ function AddGroup() {
     setSelectScheduledStatus(scheduledStatusDefault);
     setSelectScheduled(scheduledDefault);
     setSelectFrequencyType(frequencyTypeDefault);
+    setSelectCountryCodeValue({
+      target: JSON.parse('{"id":"companyid", "value":""}'),
+      value: "",
+      label: "Select Country Code...",
+    });
     setDateValue(null);
     setCheckBoxValue(false);
     setValues(defaultValues);
@@ -105,6 +118,34 @@ function AddGroup() {
       day = ("0" + date.getDate()).slice(-2);
     return [date.getFullYear(), mnth, day].join("-");
   }
+
+  const convertToArrayOfObjects = (arr) => {
+    let newArr = [];
+    for (let i = 0; i < arr.length; i++) {
+      newArr.push({
+        id: arr[i],
+        country:
+          arr[i] === "1428"
+            ? "SriLanka"
+            : arr[i] === "1429"
+            ? "Nepal A"
+            : arr[i] === "1430"
+            ? "Nepal B"
+            : "Bangladesh",
+      });
+    }
+    return newArr;
+  };
+
+  const optionsForCompanyId = convertToArrayOfObjects(companyId).map(function (
+    item
+  ) {
+    return {
+      target: JSON.parse(`{"id":"companyid", "value":"${item.id}"}`),
+      value: item.id,
+      label: item.country + " (" + item.id + ") ",
+    };
+  });
 
   const optionsForStatus = [
     {
@@ -182,6 +223,10 @@ function AddGroup() {
     if (e.target.id === "frequencytype") {
       setSelectFrequencyType({ id: id, value: value, label: e.label });
     }
+
+    if (e.target.id === "companyid") {
+      setSelectCountryCodeValue({ id: id, value: value, label: e.label });
+    }
   };
 
   const validate = (values) => {
@@ -250,6 +295,37 @@ function AddGroup() {
     <div className="card-body">
       <Loader open={isLoading} />
       <form className="myForms" ref={group_form}>
+        <div className="row">
+          <div className="col-md-8">
+            <div className="form-group row">
+              <label className="col-sm-3 col-form-label">
+                Company Code<span className="text-danger">*</span>
+              </label>
+              <div className="col-sm-9">
+                <Select
+                  styles={constants.reactSelectStyles(
+                    errors.companyid,
+                    selectCountryCodeValue.value
+                  )}
+                  inputId="companyid"
+                  options={optionsForCompanyId}
+                  value={selectCountryCodeValue}
+                  onChange={handleChange}
+                  className="search-options"
+                  placeholder="Select Company Code.."
+                  defaultValue={{
+                    target: JSON.parse('{"id":"companyid", "value":""}'),
+                    value: "",
+                    label: "Select Company Code...",
+                  }}
+                />
+                {errors.companyid && (
+                  <p className="helperText">{errors.companyid}</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="row">
           <div className="col-md-6">
             <div className="form-group row">
