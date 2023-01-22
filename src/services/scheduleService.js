@@ -191,7 +191,8 @@ export async function getJoblogReportsAll() {
     const response = await http.get(baseURL + "api/joblogs/report",
         {
             headers: {
-                Authorization: user.jwtToken
+                Authorization: user.jwtToken,
+                Companyid: user.companyid
             }
         }
     );
@@ -208,7 +209,8 @@ export async function getJoblogReportsQueries(queries) {
     const response = await http.get(baseURL + "api/joblogs/report?" + query,
         {
             headers: {
-                Authorization: user.jwtToken
+                Authorization: user.jwtToken,
+                Companyid: user.companyid
             }
         }
     );
