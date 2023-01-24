@@ -66,9 +66,8 @@ export async function getAllInterfaces() {
 
 export async function createStep(formValues) {
     const user = JSON.parse(localStorage.getItem(sessionKey))
-    console.log({ ...formValues, companyid: user.companyid })
     const response = await http.post(baseURL + "api/steps/save",
-        { ...formValues, companyid: user.companyid }, {
+        formValues, {
         headers: {
             Authorization: user.jwtToken
         }

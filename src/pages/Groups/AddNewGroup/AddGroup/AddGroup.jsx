@@ -232,6 +232,10 @@ function AddGroup() {
   const validate = (values) => {
     const errors = {};
 
+    if (!values.companyid) {
+      errors.companyid = "Company Id is Required!";
+    }
+
     if (!values.groupname) {
       errors.groupname = "Group Name is Required!";
     }
@@ -268,6 +272,7 @@ function AddGroup() {
 
   async function handleSubmit() {
     setIsLoading(true);
+    console.log(values)
     const data = await schedule.createGroup({
       ...values,
       frequency: Number(values.frequency),
