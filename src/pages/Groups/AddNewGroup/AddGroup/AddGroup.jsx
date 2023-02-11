@@ -117,7 +117,7 @@ function AddGroup() {
     let date = new Date(str);
     let month = ("0" + (date.getMonth() + 1)).slice(-2);
     let day = ("0" + date.getDate()).slice(-2);
-    let hour = date.getHours();
+    let hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
     let minutes =
       date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
     let justDate = [date.getFullYear(), month, day].join("-");
@@ -256,7 +256,7 @@ function AddGroup() {
 
     if (values.startdate === "") {
       errors.startdate = "Start Date is Required!";
-    } else if (convertFullDateToNormalDate(values.startdate).length !== 10) {
+    } else if (convertFullDateToNormalDate(values.startdate).length !== 16) {
       errors.startdate = "Invalid Date!";
     }
 
