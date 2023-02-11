@@ -10,6 +10,7 @@ export async function login(formValues) {
         formValues
     );
     localStorage.setItem(sessionKey, JSON.stringify(response.data));
+    return response.data
 }
 
 export function logout() {

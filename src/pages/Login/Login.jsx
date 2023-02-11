@@ -48,8 +48,39 @@ function Login() {
 
   const handleSubmit = async () => {
     try {
-      await auth.login(values);
+      let data = await auth.login(values);
       setIsLoading(false);
+      // if (data.companyid === "1428,1429,1430,1364") {
+      //   window.location.href = "https://twitter.com/";
+      // } else if (data.companyid === "1428,1429,1430") {
+      //   window.location.href = "https://gmail.com/";
+      // } else if (data.companyid === "1428,1429,1364") {
+      //   window.location.href = "https://amazon.in/";
+      // } else if (data.companyid === "1428,1430,1364") {
+      //   window.location.href = "https://flipkart.com/";
+      // } else if (data.companyid === "1429,1430,1364") {
+      //   window.location.href = "https://myntra.com/";
+      // } else if (data.companyid === "1428,1429") {
+      //   window.location.href = "https://olx.in/";
+      // } else if (data.companyid === "1428,1430") {
+      //   window.location.href = "https://zomato.com/";
+      // } else if (data.companyid === "1428,1364") {
+      //   window.location.href = "https://swiggy.com/";
+      // } else if (data.companyid === "1429,1430") {
+      //   window.location.href = "https://bookmyshow.com/";
+      // } else if (data.companyid === "1429,1364") {
+      //   window.location.href = "https://yatra.com/";
+      // } else if (data.companyid === "1430,1364") {
+      //   window.location.href = "https://snaodeal.com/";
+      // } else if (data.companyid === "1428") {
+      //   window.location.href = "https://facebook.com/";
+      // } else if (data.companyid === "1429") {
+      //   window.location.href = "https://google.com/";
+      // } else if (data.companyid === "1430") {
+      //   window.location.href = "https://riotgames.com/";
+      // } else if (data.companyid === "1364") {
+      //   window.location.href = "https://india.gov.in/";
+      // } 
       navigate(location.state || "/");
     } catch (e) {
       setIsLoading(false);
