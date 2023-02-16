@@ -274,12 +274,10 @@ function AddGroup() {
   const onSubmit = () => {
     setErrors(validate(values));
     setCanSubmit(true);
-    console.log(values);
   };
 
   async function handleSubmit() {
     setIsLoading(true);
-    console.log(values);
     const data = await schedule.createGroup({
       ...values,
       frequency: Number(values.frequency),

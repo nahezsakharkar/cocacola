@@ -6,7 +6,7 @@ import { TextField } from "@mui/material";
 import Select from "react-select";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import Tooltip from "@mui/material/Tooltip";
 
 // import auth from "../../../../services/authService";
@@ -149,10 +149,15 @@ function EditGroup() {
     str.replace(/^(.)|\s+(.)/g, (c) => c.toUpperCase());
 
   function convertFullDateToNormalDate(str) {
-    var date = new Date(str),
-      mnth = ("0" + (date.getMonth() + 1)).slice(-2),
-      day = ("0" + date.getDate()).slice(-2);
-    return [date.getFullYear(), mnth, day].join("-");
+    let date = new Date(str);
+    let month = ("0" + (date.getMonth() + 1)).slice(-2);
+    let day = ("0" + date.getDate()).slice(-2);
+    let hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+    let minutes =
+      date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+    let justDate = [date.getFullYear(), month, day].join("-");
+    let justTime = [hour, minutes].join(":");
+    return justDate + " " + justTime;
   }
 
   const optionsForStatus = [
@@ -257,7 +262,7 @@ function EditGroup() {
 
     if (values.startdate === "") {
       errors.startdate = "Start Date is Required!";
-    } else if (convertFullDateToNormalDate(values.startdate).length !== 10) {
+    } else if (convertFullDateToNormalDate(values.startdate).length !== 16) {
       errors.startdate = "Invalid Date!";
     }
 
@@ -394,7 +399,7 @@ function EditGroup() {
               </label>
               <div className="col-sm-9">
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker
+                  <DateTimePicker
                     inputId="startdate"
                     className="date-picker"
                     value={dateValue}
