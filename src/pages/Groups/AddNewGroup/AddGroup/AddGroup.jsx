@@ -92,7 +92,7 @@ function AddGroup() {
       admin.companyid
         ? admin.companyid.includes(",")
           ? admin.companyid.split(",")
-          : admin.companyid
+          : [admin.companyid]
         : []
     );
     if (Object.keys(errors).length === 0 && canSubmit) {
@@ -136,14 +136,12 @@ function AddGroup() {
     for (let i = 0; i < arr.length; i++) {
       newArr.push({
         id: arr[i],
-        country:
-          arr[i] === "1428"
-            ? "SriLanka"
-            : arr[i] === "1429"
-            ? "Nepal A"
-            : arr[i] === "1430"
-            ? "Nepal B"
-            : "Bangladesh",
+        country: () => {
+          if (arr[i] === "1364") return "Bangladesh";
+          if (arr[i] === "1428") return "SriLanka";
+          if (arr[i] === "1429") return "Nepal A";
+          if (arr[i] === "1430") return "Nepal B";
+        },
       });
     }
     return newArr;
@@ -155,7 +153,7 @@ function AddGroup() {
     return {
       target: JSON.parse(`{"id":"companyid", "value":"${item.id}"}`),
       value: item.id,
-      label: item.country + " (" + item.id + ") ",
+      label: item.country() + " (" + item.id + ") ",
     };
   });
 
@@ -212,10 +210,19 @@ function AddGroup() {
   const handleChange = (e) => {
     setCanSubmit(false);
     const { id, value } = e.target;
-    setValues({
-      ...values,
-      [id]: value,
-    });
+
+    if (companyId.length > 1) {
+      setValues({
+        ...values,
+        [id]: value,
+      });
+    } else {
+      setValues({
+        ...values,
+        [id]: value,
+        companyid: companyId[0],
+      });
+    }
 
     if (e.target.id === "testmode") {
       setValues({
@@ -236,16 +243,20 @@ function AddGroup() {
       setSelectFrequencyType({ id: id, value: value, label: e.label });
     }
 
-    if (e.target.id === "companyid") {
-      setSelectCountryCodeValue({ id: id, value: value, label: e.label });
+    if (companyId.length > 1) {
+      if (e.target.id === "companyid") {
+        setSelectCountryCodeValue({ id: id, value: value, label: e.label });
+      }
     }
   };
 
   const validate = (values) => {
     const errors = {};
 
-    if (!values.companyid) {
-      errors.companyid = "Company Id is Required!";
+    if (companyId.length > 1) {
+      if (!values.companyid) {
+        errors.companyid = "Company Id is Required!";
+      }
     }
 
     if (!values.groupname) {
@@ -278,6 +289,14 @@ function AddGroup() {
   };
 
   const onSubmit = () => {
+    console.log({
+      ...values,
+      frequency: Number(values.frequency),
+      groupname: capitalize(values.groupname),
+      testmode: checkBoxValue ? 1 : 0,
+      // companyid: admin["companyid"],
+      userid: admin["id"],
+    });
     setErrors(validate(values));
     setCanSubmit(true);
   };
@@ -311,7 +330,7 @@ function AddGroup() {
     <div className="card-body">
       <Loader open={isLoading} />
       <form className="myForms" ref={group_form}>
-        {companyId.includes(",") || (
+        {companyId.length > 1 && (
           <div className="row">
             <div className="col-md-8">
               <div className="form-group row">
