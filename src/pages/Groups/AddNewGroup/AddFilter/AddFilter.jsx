@@ -70,7 +70,7 @@ function AddFilter() {
     {
       target: JSON.parse('{"id":"operator", "value":"EQUALS"}'),
       value: "EQUALS",
-      label: "EQUALS",
+      label: "=",
     },
     {
       target: JSON.parse('{"id":"operator", "value":"LIKE"}'),
@@ -80,22 +80,22 @@ function AddFilter() {
     {
       target: JSON.parse('{"id":"operator", "value":"LESS THAN"}'),
       value: "LESS THAN",
-      label: "LESS THAN",
+      label: "<",
     },
     {
       target: JSON.parse('{"id":"operator", "value":"LESS THAN EQUALS TO"}'),
       value: "LESS THAN EQUALS TO",
-      label: "LESS THAN EQUALS TO",
+      label: "<=",
     },
     {
       target: JSON.parse('{"id":"operator", "value":"GREATER THAN"}'),
       value: "GREATER THAN",
-      label: "GREATER THAN",
+      label: ">",
     },
     {
       target: JSON.parse('{"id":"operator", "value":"GREATER THAN EQUALS TO"}'),
       value: "GREATER THAN EQUALS TO",
-      label: "GREATER THAN EQUALS TO",
+      label: ">=",
     },
   ];
 

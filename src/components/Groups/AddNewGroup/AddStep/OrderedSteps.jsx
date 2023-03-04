@@ -122,8 +122,6 @@ function OrderedSteps(props) {
         return { ...items, stepSequence: seq + 1 };
       });
 
-      console.log(rows)
-
   const columns = [
     { field: "stepSequence", headerName: "Step", flex: 0.8, width: 150 },
     {
@@ -169,7 +167,7 @@ function OrderedSteps(props) {
               className="btn btn-warning btn-icon-text btn-sm"
               onClick={() =>
                 navigate(editable ? "/ShowGroups/EditGroups/EditFilters" : "/AddNewGroup/AddFilter", {
-                  state: { step: params.row, groupId: groupInfo.id },
+                  state: { step: params.row, groupId: groupInfo.id, group: groupInfo },
                 })
               }
             >

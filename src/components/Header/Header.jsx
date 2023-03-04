@@ -13,7 +13,13 @@ function Header() {
 
   useEffect(() => {
     getAdmin();
-    setCompanyId(admin.companyid ? admin.companyid.split(",") : []);
+    setCompanyId(
+      admin.companyid
+        ? admin.companyid.includes(",")
+          ? admin.companyid.split(",")
+          : admin.companyid
+        : []
+    );
   }, [admin.companyid]);
 
   return (
@@ -59,33 +65,80 @@ function Header() {
           </li>
         </ul>
         <ul className="navbar-nav navbar-nav-right">
+          {companyId.includes("1364") && (
+            <li className="nav-item">
+              {" "}
+              <i
+                className={`flag-icon flag-icon-bd icon-md`}
+                // style={{ fontSize: "1.75rem" }}
+              ></i>{" "}
+              <span>BD</span>
+              <br />
+              <ul
+                style={{
+                  textAlign: "center",
+                  lineHeight: "14px",
+                  marginTop: "5px",
+                }}
+              >
+                1364
+              </ul>
+            </li>
+          )}
           {companyId.includes("1428") && (
             <li className="nav-item">
               <i
                 className={`flag-icon flag-icon-lk icon-md`}
                 // style={{ fontSize: "1.75rem" }}
               ></i>{" "}
-              LK
+              <span>LK</span>
+              <br />
+              <ul
+                style={{
+                  textAlign: "center",
+                  lineHeight: "14px",
+                  marginTop: "5px",
+                }}
+              >
+                1428
+              </ul>
             </li>
           )}
-          {companyId.includes("1429" || "1430") && (
+
+          {/1429|1430/.test(companyId) && (
             <li className="nav-item">
               <i
                 className={`flag-icon flag-icon-np icon-md`}
                 // style={{ fontSize: "1.75rem" }}
               ></i>{" "}
-              NP
+              <span>NP</span>
+              <br />
+              <ul
+                style={{
+                  textAlign: "center",
+                  lineHeight: "14px",
+                  marginTop: "5px",
+                }}
+              >
+                {" "}
+                {companyId.includes("1429") && "1429"}
+                {/1429/.test(companyId) && /1430/.test(companyId) && ","}
+                {companyId.includes("1430") && "1430"}
+              </ul>
             </li>
           )}
-          {companyId.includes("1364") && (
+          {/* {companyId.includes("1430") && (
             <li className="nav-item">
+              {" "}
               <i
-                className={`flag-icon flag-icon-bd icon-md`}
+                className={`flag-icon flag-icon-np icon-md`}
                 // style={{ fontSize: "1.75rem" }}
               ></i>{" "}
-              BD
+              <span>NP</span>
+              <br />
+              <ul style={{ textAlign: "center", lineHeight: "14px" }}>1430</ul>
             </li>
-          )}
+          )} */}
 
           {/* <li className="nav-item dropdown">
             <a

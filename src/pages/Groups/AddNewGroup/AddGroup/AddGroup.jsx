@@ -88,7 +88,13 @@ function AddGroup() {
 
   useEffect(() => {
     getAdmin();
-    setCompanyId(admin.companyid ? admin.companyid.split(",") : []);
+    setCompanyId(
+      admin.companyid
+        ? admin.companyid.includes(",")
+          ? admin.companyid.split(",")
+          : admin.companyid
+        : []
+    );
     if (Object.keys(errors).length === 0 && canSubmit) {
       handleOpen();
     }
@@ -305,37 +311,39 @@ function AddGroup() {
     <div className="card-body">
       <Loader open={isLoading} />
       <form className="myForms" ref={group_form}>
-        <div className="row">
-          <div className="col-md-8">
-            <div className="form-group row">
-              <label className="col-sm-3 col-form-label">
-                Company Code<span className="text-danger">*</span>
-              </label>
-              <div className="col-sm-9">
-                <Select
-                  styles={constants.reactSelectStyles(
-                    errors.companyid,
-                    selectCountryCodeValue.value
+        {companyId.includes(",") || (
+          <div className="row">
+            <div className="col-md-8">
+              <div className="form-group row">
+                <label className="col-sm-3 col-form-label">
+                  Company Code<span className="text-danger">*</span>
+                </label>
+                <div className="col-sm-9">
+                  <Select
+                    styles={constants.reactSelectStyles(
+                      errors.companyid,
+                      selectCountryCodeValue.value
+                    )}
+                    inputId="companyid"
+                    options={optionsForCompanyId}
+                    value={selectCountryCodeValue}
+                    onChange={handleChange}
+                    className="search-options"
+                    placeholder="Select Company Code.."
+                    defaultValue={{
+                      target: JSON.parse('{"id":"companyid", "value":""}'),
+                      value: "",
+                      label: "Select Company Code...",
+                    }}
+                  />
+                  {errors.companyid && (
+                    <p className="helperText">{errors.companyid}</p>
                   )}
-                  inputId="companyid"
-                  options={optionsForCompanyId}
-                  value={selectCountryCodeValue}
-                  onChange={handleChange}
-                  className="search-options"
-                  placeholder="Select Company Code.."
-                  defaultValue={{
-                    target: JSON.parse('{"id":"companyid", "value":""}'),
-                    value: "",
-                    label: "Select Company Code...",
-                  }}
-                />
-                {errors.companyid && (
-                  <p className="helperText">{errors.companyid}</p>
-                )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
         <div className="row">
           <div className="col-md-6">
             <div className="form-group row">

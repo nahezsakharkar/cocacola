@@ -20,7 +20,6 @@ function AddStep() {
   const navigate = useNavigate();
 
   var { group } = location.state;
-  console.log(group)
 
   const [groupInfo, setGroupInfo] = useState({});
   const [interfaces, setInterfaces] = useState([]);
@@ -204,12 +203,6 @@ function AddStep() {
   };
 
   const onSubmit = () => {
-    console.log("Values : " , {
-      ...values,
-      gid: group.id,
-      companyid: group.companyid,
-      sequence: groupInfo.steps.length === 0 ? 1 : groupInfo.steps.length + 1,
-    })
     setErrors(validate(values));
     setCanSubmit(true);
   };

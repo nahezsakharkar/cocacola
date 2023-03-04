@@ -334,6 +334,7 @@ function EditSteps() {
     const data = await schedule.createStep({
       ...values,
       gid: group.id,
+      companyid: group.companyid,
       sequence: group.steps.length === 0 ? 1 : group.steps.length + 1,
     });
     if (data.message === "updated successfully") {
