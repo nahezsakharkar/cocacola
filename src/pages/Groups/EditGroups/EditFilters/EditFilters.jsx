@@ -133,7 +133,10 @@ function EditFilters() {
         label: filter.operator,
       });
       setRadioButtonValueEdit(
-        isNaN(new Date(filter.filtervalue).getDate()) ? "text" : "date"
+        new Date(filter.filtervalue).getDate() &&
+          isNaN(Number(filter.filtervalue))
+          ? "date"
+          : "text"
       );
       setDateValueEdit(
         (isNaN(new Date(filter.filtervalue).getDate()) ? "text" : "date") ===

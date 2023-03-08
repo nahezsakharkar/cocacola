@@ -117,8 +117,21 @@ function Filters(props) {
     Object.keys([filters].flat()[0]).length === 0
       ? [].flat()
       : [filters].flat();
+  
+  for (var i = 0; i < rows.length; i++) {
+    if (rows[i].operator === "EQUALS") {
+      rows[i].operator = "=";
+    } else if (rows[i].operator === "LESS THAN") {
+      rows[i].operator = "<";
+    } else if (rows[i].operator === "GREATER THAN") {
+      rows[i].operator = ">";
+    } else if (rows[i].operator === "LESS THAN EQUALS TO") {
+      rows[i].operator = "<=";
+    } else if (rows[i].operator === "GREATER THAN EQUALS TO") {
+      rows[i].operator = "<=";
+    }
+  }
 
-  // console.log(rows)
 
   return (
     <div className="filters mt-3">
