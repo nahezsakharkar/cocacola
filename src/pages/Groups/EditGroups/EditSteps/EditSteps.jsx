@@ -431,6 +431,7 @@ function EditSteps() {
     setValuesEdit({
       ...valuesEdit,
       [id]: value,
+      companyid: group.companyid,
     });
 
     if (e.target.id === "batching") {
