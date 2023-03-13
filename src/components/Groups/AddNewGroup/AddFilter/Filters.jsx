@@ -15,6 +15,7 @@ function Filters(props) {
     isLoading,
     setIsEditing,
     handleEdit,
+    admintype,
   } = props;
 
   const [row, setRow] = useState([]);
@@ -95,18 +96,21 @@ function Filters(props) {
                 className="btn btn-dark btn-icon-text btn-sm"
                 onClick={() => openModal(params.row, "edit")}
               >
-                Edit
+                {admintype === "Admin" ? "Edit" : "View"}
                 <i className="mdi mdi-file-check btn-icon-append"></i>
               </button>
             )}
-            <button
-              type="button"
-              className="btn btn-danger btn-icon-text btn-sm"
-              onClick={() => openModal(params.row, "delete")}
-            >
-              Remove
-              <i className="ti-trash btn-icon-append"></i>
-            </button>
+            {/* disabled for support */}
+            {admintype === "Admin" && (
+              <button
+                type="button"
+                className="btn btn-danger btn-icon-text btn-sm"
+                onClick={() => openModal(params.row, "delete")}
+              >
+                Remove
+                <i className="ti-trash btn-icon-append"></i>
+              </button>
+            )}
           </div>
         );
       },
@@ -117,7 +121,7 @@ function Filters(props) {
     Object.keys([filters].flat()[0]).length === 0
       ? [].flat()
       : [filters].flat();
-  
+
   for (var i = 0; i < rows.length; i++) {
     if (rows[i].operator === "EQUALS") {
       rows[i].operator = "=";
@@ -131,7 +135,6 @@ function Filters(props) {
       rows[i].operator = "<=";
     }
   }
-
 
   return (
     <div className="filters mt-3">

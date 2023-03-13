@@ -33,6 +33,7 @@ import Error500 from "./pages/Errors/500/500"
 //helpers
 import { LoggedRoute } from './helpers/LoggedRoute';
 import { ProtectedRoute } from './helpers/ProtectedRoute';
+import { AuthorizedRoute } from './helpers/AuthorizedRoute';
 
 //toast
 import { ToastContainer } from "react-toastify";
@@ -47,7 +48,7 @@ function App() {
         <Route path="Logout" element={<Logout />} />
         <Route element={<ProtectedRoute> <Layout /> </ProtectedRoute>}>
           <Route index path="/" element={<Dashboard />} />
-          <Route path='AddNewGroup' element={<AddNewGroup />} >
+          <Route path='AddNewGroup' element={<AuthorizedRoute> <AddNewGroup /> </AuthorizedRoute>} >
             <Route index path="/AddNewGroup/AddGroup" element={<AddGroup />} />
             <Route path="/AddNewGroup/AddStep" element={<AddStep />} />
             <Route path="/AddNewGroup/AddFilter" element={<AddFilter />} />
@@ -61,8 +62,8 @@ function App() {
           <Route path="ActiveJobs" element={<ActiveJobs />} />
           <Route path="JobReport" element={<JobReport />} />
           <Route path="Logs" element={<Logs />} />
-          <Route path="Settings" element={<Settings />} />
-          <Route path="Account" element={<Account />} />
+          <Route path="Settings" element={<AuthorizedRoute> <Settings /> </AuthorizedRoute>} />
+          <Route path="Account" element={<AuthorizedRoute> <Account /> </AuthorizedRoute>} />
         </Route>
         <Route path="Error500" element={<Error500 />} />
         <Route path="Error404" element={<Error404 />} />

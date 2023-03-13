@@ -18,6 +18,7 @@ function OrderedSteps(props) {
     isLoading,
     setIsEditing,
     handleEdit,
+    admintype,
   } = props;
   const navigate = useNavigate();
 
@@ -150,28 +151,40 @@ function OrderedSteps(props) {
                 className="btn btn-dark btn-icon-text btn-sm"
                 onClick={() => openModal(params.row, "edit")}
               >
-                Edit
+                {admintype === "Admin" ? "Edit" : "View"}
                 <i className="mdi mdi-file-check btn-icon-append"></i>
+              </button>
+            )}
+            {/* disabled for support */}
+            {admintype === "Admin" && (
+              <button
+                type="button"
+                className="btn btn-danger btn-icon-text btn-sm"
+                onClick={() => openModal(params.row, "delete")}
+              >
+                Delete
+                <i className="ti-trash btn-icon-append"></i>
               </button>
             )}
             <button
               type="button"
-              className="btn btn-danger btn-icon-text btn-sm"
-              onClick={() => openModal(params.row, "delete")}
-            >
-              Delete
-              <i className="ti-trash btn-icon-append"></i>
-            </button>
-            <button
-              type="button"
               className="btn btn-warning btn-icon-text btn-sm"
               onClick={() =>
-                navigate(editable ? "/ShowGroups/EditGroups/EditFilters" : "/AddNewGroup/AddFilter", {
-                  state: { step: params.row, groupId: groupInfo.id, group: groupInfo },
-                })
+                navigate(
+                  editable
+                    ? "/ShowGroups/EditGroups/EditFilters"
+                    : "/AddNewGroup/AddFilter",
+                  {
+                    state: {
+                      step: params.row,
+                      groupId: groupInfo.id,
+                      group: groupInfo,
+                    },
+                  }
+                )
               }
             >
-              Manage Filters
+              {admintype === "Admin" ? "Manage Filters" : "View Filters"}
               <i className="fa fa-filter btn-icon-append"></i>
             </button>
           </div>

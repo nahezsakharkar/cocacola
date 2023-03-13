@@ -9,14 +9,14 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import Tooltip from "@mui/material/Tooltip";
 
-// import auth from "../../../../services/authService";
+import auth from "../../../../services/authService";
 import schedule from "../../../../services/scheduleService";
 import OurModal from "../../../../components/Common/OurModal/OurModal";
 import Loader from "../../../../components/Common/Loader/Loader";
 import constants from "../../../../custom/constants/constants";
 
 function EditGroup() {
-  // const [admin, setAdmin] = useState({});
+  const [admin, setAdmin] = useState({});
 
   const [isEditable, setIsEditable] = useState(false);
 
@@ -82,10 +82,11 @@ function EditGroup() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // async function getAdmin() {
-  //   const data = await auth.getCurrentUserDetails();
-  //   setAdmin(data.payload);
-  // }
+  async function getAdmin() {
+    const data = await auth.getCurrentUserDetails();
+    setAdmin(data.payload);
+    setIsLoading(false);
+  }
 
   useEffect(() => {
     // ------------- setting default values -------------
@@ -124,7 +125,7 @@ function EditGroup() {
       setCheckBoxValue(group.testmode === 1 ? true : false);
     }
     // ------------- setting default values -------------
-    // getAdmin();
+    getAdmin();
     if (Object.keys(errors).length === 0 && canSubmit) {
       handleOpen();
     }
@@ -529,51 +530,59 @@ function EditGroup() {
             </div>
           </div>
         </div>
-        <div className="row" style={{ justifyContent: "center", gap: "2rem" }}>
-          {isEditable ? (
-            <>
-              <button
-                type="button"
-                onClick={onSubmit}
-                className="btn btn-dark btn-icon-text"
-                disabled={areObjectsEqual(defaultValues, values) ? true : false}
-              >
-                Save Changes
-                <i className="fa fa-cloud-upload btn-icon-append"></i>
-              </button>
-              <Tooltip
-                title="Clear All Data from the Form."
-                placement="bottom"
-                arrow
-              >
+        {/* disabled for support */}
+        {admin.admintype === "Admin" && (
+          <div
+            className="row"
+            style={{ justifyContent: "center", gap: "2rem" }}
+          >
+            {isEditable ? (
+              <>
                 <button
                   type="button"
-                  onClick={reset}
-                  className="btn btn-secondary btn-icon-text"
+                  onClick={onSubmit}
+                  className="btn btn-dark btn-icon-text"
+                  disabled={
+                    areObjectsEqual(defaultValues, values) ? true : false
+                  }
                 >
-                  Reset
+                  Save Changes
+                  <i className="fa fa-cloud-upload btn-icon-append"></i>
                 </button>
-              </Tooltip>
+                <Tooltip
+                  title="Clear All Data from the Form."
+                  placement="bottom"
+                  arrow
+                >
+                  <button
+                    type="button"
+                    onClick={reset}
+                    className="btn btn-secondary btn-icon-text"
+                  >
+                    Reset
+                  </button>
+                </Tooltip>
+                <button
+                  type="button"
+                  onClick={() => setIsEditable(false)}
+                  className="btn btn-dark btn-icon-text"
+                >
+                  <i className="ti-close btn-icon-prepend"></i>
+                  Cancel Edit
+                </button>
+              </>
+            ) : (
               <button
                 type="button"
-                onClick={() => setIsEditable(false)}
+                onClick={() => setIsEditable(true)}
                 className="btn btn-dark btn-icon-text"
               >
-                <i className="ti-close btn-icon-prepend"></i>
-                Cancel Edit
+                Edit Group
+                <i className="fa fa-edit btn-icon-append"></i>
               </button>
-            </>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setIsEditable(true)}
-              className="btn btn-dark btn-icon-text"
-            >
-              Edit Group
-              <i className="fa fa-edit btn-icon-append"></i>
-            </button>
-          )}
-        </div>
+            )}
+          </div>
+        )}
         <OurModal
           open={open}
           setOpen={setOpen}

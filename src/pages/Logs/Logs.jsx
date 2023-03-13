@@ -68,7 +68,6 @@ function Logs() {
   }
 
   async function getLogs(pgNumber) {
-    console.log(pgNumber);
     const data = await schedule.getAllJobLogs(
       pgNumber === 0 ? 15 : 15 * (pgNumber + 1)
     );

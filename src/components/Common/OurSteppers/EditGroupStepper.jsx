@@ -5,16 +5,27 @@ import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
+import Loader from "../Loader/Loader";
+import auth from "../../../services/authService";
 
 const EditGroupStepper = (props) => {
+  const [admin, setAdmin] = useState({});
   const { group, steps, Outlet, pathNames } = props;
   const [activeStep, setActiveStep] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
   const noSteps = (!group.steps ? [] : group.steps).length === 0;
 
+  async function getAdmin() {
+    const data = await auth.getCurrentUserDetails();
+    setAdmin(data.payload);
+    setIsLoading(false);
+  }
+
   useEffect(() => {
+    getAdmin();
     if (location.pathname === pathNames.Group) {
       setActiveStep(0);
     } else if (location.pathname === pathNames.Steps) {
@@ -49,6 +60,7 @@ const EditGroupStepper = (props) => {
 
   return (
     <Box sx={{ width: "100%" }}>
+      <Loader open={isLoading} />
       <Stepper activeStep={activeStep} sx={{ paddingBottom: "1rem" }}>
         {steps.map((label, index) => {
           const stepProps = {
@@ -86,8 +98,10 @@ const EditGroupStepper = (props) => {
           >
             {activeStep === 0
               ? noSteps
-                ? "Add Steps"
-                : "Manage steps"
+                ? admin.admintype === "Admin"
+                  ? "Add Steps"
+                  : "Manage steps"
+                : "View steps"
               : "Show Job Groups"}
           </Button>
         </div>

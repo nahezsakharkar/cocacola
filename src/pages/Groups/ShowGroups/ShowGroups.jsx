@@ -7,6 +7,8 @@ import Tooltip from "@mui/material/Tooltip";
 import DataTable from "../../../components/Common/DataTable/DataTable";
 import schedule from "../../../services/scheduleService";
 import OurModal from "../../../components/Common/OurModal/OurModal";
+import Loader from "../../../components/Common/Loader/Loader";
+import auth from "../../../services/authService";
 import "../../../custom/css/custom.css";
 
 function ShowGroups() {
@@ -18,10 +20,17 @@ function ShowGroups() {
   const [modalDesc, setModalDesc] = useState();
 
   const [isLoading, setIsLoading] = useState(true);
+  const [admin, setAdmin] = useState({});
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  async function getAdmin() {
+    const data = await auth.getCurrentUserDetails();
+    setAdmin(data.payload);
+    setIsLoading(false);
+  }
 
   async function getGroupsData(queryParams) {
     const data = await schedule.getGroupsByScheduleStatus(queryParams);
@@ -30,6 +39,7 @@ function ShowGroups() {
   }
 
   useEffect(() => {
+    getAdmin();
     getGroupsData("Active,Disabled");
   }, []);
 
@@ -156,6 +166,7 @@ function ShowGroups() {
       renderCell: (params) => {
         return (
           <div className="cellAction">
+            {/* disabled for support */}
             <button
               type="button"
               className="btn btn-dark btn-icon-text btn-sm"
@@ -165,16 +176,19 @@ function ShowGroups() {
                 })
               }
             >
-              Edit
+              {admin.admintype === "Admin" ? "Edit" : "View"}
               <i className="mdi mdi-file-check btn-icon-append"></i>
             </button>
-            <button
-              type="button"
-              className="btn btn-secondary btn-icon-text btn-sm"
-            >
-              Disable
-              <i className="fa fa-ban btn-icon-append"></i>
-            </button>
+            {/* disabled for support */}
+            {admin.admintype === "Admin" && (
+              <button
+                type="button"
+                className="btn btn-secondary btn-icon-text btn-sm"
+              >
+                Disable
+                <i className="fa fa-ban btn-icon-append"></i>
+              </button>
+            )}
             <Tooltip
               title={
                 params.row.runningstatus === "Running"
@@ -203,14 +217,17 @@ function ShowGroups() {
                 </button>
               </span>
             </Tooltip>
-            <button
-              type="button"
-              className="btn btn-danger btn-icon-text btn-sm"
-              onClick={() => openModal(params.row, "delete")}
-            >
-              Delete
-              <i className="ti-trash btn-icon-append"></i>
-            </button>
+            {/* disabled for support */}
+            {admin.admintype === "Admin" && (
+              <button
+                type="button"
+                className="btn btn-danger btn-icon-text btn-sm"
+                onClick={() => openModal(params.row, "delete")}
+              >
+                Delete
+                <i className="ti-trash btn-icon-append"></i>
+              </button>
+            )}
           </div>
         );
       },
@@ -221,6 +238,7 @@ function ShowGroups() {
 
   return (
     <div className="data existingGroups">
+      <Loader open={isLoading} />
       <div className="title">
         <h1 className="Heading">Jobs Group</h1>
         <button

@@ -14,8 +14,10 @@ import OurModal from "../../../../components/Common/OurModal/OurModal";
 import OrderedSteps from "../../../../components/Groups/AddNewGroup/AddStep/OrderedSteps";
 import EmptyModal from "../../../../components/Common/EmptyModal/EmptyModal";
 import constants from "../../../../custom/constants/constants";
+import auth from "../../../../services/authService";
 
 function EditSteps() {
+  const [admin, setAdmin] = useState({});
   const location = useLocation();
 
   // var { group } = location.state;
@@ -140,7 +142,14 @@ function EditSteps() {
     }
   };
 
+  async function getAdmin() {
+    const data = await auth.getCurrentUserDetails();
+    setAdmin(data.payload);
+    setIsLoading(false);
+  }
+
   useEffect(() => {
+    getAdmin();
     getInterfaces();
     setSteps(group.steps);
     setSequence(group.sids);
@@ -795,84 +804,87 @@ function EditSteps() {
               </div>
             </div>
           </form>
-          <div
-            className="row"
-            style={{ justifyContent: "center", gap: "2rem" }}
-          >
-            {isEditable ? (
-              <>
-                <button
-                  type="button"
-                  onClick={onSubmitEdit}
-                  className="btn btn-dark btn-icon-text"
-                  disabled={
-                    areObjectsEqual(defaultValuesEdit, valuesEdit)
-                      ? true
-                      : false
-                  }
-                >
-                  Save Changes
-                  <i className="fa fa-cloud-upload btn-icon-append"></i>
-                </button>
-                <Tooltip
-                  title="Clear All Data from the Form."
-                  placement="bottom"
-                  arrow
-                >
+          {/* disabled for support */}
+          {admin.admintype === "Admin" && (
+            <div
+              className="row"
+              style={{ justifyContent: "center", gap: "2rem" }}
+            >
+              {isEditable ? (
+                <>
                   <button
                     type="button"
-                    onClick={resetEdit}
-                    className="btn btn-secondary btn-icon-text"
+                    onClick={onSubmitEdit}
+                    className="btn btn-dark btn-icon-text"
+                    disabled={
+                      areObjectsEqual(defaultValuesEdit, valuesEdit)
+                        ? true
+                        : false
+                    }
                   >
-                    Reset
+                    Save Changes
+                    <i className="fa fa-cloud-upload btn-icon-append"></i>
                   </button>
-                </Tooltip>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsEditing(false);
-                    setIsEditable(false);
-                    setStepDataSaveChangesClicked(false);
-                    setErrors({});
-                    setErrorsEdit({});
-                    setCanSubmit(false);
-                    setCanSubmitEdit(false);
-                  }}
-                  className="btn btn-dark btn-icon-text"
-                >
-                  <i className="ti-close btn-icon-prepend"></i>
-                  Cancel Edit
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  type="button"
-                  onClick={() => setIsEditable(true)}
-                  className="btn btn-dark btn-icon-text"
-                >
-                  Edit Step
-                  <i className="fa fa-edit btn-icon-append"></i>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsEditing(false);
-                    setIsEditable(false);
-                    setStepDataSaveChangesClicked(false);
-                    setErrors({});
-                    setErrorsEdit({});
-                    setCanSubmit(false);
-                    setCanSubmitEdit(false);
-                  }}
-                  className="btn btn-dark btn-icon-text"
-                >
-                  <i className="ti-close btn-icon-prepend"></i>
-                  Cancel Edit
-                </button>
-              </>
-            )}
-          </div>
+                  <Tooltip
+                    title="Clear All Data from the Form."
+                    placement="bottom"
+                    arrow
+                  >
+                    <button
+                      type="button"
+                      onClick={resetEdit}
+                      className="btn btn-secondary btn-icon-text"
+                    >
+                      Reset
+                    </button>
+                  </Tooltip>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsEditing(false);
+                      setIsEditable(false);
+                      setStepDataSaveChangesClicked(false);
+                      setErrors({});
+                      setErrorsEdit({});
+                      setCanSubmit(false);
+                      setCanSubmitEdit(false);
+                    }}
+                    className="btn btn-dark btn-icon-text"
+                  >
+                    <i className="ti-close btn-icon-prepend"></i>
+                    Cancel Edit
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setIsEditable(true)}
+                    className="btn btn-dark btn-icon-text"
+                  >
+                    Edit Step
+                    <i className="fa fa-edit btn-icon-append"></i>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsEditing(false);
+                      setIsEditable(false);
+                      setStepDataSaveChangesClicked(false);
+                      setErrors({});
+                      setErrorsEdit({});
+                      setCanSubmit(false);
+                      setCanSubmitEdit(false);
+                    }}
+                    className="btn btn-dark btn-icon-text"
+                  >
+                    <i className="ti-close btn-icon-prepend"></i>
+                    Cancel Edit
+                  </button>
+                </>
+              )}
+            </div>
+          )}
         </>
       ) : (
         // add form
@@ -1087,32 +1099,35 @@ function EditSteps() {
               </div>
             </div>
           </form>
-          <div
-            className="row"
-            style={{ justifyContent: "center", gap: "2rem" }}
-          >
-            <button
-              type="button"
-              className="btn btn-dark btn-icon-text"
-              onClick={onSubmit}
-            >
-              Confirm Step
-              <i className="fa fa-plus btn-icon-append"></i>
-            </button>
-            <Tooltip
-              title="Clear All Data from the Form."
-              placement="right"
-              arrow
+          {/* disabled for support */}
+          {admin.admintype === "Admin" && (
+            <div
+              className="row"
+              style={{ justifyContent: "center", gap: "2rem" }}
             >
               <button
                 type="button"
-                onClick={reset}
-                className="btn btn-secondary btn-icon-text"
+                className="btn btn-dark btn-icon-text"
+                onClick={onSubmit}
               >
-                Reset
+                Confirm Step
+                <i className="fa fa-plus btn-icon-append"></i>
               </button>
-            </Tooltip>
-          </div>
+              <Tooltip
+                title="Clear All Data from the Form."
+                placement="right"
+                arrow
+              >
+                <button
+                  type="button"
+                  onClick={reset}
+                  className="btn btn-secondary btn-icon-text"
+                >
+                  Reset
+                </button>
+              </Tooltip>
+            </div>
+          )}
         </>
       )}
       <EmptyModal open={isLoading} />
@@ -1134,6 +1149,7 @@ function EditSteps() {
         isLoading={isLoading}
         setIsEditing={setIsEditing}
         handleEdit={handleEdit}
+        admintype={admin.admintype}
       />
     </div>
   );

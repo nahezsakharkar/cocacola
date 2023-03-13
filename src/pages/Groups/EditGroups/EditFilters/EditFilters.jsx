@@ -14,6 +14,7 @@ import OurModal from "../../../../components/Common/OurModal/OurModal";
 import Filters from "../../../../components/Groups/AddNewGroup/AddFilter/Filters";
 import schedule from "../../../../services/scheduleService";
 import constants from "../../../../custom/constants/constants";
+import auth from "../../../../services/authService";
 
 function EditFilters() {
   const location = useLocation();
@@ -24,7 +25,7 @@ function EditFilters() {
   const { step } = location.state;
 
   const { group, getGroup } = useOutletContext();
-
+  const [admin, setAdmin] = useState({});
   const [filters, setFilters] = useState({});
   const filter_form = useRef(null);
 
@@ -114,7 +115,14 @@ function EditFilters() {
     }
   };
 
+  async function getAdmin() {
+    const data = await auth.getCurrentUserDetails();
+    setAdmin(data.payload);
+    setIsLoading(false);
+  }
+
   useEffect(() => {
+    getAdmin();
     getFilters(step.id);
 
     // for edit  ----------------
@@ -507,84 +515,87 @@ function EditFilters() {
                   )}
                 </div>
               </div>
-              <div className="filterField m-auto" style={{ width: "26%" }}>
-                <div className="label">
-                  <label className="col-sm-3 col-form-label">Actions</label>
+              {/* disabled for support */}
+              {admin.admintype === "Admin" && (
+                <div className="filterField m-auto" style={{ width: "26%" }}>
+                  <div className="label">
+                    <label className="col-sm-3 col-form-label">Actions</label>
+                  </div>
+                  <div
+                    className="input"
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginTop: "-4px",
+                    }}
+                  >
+                    {isEditable ? (
+                      <>
+                        <button
+                          type="button"
+                          onClick={onSubmitEdit}
+                          className="btn btn-dark btn-icon-text"
+                          style={{ scale: ".8" }}
+                          disabled={
+                            areObjectsEqual(defaultValuesEdit, valuesEdit)
+                              ? true
+                              : false
+                          }
+                        >
+                          Save Changes
+                          <i className="fa fa-cloud-upload btn-icon-append"></i>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsEditing(false);
+                            setIsEditable(false);
+                            setFilterDataSaveChangesClicked(false);
+                            setErrors({});
+                            setErrorsEdit({});
+                            setCanSubmit(false);
+                            setCanSubmitEdit(false);
+                          }}
+                          className="btn btn-dark btn-icon-text"
+                          style={{ scale: ".8" }}
+                        >
+                          <i className="ti-close btn-icon-prepend"></i>
+                          Cancel
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => setIsEditable(true)}
+                          className="btn btn-dark btn-icon-text"
+                          style={{ scale: ".8" }}
+                        >
+                          Edit Filter
+                          <i className="fa fa-edit btn-icon-append"></i>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsEditing(false);
+                            setIsEditable(false);
+                            setFilterDataSaveChangesClicked(false);
+                            setErrors({});
+                            setErrorsEdit({});
+                            setCanSubmit(false);
+                            setCanSubmitEdit(false);
+                          }}
+                          className="btn btn-dark btn-icon-text"
+                          style={{ scale: ".8" }}
+                        >
+                          <i className="ti-close btn-icon-prepend"></i>
+                          Cancel Edit
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
-                <div
-                  className="input"
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    marginTop: "-4px",
-                  }}
-                >
-                  {isEditable ? (
-                    <>
-                      <button
-                        type="button"
-                        onClick={onSubmitEdit}
-                        className="btn btn-dark btn-icon-text"
-                        style={{ scale: ".8" }}
-                        disabled={
-                          areObjectsEqual(defaultValuesEdit, valuesEdit)
-                            ? true
-                            : false
-                        }
-                      >
-                        Save Changes
-                        <i className="fa fa-cloud-upload btn-icon-append"></i>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsEditing(false);
-                          setIsEditable(false);
-                          setFilterDataSaveChangesClicked(false);
-                          setErrors({});
-                          setErrorsEdit({});
-                          setCanSubmit(false);
-                          setCanSubmitEdit(false);
-                        }}
-                        className="btn btn-dark btn-icon-text"
-                        style={{ scale: ".8" }}
-                      >
-                        <i className="ti-close btn-icon-prepend"></i>
-                        Cancel
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button
-                        type="button"
-                        onClick={() => setIsEditable(true)}
-                        className="btn btn-dark btn-icon-text"
-                        style={{ scale: ".8" }}
-                      >
-                        Edit Filter
-                        <i className="fa fa-edit btn-icon-append"></i>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsEditing(false);
-                          setIsEditable(false);
-                          setFilterDataSaveChangesClicked(false);
-                          setErrors({});
-                          setErrorsEdit({});
-                          setCanSubmit(false);
-                          setCanSubmitEdit(false);
-                        }}
-                        className="btn btn-dark btn-icon-text"
-                        style={{ scale: ".8" }}
-                      >
-                        <i className="ti-close btn-icon-prepend"></i>
-                        Cancel Edit
-                      </button>
-                    </>
-                  )}
-                </div>
-              </div>
+              )}
             </div>
           </form>
         </>
@@ -709,22 +720,25 @@ function EditFilters() {
                   )}
                 </div>
               </div>
-              <div className="filterField m-auto">
-                <div className="label">
-                  <label className="col-sm-3 col-form-label">Actions</label>
+              {/* disabled for support */}
+              {admin.admintype === "Admin" && (
+                <div className="filterField m-auto">
+                  <div className="label">
+                    <label className="col-sm-3 col-form-label">Actions</label>
+                  </div>
+                  <div className="input" style={{ marginTop: "-4px" }}>
+                    <button
+                      onClick={onSubmit}
+                      type="button"
+                      className="btn btn-dark btn-icon-text"
+                      style={{ scale: ".8" }}
+                    >
+                      Add
+                      <i className="fa fa-plus btn-icon-append"></i>
+                    </button>
+                  </div>
                 </div>
-                <div className="input" style={{ marginTop: "-4px" }}>
-                  <button
-                    onClick={onSubmit}
-                    type="button"
-                    className="btn btn-dark btn-icon-text"
-                    style={{ scale: ".8" }}
-                  >
-                    Add
-                    <i className="fa fa-plus btn-icon-append"></i>
-                  </button>
-                </div>
-              </div>
+              )}
             </div>
           </form>
         </>
@@ -748,6 +762,7 @@ function EditFilters() {
         isLoading={isLoading}
         setIsEditing={setIsEditing}
         handleEdit={handleEdit}
+        admintype={admin.admintype}
       />
     </div>
   );

@@ -1,20 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink, Link, useNavigate, useLocation } from "react-router-dom";
 import OurModal from "../Common/OurModal/OurModal";
+import Loader from "../Common/Loader/Loader";
+import auth from "../../services/authService";
+
 function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isLoading, setIsLoading] = useState(true);
+  const [admin, setAdmin] = useState({});
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  async function getAdmin() {
+    const data = await auth.getCurrentUserDetails();
+    setAdmin(data.payload);
+    setIsLoading(false);
+  }
 
   function handleLogout() {
     setOpen(false);
     navigate("/Logout");
   }
 
+  useEffect(() => {
+    getAdmin();
+  }, []);
+
   return (
     <nav className="sidebar sidebar-offcanvas" id="sidebar">
+      <Loader open={isLoading} />
       <ul className="nav">
         <li className="nav-item">
           <Link to="/" className="navbar-brand brand-logo-mini">
@@ -58,27 +74,30 @@ function Sidebar() {
           </a>
           <div className="collapse" id="groups">
             <ul className="nav flex-column sub-menu">
-              <li className="nav-item">
-                {" "}
-                <NavLink
-                  className="nav-link"
-                  onClick={(e) => {
-                    if (location.pathname.includes("/AddNewGroup/"))
-                      e.preventDefault();
-                  }}
-                  to={
-                    location.pathname.includes("/AddNewGroup/")
-                      ? location.pathname.includes("/AddNewGroup/AddGroup")
-                        ? "/AddNewGroup/AddGroup"
-                        : location.pathname.includes("/AddNewGroup/AddStep")
-                        ? "/AddNewGroup/AddStep"
-                        : "/AddNewGroup/AddFilter"
-                      : "/AddNewGroup/AddGroup"
-                  }
-                >
-                  Add New Group
-                </NavLink>
-              </li>
+              {/* disabled for support */}
+              {admin.admintype === "Admin" && (
+                <li className="nav-item">
+                  {" "}
+                  <NavLink
+                    className="nav-link"
+                    onClick={(e) => {
+                      if (location.pathname.includes("/AddNewGroup/"))
+                        e.preventDefault();
+                    }}
+                    to={
+                      location.pathname.includes("/AddNewGroup/")
+                        ? location.pathname.includes("/AddNewGroup/AddGroup")
+                          ? "/AddNewGroup/AddGroup"
+                          : location.pathname.includes("/AddNewGroup/AddStep")
+                          ? "/AddNewGroup/AddStep"
+                          : "/AddNewGroup/AddFilter"
+                        : "/AddNewGroup/AddGroup"
+                    }
+                  >
+                    Add New Group
+                  </NavLink>
+                </li>
+              )}
               <li className="nav-item">
                 {" "}
                 <NavLink
@@ -148,21 +167,27 @@ function Sidebar() {
             <span className="menu-title"> Logs</span>
           </NavLink>
         </li>
-        <li className="nav-item">
-          <NavLink className="nav-link" to="/Settings">
-            <i className="mdi mdi-settings menu-icon"></i>
-            <span className="menu-title"> Settings</span>
-          </NavLink>
-        </li>
+        {/* disabled for support */}
+        {admin.admintype === "Admin" && (
+          <li className="nav-item">
+            <NavLink className="nav-link" to="/Settings">
+              <i className="mdi mdi-settings menu-icon"></i>
+              <span className="menu-title"> Settings</span>
+            </NavLink>
+          </li>
+        )}
         <li className="nav-item">
           <div className="menu-heading">User Management</div>
         </li>
-        <li className="nav-item">
-          <NavLink className="nav-link" to="/Account">
-            <i className="mdi mdi-account menu-icon"></i>
-            <span className="menu-title"> Account</span>
-          </NavLink>
-        </li>
+        {/* disabled for support */}
+        {admin.admintype === "Admin" && (
+          <li className="nav-item">
+            <NavLink className="nav-link" to="/Account">
+              <i className="mdi mdi-account menu-icon"></i>
+              <span className="menu-title"> Account</span>
+            </NavLink>
+          </li>
+        )}
         <li className="nav-item">
           <Link className="nav-link" onClick={handleOpen}>
             <i className="mdi mdi-logout menu-icon"></i>
