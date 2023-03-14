@@ -7,7 +7,6 @@ import Tooltip from "@mui/material/Tooltip";
 import DataTable from "../../../components/Common/DataTable/DataTable";
 import schedule from "../../../services/scheduleService";
 import OurModal from "../../../components/Common/OurModal/OurModal";
-import Loader from "../../../components/Common/Loader/Loader";
 import auth from "../../../services/authService";
 import "../../../custom/css/custom.css";
 
@@ -29,7 +28,7 @@ function ShowGroups() {
   async function getAdmin() {
     const data = await auth.getCurrentUserDetails();
     setAdmin(data.payload);
-    setIsLoading(false);
+    getGroupsData("Active,Disabled");
   }
 
   async function getGroupsData(queryParams) {
@@ -40,7 +39,7 @@ function ShowGroups() {
 
   useEffect(() => {
     getAdmin();
-    getGroupsData("Active,Disabled");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // console.log(groupList)
@@ -238,7 +237,6 @@ function ShowGroups() {
 
   return (
     <div className="data existingGroups">
-      <Loader open={isLoading} />
       <div className="title">
         <h1 className="Heading">Jobs Group</h1>
         <button
