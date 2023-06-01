@@ -80,7 +80,16 @@ function Login() {
       //   window.location.href = "https://riotgames.com/";
       // } else if (data.companyid === "1364") {
       //   window.location.href = "https://india.gov.in/";
-      // } 
+      // }
+      if (data.companyid === "1428") {
+        auth.setBaseURL(7071);
+      } else if (data.companyid === "1429,1430") {
+        auth.setBaseURL(7070);
+      } else if (data.companyid === "1429") {
+        auth.setBaseURL(7070);
+      } else if (data.companyid === "1430") {
+        auth.setBaseURL(7070);
+      }
       navigate(location.state || "/");
     } catch (e) {
       setIsLoading(false);
