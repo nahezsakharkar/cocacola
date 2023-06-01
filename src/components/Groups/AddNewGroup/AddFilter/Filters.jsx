@@ -122,19 +122,19 @@ function Filters(props) {
       ? [].flat()
       : [filters].flat();
 
-  for (var i = 0; i < rows.length; i++) {
-    if (rows[i].operator === "EQUALS") {
-      rows[i].operator = "=";
-    } else if (rows[i].operator === "LESS THAN") {
-      rows[i].operator = "<";
-    } else if (rows[i].operator === "GREATER THAN") {
-      rows[i].operator = ">";
-    } else if (rows[i].operator === "LESS THAN EQUALS TO") {
-      rows[i].operator = "<=";
-    } else if (rows[i].operator === "GREATER THAN EQUALS TO") {
-      rows[i].operator = "<=";
-    }
-  }
+  // for (var i = 0; i < rows.length; i++) {
+  //   if (rows[i].operator === "=") {
+  //     rows[i].operator = "=";
+  //   } else if (rows[i].operator === "<") {
+  //     rows[i].operator = "<";
+  //   } else if (rows[i].operator === ">") {
+  //     rows[i].operator = ">";
+  //   } else if (rows[i].operator === "<=") {
+  //     rows[i].operator = "<=";
+  //   } else if (rows[i].operator === "<=") {
+  //     rows[i].operator = "<=";
+  //   }
+  // }
 
   return (
     <div className="filters mt-3">

@@ -68,8 +68,8 @@ function AddFilter() {
 
   const optionsForOperator = [
     {
-      target: JSON.parse('{"id":"operator", "value":"EQUALS"}'),
-      value: "EQUALS",
+      target: JSON.parse('{"id":"operator", "value":"="}'),
+      value: "=",
       label: "=",
     },
     {
@@ -78,24 +78,29 @@ function AddFilter() {
       label: "LIKE",
     },
     {
-      target: JSON.parse('{"id":"operator", "value":"LESS THAN"}'),
-      value: "LESS THAN",
+      target: JSON.parse('{"id":"operator", "value":"<"}'),
+      value: "<",
       label: "<",
     },
     {
-      target: JSON.parse('{"id":"operator", "value":"LESS THAN EQUALS TO"}'),
-      value: "LESS THAN EQUALS TO",
+      target: JSON.parse('{"id":"operator", "value":"<="}'),
+      value: "<=",
       label: "<=",
     },
     {
-      target: JSON.parse('{"id":"operator", "value":"GREATER THAN"}'),
-      value: "GREATER THAN",
+      target: JSON.parse('{"id":"operator", "value":">"}'),
+      value: ">",
       label: ">",
     },
     {
-      target: JSON.parse('{"id":"operator", "value":"GREATER THAN EQUALS TO"}'),
-      value: "GREATER THAN EQUALS TO",
+      target: JSON.parse('{"id":"operator", "value":">="}'),
+      value: ">=",
       label: ">=",
+    },
+    {
+      target: JSON.parse('{"id":"operator", "value":"IN"}'),
+      value: "IN",
+      label: "IN",
     },
   ];
 
