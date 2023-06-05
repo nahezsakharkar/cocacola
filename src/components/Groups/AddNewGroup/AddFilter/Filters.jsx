@@ -131,8 +131,8 @@ function Filters(props) {
   //     rows[i].operator = ">";
   //   } else if (rows[i].operator === "<=") {
   //     rows[i].operator = "<=";
-  //   } else if (rows[i].operator === "<=") {
-  //     rows[i].operator = "<=";
+  //   } else if (rows[i].operator === ">=") {
+  //     rows[i].operator = ">=";
   //   }
   // }
 

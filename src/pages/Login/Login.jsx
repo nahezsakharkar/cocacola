@@ -8,7 +8,7 @@ import { TextField } from "@mui/material";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
-// import { reactSelectStyles } from "../../custom/constants/constants";
+// import constants from "../../custom/constants/constants";
 
 const LoginSchema = Yup.object().shape({
   username: Yup.string()
@@ -144,7 +144,7 @@ function Login() {
                   </div>
                   {/* <div className="form-group">
                     <Select
-                      styles={reactSelectStyles(errors.companyid)}
+                      styles={constants.reactSelectStyles(errors.companyid)}
                       inputId="companyid"
                       options={optionsForCompanyId}
                       onChange={handleChange}

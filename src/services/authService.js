@@ -1,14 +1,16 @@
 import http from "./httpService";
 import { encrypt, decrypt } from "./cryptoService";
-
-const sessionKey = "user";
-const cryptoKey = "Coke-Login-BaseURL";
-const loginBaseURL = "http://localhost:7070/";
+import constantsService from "./constantsService";
+const {
+  sessionKey,
+  sessionBaseURLKey,
+  cryptoBaseURLKey,
+  loginBaseURL,
+  dynamicBaseURL,
+  correctExpiry,
+} = constantsService;
 
 let currentDate = new Date();
-
-const correctExpiry = (expiry) =>
-  expiry.substr(3, 2) + "-" + expiry.substr(0, 2) + expiry.substr(5);
 
 export async function login(formValues) {
   const response = await http.post(loginBaseURL + "authenticate", formValues);
@@ -18,7 +20,7 @@ export async function login(formValues) {
 
 export function logout() {
   localStorage.removeItem(sessionKey);
-  localStorage.removeItem("baseURL");
+  localStorage.removeItem(sessionBaseURLKey);
 }
 
 export function getCurrentUser() {
@@ -43,7 +45,8 @@ export function getCurrentUser() {
 
 export async function getCurrentUserDetails() {
   const user = JSON.parse(localStorage.getItem(sessionKey));
-  const baseURL = decrypt(localStorage.getItem("baseURL"), cryptoKey);
+  const baseURLCypherText = localStorage.getItem(sessionBaseURLKey);
+  const baseURL = decrypt(baseURLCypherText, cryptoBaseURLKey);
   try {
     const response = await http.get(baseURL + "api/admin/byid?id=" + user.id, {
       headers: {
@@ -57,8 +60,11 @@ export async function getCurrentUserDetails() {
 }
 
 export function setBaseURL(PORT) {
-  const plainText = "http://localhost:" + PORT + "/";
-  localStorage.setItem("baseURL", encrypt(plainText, cryptoKey));
+  const baseURLPlainText = dynamicBaseURL(PORT);
+  localStorage.setItem(
+    sessionBaseURLKey,
+    encrypt(baseURLPlainText, cryptoBaseURLKey)
+  );
 }
 
 const auth = {

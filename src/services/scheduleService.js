@@ -1,15 +1,15 @@
 import http from "./httpService";
 import { decrypt } from "./cryptoService";
+import constantsService from "./constantsService";
+const { sessionKey, sessionBaseURLKey, cryptoBaseURLKey } = constantsService;
 
-const sessionKey = "user";
-const cryptoKey = "Coke-Login-BaseURL";
-const localBaseURL = localStorage.getItem("baseURL");
+const localBaseURL = localStorage.getItem(sessionBaseURLKey);
 
 const decryptBaseURL = (enURL) => {
   if (!localBaseURL) {
     console.log("Try Logging In...");
     return null;
-  } else return decrypt(enURL, cryptoKey);
+  } else return decrypt(enURL, cryptoBaseURLKey);
 };
 
 const baseURL = decryptBaseURL(localBaseURL);
