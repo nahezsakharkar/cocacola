@@ -1,17 +1,15 @@
 import http from "./httpService";
-import CryptoJS from "crypto-js";
+import { decrypt } from "./cryptoService";
 
 const sessionKey = "user";
+const cryptoKey = "Coke-Login-BaseURL";
 const localBaseURL = localStorage.getItem("baseURL");
 
 const decryptBaseURL = (enURL) => {
   if (!localBaseURL) {
     console.log("Try Logging In...");
     return null;
-  } else
-    return CryptoJS.AES.decrypt(enURL, "Coke-Login-BaseURL").toString(
-      CryptoJS.enc.Utf8
-    );
+  } else return decrypt(enURL, cryptoKey);
 };
 
 const baseURL = decryptBaseURL(localBaseURL);

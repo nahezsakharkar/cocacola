@@ -8,7 +8,7 @@ import { TextField } from "@mui/material";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
-// import constants from "../../custom/constants/constants";
+// import { reactSelectStyles } from "../../custom/constants/constants";
 
 const LoginSchema = Yup.object().shape({
   username: Yup.string()
@@ -50,47 +50,39 @@ function Login() {
     try {
       let data = await auth.login(values);
       setIsLoading(false);
-      // if (data.companyid === "1428,1429,1430,1364") {
-      //   window.location.href = "https://twitter.com/";
-      // } else if (data.companyid === "1428,1429,1430") {
-      //   window.location.href = "https://gmail.com/";
-      // } else if (data.companyid === "1428,1429,1364") {
-      //   window.location.href = "https://amazon.in/";
-      // } else if (data.companyid === "1428,1430,1364") {
-      //   window.location.href = "https://flipkart.com/";
-      // } else if (data.companyid === "1429,1430,1364") {
-      //   window.location.href = "https://myntra.com/";
-      // } else if (data.companyid === "1428,1429") {
-      //   window.location.href = "https://olx.in/";
-      // } else if (data.companyid === "1428,1430") {
-      //   window.location.href = "https://zomato.com/";
-      // } else if (data.companyid === "1428,1364") {
-      //   window.location.href = "https://swiggy.com/";
-      // } else if (data.companyid === "1429,1430") {
-      //   window.location.href = "https://bookmyshow.com/";
-      // } else if (data.companyid === "1429,1364") {
-      //   window.location.href = "https://yatra.com/";
-      // } else if (data.companyid === "1430,1364") {
-      //   window.location.href = "https://snaodeal.com/";
-      // } else if (data.companyid === "1428") {
-      //   window.location.href = "https://facebook.com/";
-      // } else if (data.companyid === "1429") {
-      //   window.location.href = "https://google.com/";
-      // } else if (data.companyid === "1430") {
-      //   window.location.href = "https://riotgames.com/";
-      // } else if (data.companyid === "1364") {
-      //   window.location.href = "https://india.gov.in/";
-      // }
-      if (data.companyid === "1428") {
+      if (data.companyid === "1428,1429,1430,1364") {
+        auth.setBaseURL(7071);
+      } else if (data.companyid === "1428,1429,1430") {
+        auth.setBaseURL(7071);
+      } else if (data.companyid === "1428,1429,1364") {
+        auth.setBaseURL(7071);
+      } else if (data.companyid === "1428,1430,1364") {
+        auth.setBaseURL(7071);
+      } else if (data.companyid === "1429,1430,1364") {
+        auth.setBaseURL(7071);
+      } else if (data.companyid === "1428,1429") {
+        auth.setBaseURL(7071);
+      } else if (data.companyid === "1428,1430") {
+        auth.setBaseURL(7071);
+      } else if (data.companyid === "1428,1364") {
         auth.setBaseURL(7071);
       } else if (data.companyid === "1429,1430") {
         auth.setBaseURL(7070);
+      } else if (data.companyid === "1429,1364") {
+        auth.setBaseURL(7071);
+      } else if (data.companyid === "1430,1364") {
+        auth.setBaseURL(7071);
+      } else if (data.companyid === "1428") {
+        auth.setBaseURL(7071);
       } else if (data.companyid === "1429") {
         auth.setBaseURL(7070);
       } else if (data.companyid === "1430") {
         auth.setBaseURL(7070);
+      } else if (data.companyid === "1364") {
+        auth.setBaseURL(7071);
       }
       navigate(location.state || "/");
+      window.location.reload(false);
     } catch (e) {
       setIsLoading(false);
       console.log("error :", e);
@@ -152,7 +144,7 @@ function Login() {
                   </div>
                   {/* <div className="form-group">
                     <Select
-                      styles={constants.reactSelectStyles(errors.companyid)}
+                      styles={reactSelectStyles(errors.companyid)}
                       inputId="companyid"
                       options={optionsForCompanyId}
                       onChange={handleChange}

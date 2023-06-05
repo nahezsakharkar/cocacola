@@ -1,7 +1,8 @@
 import http from "./httpService";
-import CryptoJS from "crypto-js";
+import { encrypt, decrypt } from "./cryptoService";
 
 const sessionKey = "user";
+const cryptoKey = "Coke-Login-BaseURL";
 const loginBaseURL = "http://localhost:7070/";
 
 let currentDate = new Date();
@@ -42,10 +43,7 @@ export function getCurrentUser() {
 
 export async function getCurrentUserDetails() {
   const user = JSON.parse(localStorage.getItem(sessionKey));
-  const baseURL = CryptoJS.AES.decrypt(
-    localStorage.getItem("baseURL"),
-    "Coke-Login-BaseURL"
-  ).toString(CryptoJS.enc.Utf8);
+  const baseURL = decrypt(localStorage.getItem("baseURL"), cryptoKey);
   try {
     const response = await http.get(baseURL + "api/admin/byid?id=" + user.id, {
       headers: {
@@ -59,13 +57,8 @@ export async function getCurrentUserDetails() {
 }
 
 export function setBaseURL(PORT) {
-  localStorage.setItem(
-    "baseURL",
-    CryptoJS.AES.encrypt(
-      "http://localhost:" + PORT + "/",
-      "Coke-Login-BaseURL"
-    ).toString()
-  );
+  const plainText = "http://localhost:" + PORT + "/";
+  localStorage.setItem("baseURL", encrypt(plainText, cryptoKey));
 }
 
 const auth = {
