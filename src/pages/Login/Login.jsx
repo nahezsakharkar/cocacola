@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import constantsService from "../../services/constantsService";
 import Loader from "../../components/Common/Loader/Loader";
 import auth from "../../services/authService";
 
@@ -9,6 +10,7 @@ import { TextField } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 // import constants from "../../custom/constants/constants";
+const { dynamicBaseURLPORT } = constantsService;
 
 const LoginSchema = Yup.object().shape({
   username: Yup.string()
@@ -50,37 +52,7 @@ function Login() {
     try {
       let data = await auth.login(values);
       setIsLoading(false);
-      if (data.companyid === "1428,1429,1430,1364") {
-        auth.setBaseURL(7071);
-      } else if (data.companyid === "1428,1429,1430") {
-        auth.setBaseURL(7071);
-      } else if (data.companyid === "1428,1429,1364") {
-        auth.setBaseURL(7071);
-      } else if (data.companyid === "1428,1430,1364") {
-        auth.setBaseURL(7071);
-      } else if (data.companyid === "1429,1430,1364") {
-        auth.setBaseURL(7071);
-      } else if (data.companyid === "1428,1429") {
-        auth.setBaseURL(7071);
-      } else if (data.companyid === "1428,1430") {
-        auth.setBaseURL(7071);
-      } else if (data.companyid === "1428,1364") {
-        auth.setBaseURL(7071);
-      } else if (data.companyid === "1429,1430") {
-        auth.setBaseURL(7070);
-      } else if (data.companyid === "1429,1364") {
-        auth.setBaseURL(7071);
-      } else if (data.companyid === "1430,1364") {
-        auth.setBaseURL(7071);
-      } else if (data.companyid === "1428") {
-        auth.setBaseURL(7071);
-      } else if (data.companyid === "1429") {
-        auth.setBaseURL(7070);
-      } else if (data.companyid === "1430") {
-        auth.setBaseURL(7070);
-      } else if (data.companyid === "1364") {
-        auth.setBaseURL(7071);
-      }
+      auth.setBaseURL(dynamicBaseURLPORT(data.companyid));
       navigate(location.state || "/");
       window.location.reload(false);
     } catch (e) {
